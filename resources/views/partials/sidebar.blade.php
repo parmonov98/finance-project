@@ -9,10 +9,22 @@
             </svg>Home</a>
         </li>
 
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('homeloan') }}">
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('homeloan.show') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
             </svg> Home Loan</a>
+        </li>
+
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('investpersonal.show') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg> Invest Personal</a>
+        </li>
+
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('investpersonal.show') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg>Program Super</a>
         </li>
 
         <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

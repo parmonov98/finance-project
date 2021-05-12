@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HomeLoan;
+use App\Models\ProgramSuper;
 use Illuminate\Http\Request;
 
-class HomeLoanController extends Controller
+class ProgramSuperController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,21 +41,21 @@ class HomeLoanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\ProgramSuper  $programSuper
      * @return \Illuminate\Http\Response
      */
-    public function show(HomeLoan $HomeLoan)
+    public function show(ProgramSuper $programSuper)
     {
-        return view('dashboard.home-loan.show');
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\ProgramSuper  $programSuper
      * @return \Illuminate\Http\Response
      */
-    public function edit(HomeLoan $HomeLoan)
+    public function edit(ProgramSuper $programSuper)
     {
         //
     }
@@ -64,10 +64,10 @@ class HomeLoanController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\ProgramSuper  $programSuper
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, HomeLoan $HomeLoan)
+    public function update(Request $request, ProgramSuper $programSuper)
     {
         //
     }
@@ -75,10 +75,10 @@ class HomeLoanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\ProgramSuper  $programSuper
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HomeLoan $HomeLoan)
+    public function destroy(ProgramSuper $programSuper)
     {
         //
     }

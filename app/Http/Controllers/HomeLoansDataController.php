@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\home_loans_data;
+use App\Models\HomeLoanData;
 use Illuminate\Http\Request;
 
 class HomeLoansDataController extends Controller
@@ -41,10 +41,10 @@ class HomeLoansDataController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\home_loans_data  $home_loans_data
+     * @param  \App\Models\HomeLoanData  $HomeLoanData
      * @return \Illuminate\Http\Response
      */
-    public function show(home_loans_data $home_loans_data)
+    public function show(HomeLoanData $HomeLoanData)
     {
         //
     }
@@ -52,10 +52,10 @@ class HomeLoansDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\home_loans_data  $home_loans_data
+     * @param  \App\Models\HomeLoanData  $HomeLoanData
      * @return \Illuminate\Http\Response
      */
-    public function edit(home_loans_data $home_loans_data)
+    public function edit(HomeLoanData $HomeLoanData)
     {
         //
     }
@@ -64,10 +64,10 @@ class HomeLoansDataController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\home_loans_data  $home_loans_data
+     * @param  \App\Models\HomeLoanData  $HomeLoanData
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, home_loans_data $home_loans_data)
+    public function update(Request $request, HomeLoanData $HomeLoanData)
     {
         //
     }
@@ -75,10 +75,10 @@ class HomeLoansDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\home_loans_data  $home_loans_data
+     * @param  \App\Models\HomeLoanData  $HomeLoanData
      * @return \Illuminate\Http\Response
      */
-    public function destroy(home_loans_data $home_loans_data)
+    public function destroy(HomeLoanData $HomeLoanData)
     {
         //
     }

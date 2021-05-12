@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\InvestPersonal;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeLoanController;
+use App\Http\Controllers\InvestPersonalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +29,9 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::get('/home-loan', [HomeLoanController::class, 'show'])->name('homeloan');
+Route::get('/HomeLoan', [HomeLoanController::class, 'show'])->name('homeloan.show');
+
+Route::get('/InvestPersonal', [InvestPersonalController::class,'show'])->name('investpersonal.show');
+
+Route::get('/ProgramSuper', [ProgramSuperController::class, 'show'])->name('programsuper.show');
 

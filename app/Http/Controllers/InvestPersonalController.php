@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HomeLoan;
+use App\Models\InvestPersonal;
 use Illuminate\Http\Request;
 
-class HomeLoanController extends Controller
+class InvestPersonalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,21 +41,21 @@ class HomeLoanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\InvestPersonal  $investPersonal
      * @return \Illuminate\Http\Response
      */
-    public function show(HomeLoan $HomeLoan)
+    public function show(InvestPersonal $investPersonal)
     {
-        return view('dashboard.home-loan.show');
+        return view('dashboard.invest-personal.show');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\InvestPersonal  $investPersonal
      * @return \Illuminate\Http\Response
      */
-    public function edit(HomeLoan $HomeLoan)
+    public function edit(InvestPersonal $investPersonal)
     {
         //
     }
@@ -64,10 +64,10 @@ class HomeLoanController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\InvestPersonal  $investPersonal
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, HomeLoan $HomeLoan)
+    public function update(Request $request, InvestPersonal $investPersonal)
     {
         //
     }
@@ -75,10 +75,10 @@ class HomeLoanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\HomeLoan  $HomeLoan
+     * @param  \App\Models\InvestPersonal  $investPersonal
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HomeLoan $HomeLoan)
+    public function destroy(InvestPersonal $investPersonal)
     {
         //
     }
