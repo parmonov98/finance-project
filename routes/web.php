@@ -1,9 +1,11 @@
 <?php
 
-use App\Models\InvestPersonal;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeLoanController;
+use App\Http\Controllers\ProgramPayController;
 use App\Http\Controllers\InvestPersonalController;
+use App\Http\Controllers\LongTermInvestmentController;
+use App\Http\Controllers\Program5YRNetworthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,9 +31,15 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::get('/HomeLoan', [HomeLoanController::class, 'show'])->name('homeloan.show');
+Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
-Route::get('/InvestPersonal', [InvestPersonalController::class,'show'])->name('investpersonal.show');
+Route::get('/Invest-Personal', [InvestPersonalController::class,'show'])->name('investpersonal.show');
 
-Route::get('/ProgramSuper', [ProgramSuperController::class, 'show'])->name('programsuper.show');
+Route::get('/Program-Super', [ProgramSuperController::class, 'show'])->name('programsuper.show');
+
+Route::get('/Long-Term-Investement', [LongTermInvestmentController::class, 'show'])->name('longterminvestment.show');
+
+Route::get('/Program-5-Year-Networth', [Program5YRNetworthController::class, 'show'])->name('5yrnetworth.show');
+
+Route::get('/Program-Pay', [ProgramPayController::class, 'show'])->name('programpay.show');
 

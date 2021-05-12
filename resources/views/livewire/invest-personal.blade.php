@@ -17,19 +17,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for($i=0; $i<50; $i++)
-                        <tr>
-                            <td>6-12-2020</td>
-                            <td>4%</td>
-                            <td>0.20%</td>
-                            <td>$50.00</td>
-                            <td> </td>
-                            <td>$500.00</td>
-                            <td>$1.67</td>
-                            <td>$50.08</td>
-                            <td>$451.58</td>
+                    @for($i=0; $i<50; $i++) <tr>
+                        <td>6-12-2020</td>
+                        <td>4%</td>
+                        <td>0.20%</td>
+                        <td>$50.00</td>
+                        <td> </td>
+                        <td>$500.00</td>
+                        <td>$1.67</td>
+                        <td>$50.08</td>
+                        <td>$451.58</td>
                         </tr>
-                    @endfor
+                        @endfor
                 </tbody>
             </table>
             <ul class="pagination">
@@ -41,5 +40,6 @@
                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
         </div>
+        
     </div>
 </div>

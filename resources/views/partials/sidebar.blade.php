@@ -27,6 +27,24 @@
             </svg>Program Super</a>
         </li>
 
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('longterminvestment.show') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg>Program Long Term Investment</a>
+        </li>
+
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('5yrnetworth.show') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg>Program 5 Year Netwroth</a>
+        </li>
+
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('programpay.show') }}">
+            <svg class="c-sidebar-nav-icon">
+                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+            </svg>Program Pay</a>
+        </li>
+
         <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
