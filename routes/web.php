@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeLoanController;
 use App\Http\Controllers\ProgramPayController;
 use App\Http\Controllers\InvestPersonalController;
+use App\Http\Controllers\MonthlyNetworthController;
 use App\Http\Controllers\LongTermInvestmentController;
 use App\Http\Controllers\Program5YRNetworthController;
 
@@ -42,4 +43,6 @@ Route::get('/Long-Term-Investement', [LongTermInvestmentController::class, 'show
 Route::get('/Program-5-Year-Networth', [Program5YRNetworthController::class, 'show'])->name('5yrnetworth.show');
 
 Route::get('/Program-Pay', [ProgramPayController::class, 'show'])->name('programpay.show');
+
+Route::get('/Monthly-networth', [MonthlyNetworthController::class, 'show'])->name('monthlynetworth.show');
 

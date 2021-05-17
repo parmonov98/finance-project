@@ -7,10 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CoreUI CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css') }}" crossorigin="anonymous">
+
     @livewireStyles
     @stack('css')
-    
+
+
+    <style>
+        th {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: white;
+        }
+    </style>
+
 
     <title>CoreUI</title>
 </head>
@@ -26,26 +38,29 @@
                         @yield('content')
                     </div>
                 </div>
-             </main>
-         </div>           
+            </main>
+        </div>
         @include('partials.footer')
     </div>
 
     <!-- Optional JavaScript -->
     <!-- Popper.js first, then CoreUI JS -->
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js"></script>
+    <script src="{{ asset('https://unpkg.com/@popperjs/core@2') }}"></script>
+    <script src="{{ asset('https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js') }}"></script>
 
-    <script src="vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
+    <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>
     <!--[if IE]><!-->
-    <script src="vendors/@coreui/icons/js/svgxuse.min.js"></script>
+    <script src="{{ asset('vendors/@coreui/icons/js/svgxuse.min.js') }}"></script>
     <!--<![endif]-->
 
-    <script src="vendors/@coreui/chartjs/js/coreui-chartjs.bundle.js"></script>
-    <script src="vendors/@coreui/utils/js/coreui-utils.js"></script>
+    <script src="{{ asset('vendors/@coreui/chartjs/js/coreui-chartjs.bundle.js') }}"></script>
+    <script src="{{ asset('vendors/@coreui/utils/js/coreui-utils.js') }}"></script>
     <script src="js/main.js"></script>
     @livewireScripts
     @stack('scripts')
+    <script src="{{ asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
+    <script src="{{ asset('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/masking-input.js') }}" data-autoinit="true"></script>
+
 
 </body>
 

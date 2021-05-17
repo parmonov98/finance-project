@@ -10,7 +10,7 @@
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="name">Loan Amount</label>
-                                        <input class="form-control" placeholder="Enter your loan amount">
+                                        <input type="text" class="form-control numeric" placeholder="Enter your loan amount" id="cc" type="text" data-inputmask="'mask': '9999 9999 9999 9999'" >
                                    </div>
                               </div>
                               <div class="col-sm-12 col-md-6">
@@ -115,24 +115,24 @@
      <div class="card">
           <div class="card-header"><i class="fa fa-align-justify"></i> Striped Table</div>
           <div class="card-body">
-               <table class="table table-responsive-sm table-striped">
-                    <thead>
-                         <tr>
-                              <th>PMT No</th>
-                              <th>PMT Date</th>
-                              <th>Beg Balance</th>
-                              <th>SCH Pay</th>
-                              <th>EXT Pay</th>
-                              <th>TOT Pay</th>
-                              <th>Principal</th>
-                              <th>Interest</th>
-                              <th>End Balance</th>
-                              <th>CUM INTRST</th>
-                         </tr>
-                    </thead>
-                    <tbody>
-                         @for($i=0; $i<30 ; $i++)
+               <div class="tableFixHead">
+                    <table class="table table-responsive-sm table-striped">
+                         <thead>
                               <tr>
+                                   <th>PMT No</th>
+                                   <th>PMT Date</th>
+                                   <th>Beg Balance</th>
+                                   <th>SCH Pay</th>
+                                   <th>EXT Pay</th>
+                                   <th>TOT Pay</th>
+                                   <th>Principal</th>
+                                   <th>Interest</th>
+                                   <th>End Balance</th>
+                                   <th>CUM INTRST</th>
+                              </tr>
+                         </thead>
+                         <tbody>
+                              @for($i=0; $i<30 ; $i++) <tr>
                                    <td>1</td>
                                    <td>2012/01/01</td>
                                    <td>$235,000.00</td>
@@ -143,10 +143,12 @@
                                    <td>$587.50</td>
                                    <td>$233,369.73</td>
                                    <td>No Data</td>
-                              </tr>
-                         @endfor
-                    </tbody>
-               </table>
+                                   </tr>
+                                   @endfor
+                         </tbody>
+                    </table>
+               </div>
+
                <ul class="pagination">
                     <li class="page-item"><a class="page-link" href="#">Prev</a></li>
                     <li class="page-item active"><a class="page-link" href="#">1</a></li>

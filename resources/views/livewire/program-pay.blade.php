@@ -1,5 +1,37 @@
 <div>
     <div class="card">
+        <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-4">
+                    <div class="form-group">
+                        <label for="ccnumber">Gross Pay</label>
+                        <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-4">
+                    <div class="form-group">
+                        <label for="ccnumber">Allowance</label>
+                        <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label for="ccnumber">Super</label>
+                        <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button class="btn btn-sm btn-primary" type="submit"> Submit</button>
+            <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
+        </div>
+    </div>
+    <div class="card">
         <div class="card-header"><i class="fa fa-align-justify"></i> Simple Table</div>
         <div class="card-body">
             <table class="table table-responsive-sm">
@@ -19,8 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @for($i=0; $i<50; $i++)
-                    <tr>
+                    @for($i=0; $i<50; $i++) <tr>
                         <td>1-15-2021</td>
                         <td>$200.00</td>
                         <td>$75.00</td>
@@ -33,8 +64,8 @@
                         <td>2.00</td>
                         <td>$6.00</td>
                         <td></td>
-                    </tr>
-                @endfor
+                        </tr>
+                        @endfor
                 </tbody>
             </table>
             <ul class="pagination">

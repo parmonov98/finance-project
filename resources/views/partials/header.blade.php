@@ -1,4 +1,4 @@
-<header class="c-header c-header-light c-header-fixed c-header-with-subheader">
+<header class="c-header c-header-light  c-header-with-subheader">
     <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
         <svg class="c-icon c-icon-lg">  
             <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-menu"></use>
