@@ -70,8 +70,6 @@
                         @endfor
                     </tr>
 
-
-
                     <tr>
                         <th class="table-header-bold">Assets</th>
                     </tr>
@@ -112,14 +110,12 @@
                         @endfor
                     </tr>
 
-
                     <tr>
                         <th></th>
                         @for($i=0;$i<24;$i++)
                             <td></td>
                         @endfor
                     </tr>
-
 
                     <tr>
                         <th class="table-header-bold">Summary</th>

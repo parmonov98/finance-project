@@ -6,7 +6,7 @@
                 <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6">
                     <div class="row">
                         <div class="col-6">
-                            <label for="ccnumber">Return on invest (Max)</label>
+                            <label for="ccnumber">Return on invest (Min)</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">0</span>
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <label for="ccnumber">Return on invest (Min)</label>
+                            <label for="ccnumber">Return on invest (Max)</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">0</span>

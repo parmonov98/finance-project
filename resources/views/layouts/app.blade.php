@@ -21,6 +21,10 @@
             z-index: 2;
             background-color: white;
         }
+        .span-error{
+            color: #c22e00  ;
+            font-size: 12px;
+        }
     </style>
 
 
