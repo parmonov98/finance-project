@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CoreUI CSS -->
     <link rel="stylesheet" href="{{ asset('https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css') }}" crossorigin="anonymous">
 
     @livewireStyles
@@ -28,7 +27,7 @@
     </style>
 
 
-    <title>CoreUI</title>
+    <title>Finance App</title>
 </head>
 
 <body class="c-app">
@@ -47,8 +46,6 @@
         @include('partials.footer')
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- Popper.js first, then CoreUI JS -->
     <script src="{{ asset('https://unpkg.com/@popperjs/core@2') }}"></script>
     <script src="{{ asset('https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js') }}"></script>
 

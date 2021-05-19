@@ -45,8 +45,6 @@ class HomeLoan extends Component
         $test = $this->pmt($interest_rate, $loan_amount, $nb_payments, $period);
 
         dd($test);
-
-
         
     }
 
@@ -55,10 +53,9 @@ class HomeLoan extends Component
         $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay']);
     }
 
+    public function pmt($interest_rate, $loan_amount, $nb_payments, $period )
+    {
 
-    
-
-    public function pmt($interest_rate, $loan_amount, $nb_payments, $period ){
         $interest_rate = $interest_rate/100;
         $up = $interest_rate*$loan_amount;
         $pow = pow(1+($interest_rate/$nb_payments), -$nb_payments*$period );
