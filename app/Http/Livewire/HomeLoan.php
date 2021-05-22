@@ -56,7 +56,6 @@ class HomeLoan extends Component
     public function pmt($interest_rate, $loan_amount, $nb_payments, $period )
     {
 
-        $interest_rate = $interest_rate/100;
         $up = $interest_rate*$loan_amount;
         $pow = pow(1+($interest_rate/$nb_payments), -$nb_payments*$period );
 
