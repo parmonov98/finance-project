@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class HomeLoanData extends Model
 {
     use HasFactory;
+    protected $table = 'Home_Loans_Datas';
 
-    protected $fillable = [ 'loan_amount', 'int_rate', 'loan_period', 'no_payments', 'start_date', 'opt_payments' ];
+    protected $fillable = [ 'loan_amount', 'int_rate', 'loan_period', 'no_payments', 'start_date', 'opt_payments', 'date', 'user_id', 'sch_payment'];
 
     public function homeloan()
     {

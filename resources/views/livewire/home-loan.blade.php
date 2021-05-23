@@ -3,21 +3,21 @@
      <div class="row">
           <!-- First Card -->
           <div class="col-sm-12 col-md-6">
-               <form wire:submit.prevent="calculate">
+               <form wire:submit.prevent="submit">
                     <div class="card">
                          <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
                          <div class="card-body">
                               <div class="row">
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <label for="name">Loan Amount</label>
+                                             <label>Loan Amount</label>
                                              <input wire:model="loan" type="text" class="form-control numeric" placeholder="Enter your loan amount">
                                              @error('loan')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <label for="ccnumber">Annual Interest Rate (%)</label>
+                                             <label>Annual Interest Rate (%)</label>
                                              <input wire:model="int_rate" class="form-control" placeholder="3">
                                              @error('int_rate')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
@@ -27,14 +27,14 @@
                               <div class="row">
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <label for="ccnumber">Loan Period (Years)</label>
+                                             <label>Loan Period (Years)</label>
                                              <input wire:model="period" class="form-control" placeholder="30 (In Years)">
                                              @error('period')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <label for="ccnumber">Number Of Payments (Motnhs)</label>
+                                             <label>Number Of Payments (Motnhs)</label>
                                              <input wire:model="nb_pay" class="form-control" placeholder="30 (Per year)">
                                              @error('nb_pay')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
@@ -44,17 +44,15 @@
                               <div class="row">
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <div class="form-group">
-                                                  <label for="ccnumber">Start Date Of Loan</label>
-                                                  <input wire:model="date" class="form-control" placeholder="01/01/2020">
-                                                  @error('date')<span class="span-error">{{ $message }}</span>@enderror
-                                             </div>
+                                             <label>Date Input</label>
+                                             <input wire:model="date" class="form-control" id="date-input" type="date" name="date-input" placeholder="date">
+                                             @error('date')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                              <div class="form-group">
-                                                  <label for="ccnumber">Extra Payments</label>
+                                                  <label>Extra Payments</label>
                                                   <input wire:model="ext_pay" class="form-control" placeholder="Optional">
                                                   @error('ext_pay')<span class="span-error">{{ $message }}</span>@enderror
                                              </div>
@@ -63,7 +61,7 @@
                               </div>
                          </div>
                          <div class="card-footer">
-                              <button class="btn btn-sm btn-primary" type="submit" > Calculate</button>
+                              <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
                               <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
                          </div>
                     </div>
@@ -157,15 +155,6 @@
                          </tbody>
                     </table>
                </div>
-
-               <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-               </ul>
           </div>
      </div>
 </div>

@@ -18,12 +18,13 @@ class CreateHomeLoansDatasTable extends Migration
             $table->timestamps();
             $table->bigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->bigInteger('loan_amount');
-            $table->bigInteger('int_rate');
-            $table->bigInteger('loan_period');
-            $table->bigInteger('no_payments');
+            $table->decimal('loan_amount', $precision = 20, $scale = 2);
+            $table->decimal('int_rate', $precision = 20, $scale = 2);
+            $table->decimal('loan_period', $precision = 20 , $scale = 2);
+            $table->decimal('no_payments', $precision = 20, $scale = 2);
+            $table->decimal('sch_payment', $precision = 20, $scale =2 );
             $table->date('start_date');
-            $table->bigInteger('opt_payment')->nullable();
+            $table->decimal('opt_payment', $precision = 20, $scale = 2)->nullable();
         });
     }
 

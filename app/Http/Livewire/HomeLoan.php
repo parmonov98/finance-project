@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Models\HomeLoanData;
+use Illuminate\Support\Facades\Auth;
 
 class HomeLoan extends Component
 {
@@ -17,7 +19,7 @@ class HomeLoan extends Component
     protected $rules = [
         'loan' => 'required|numeric',
         'period' => 'required|numeric',
-        'date' => 'required|numeric',
+        'date' => 'required|date',
         'int_rate' => 'required|numeric' ,
         'nb_pay' => 'required|numeric' , 
         'ext_pay' => 'numeric'
@@ -33,34 +35,86 @@ class HomeLoan extends Component
         return view('livewire.home-loan');
     }
 
-    public function calculate()
-    {
+    public function formatVariables(){
+
         $this->validate();
 
-        $interest_rate =  $this->int_rate/100;
-        $nb_payments = $this->nb_pay; //months
-        $period = $this->period; // years
-        $loan_amount = $this->loan;
+        $data['date'] = date('d-m-Y', strtotime($this->date)); //start of payments;
+        dd($data['date']);
         
-        $test = $this->pmt($interest_rate, $loan_amount, $nb_payments, $period);
 
-        dd($test);
+        $data['date'] = $this->date;
+        $data['interest_rate'] =  $this->int_rate/100;
+        $data['nb_payments'] = $this->nb_pay; //months
+        $data['loan_period'] = $this->period; // years
+        $data['loan_amount'] = $this->loan;
+
+        return $data;
+    }
+
+    public function submit()
+    {
+        // $daystosum = 1;
+        // $start_date = date('d-m-Y', strtotime($this->date.' + '.$daystosum.' days')); // convert to d-m-Y format
+        $data = $this->scheduled_payment();
+        $this->home_loan_data($data);
+
+        $this->calculate($data);
+
+    }
+
+    public function scheduled_payment()
+    {
+        $data = $this->formatVariables();
+        $up = $data['interest_rate']*$data['loan_amount'];
+        $pow = pow(1+($data['interest_rate']/$data['nb_payments']), -$data['nb_payments']*$data['loan_period'] );
+        $data['sch_payment'] = $up / ($data['nb_payments']*(1-$pow));
+
+        dd($data['sch_payment']);
         
+        return $data;    
     }
 
-    public function resetIputs()
+    public function home_loan_data($data)
     {
-        $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay']);
+        $db_data = HomeLoanData::get();
+
+        if(!count($db_data)){
+            HomeLoanData::create([
+                "loan_amount" => $data['loan_amount'],
+                "int_rate" => $data['interest_rate'], 
+                "loan_period" => $data['loan_period'], 
+                "no_payments" => $data['nb_payments'], 
+                "start_date" => $data['date'], 
+                "sch_payment" => $data['sch_payment'],
+                "user_id" => Auth::user()->id
+            ]);
+        }else if (count($db_data)){
+
+            HomeLoanData::truncate();
+            HomeLoanData::create([
+                "loan_amount" => $data['loan_amount'],
+                "int_rate" => $data['interest_rate'], 
+                "loan_period" => $data['loan_period'], 
+                "no_payments" => $data['nb_payments'], 
+                "start_date" => $data['date'], 
+                "sch_payment" => $data['sch_payment'],
+                "user_id" => Auth::user()->id
+            ]);
+        }
     }
 
-    public function pmt($interest_rate, $loan_amount, $nb_payments, $period )
+    public function calculate($data)
     {
+        $interest = $data['loan_amount']*($data['interest_rate']/12);
 
-        $up = $interest_rate*$loan_amount;
-        $pow = pow(1+($interest_rate/$nb_payments), -$nb_payments*$period );
+        while($data['loan_amount'] > $data['sch_payment'] ){
+            $data['interest'] = round($data['loan_amount'], 2)*(round($data['interest_rate'], 2)/12);// Interest
+            dd("something");
+        }
 
-        $sch_payment = $up / ($nb_payments*(1-$pow));
-
-        return $sch_payment;
     }
+
+
+
 }
