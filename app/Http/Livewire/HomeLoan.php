@@ -104,7 +104,6 @@ class HomeLoan extends Component
     public function calculate($data)
     {
     
-        $end_balance = $data['loan_amount'];
         $data['interest'] = round($data['loan_amount'], 2)*(round($data['interest_rate'], 2)/12); // Interest
         $data['total_payment'] = $data['sch_payment']+$this->ext_pay;
         $data['principal'] = $data['total_payment'] - $data['interest'];
