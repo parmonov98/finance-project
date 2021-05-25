@@ -22,12 +22,13 @@ class HomeLoan extends Component
         'date' => 'required|date',
         'int_rate' => 'required|numeric' ,
         'nb_pay' => 'required|numeric' , 
-        'ext_pay' => 'numeric'
+        'ext_pay' => 'required|numeric'
     ];
 
     protected $messages = [ 
         '*.required' => 'This field is required',
-        '*.numeric' => 'This field must be a number'
+        '*.numeric' => 'This field must be a number',
+        '*.date' => 'This field must be a date' 
     ];
 
     public function render()
@@ -40,14 +41,12 @@ class HomeLoan extends Component
         $this->validate();
 
         $data['date'] = date('d-m-Y', strtotime($this->date)); //start of payments;
-        dd($data['date']);
-        
 
         $data['date'] = $this->date;
         $data['interest_rate'] =  $this->int_rate/100;
         $data['nb_payments'] = $this->nb_pay; //months
         $data['loan_period'] = $this->period; // years
-        $data['loan_amount'] = $this->loan;
+        $data['loan_amount'] = $this->loan; // loan amount
 
         return $data;
     }
@@ -58,7 +57,6 @@ class HomeLoan extends Component
         // $start_date = date('d-m-Y', strtotime($this->date.' + '.$daystosum.' days')); // convert to d-m-Y format
         $data = $this->scheduled_payment();
         $this->home_loan_data($data);
-
         $this->calculate($data);
 
     }
@@ -69,8 +67,6 @@ class HomeLoan extends Component
         $up = $data['interest_rate']*$data['loan_amount'];
         $pow = pow(1+($data['interest_rate']/$data['nb_payments']), -$data['nb_payments']*$data['loan_period'] );
         $data['sch_payment'] = $up / ($data['nb_payments']*(1-$pow));
-
-        dd($data['sch_payment']);
         
         return $data;    
     }
@@ -80,6 +76,7 @@ class HomeLoan extends Component
         $db_data = HomeLoanData::get();
 
         if(!count($db_data)){
+
             HomeLoanData::create([
                 "loan_amount" => $data['loan_amount'],
                 "int_rate" => $data['interest_rate'], 
@@ -106,15 +103,16 @@ class HomeLoan extends Component
 
     public function calculate($data)
     {
-        $interest = $data['loan_amount']*($data['interest_rate']/12);
+    
+        $end_balance = $data['loan_amount'];
+        $data['interest'] = round($data['loan_amount'], 2)*(round($data['interest_rate'], 2)/12); // Interest
+        $data['total_payment'] = $data['sch_payment']+$this->ext_pay;
+        $data['principal'] = $data['total_payment'] - $data['interest'];
+        $data['end_balance'] = $data['loan_amount'] - $data['principal'];
 
-        while($data['loan_amount'] > $data['sch_payment'] ){
-            $data['interest'] = round($data['loan_amount'], 2)*(round($data['interest_rate'], 2)/12);// Interest
-            dd("something");
-        }
+        dd($data['end_balance']);
+
 
     }
-
-
 
 }
