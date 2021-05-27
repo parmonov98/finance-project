@@ -34,7 +34,7 @@
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                             <label>Number Of Payments (Motnhs)</label>
+                                             <label>Number Of Payments (Months)</label>
                                              <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
                                              @error('nb_pay')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
@@ -62,6 +62,7 @@
                          </div>
                          <div class="card-footer">
                               <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
+                              <button class="btn btn-sm btn-primary" type="submit"> Changes values</button>
                               <button class="btn btn-sm btn-danger" wire:click="resetTables"> Reset</button>
                          </div>
                     </div>
@@ -77,14 +78,14 @@
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="name">Scheduled Payment</label>
-                                        <input class="form-control" placeholder="No data" disabled>
+                                        <input class="form-control" placeholder="{{ $sch_payment }}" disabled>
                                    </div>
                               </div>
 
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
-                                        <label for="name">Cumulative Interest</label>
-                                        <input class="form-control" placeholder="No data" disabled>
+                                        <label for="name">Interest savings</label>
+                                        <input class="form-control" placeholder="{{ $savings }}" disabled>
                                    </div>
                               </div>
 
@@ -93,13 +94,13 @@
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="ccnumber">Scheduled No Of Pay</label>
-                                        <input class="form-control" placeholder="No Data" disabled>
+                                        <input class="form-control" placeholder="{{ $sch_no_pay }}" disabled>
                                    </div>
                               </div>
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="ccnumber">Actual No Of Payments</label>
-                                        <input class="form-control" placeholder="No Data" disabled>
+                                        <input class="form-control" placeholder="{{ $actual_no_pay }}" disabled>
                                    </div>
                               </div>
 
@@ -109,14 +110,14 @@
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="ccnumber">Total early Pay</label>
-                                        <input class="form-control" placeholder="No Data" disabled>
+                                        <input class="form-control" placeholder="{{ $total_early_pay }}" disabled>
                                    </div>
                               </div>
                               <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <div class="form-group">
-                                             <label for="ccnumber">Total Interest</label>
-                                             <input class="form-control" placeholder="No Data" disabled>
+                                             <label for="ccnumber">Cumulative Interest</label>
+                                             <input class="form-control" placeholder="{{ $cum_interest }}" disabled>
                                         </div>
                                    </div>
                               </div>
@@ -148,7 +149,7 @@
                          <tbody>
                               @foreach($datas as $data) <tr>
                                    <td>{{ $data->pmt_no }}</td>
-                                   <td>{{ $data->pay_date }}</td>
+                                   <td>{{ $data->formatDate() }}</td>
                                    <td>{{ $data->beg_balance }}</td>
                                    <td>{{ $data->sch_payment }}</td>
                                    <td>{{ $data->ext_payment }}</td>
@@ -158,7 +159,7 @@
                                    <td>{{ $data->end_balance }}</td>
                                    <td>{{ $data->cum_interest }}</td>
                                    </tr>
-                                   @endforeach
+                              @endforeach
                          </tbody>
                     </table>
                </div>
