@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\HomeLoanData;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class HomeLoans extends Component
@@ -15,6 +16,10 @@ class HomeLoans extends Component
     public $nb_pay;
     public $date;
     public $ext_pay;
+
+
+    protected $listeners = ['tablesTruncated' => 'render'];
+
 
     protected $rules = [
         'loan' => 'required|numeric',
@@ -34,9 +39,12 @@ class HomeLoans extends Component
     public function render()
     {
         $datas = HomeLoan::all();
+        $cum_interest = HomeLoan::select('cum_interest')->orderBy('id', 'DESC')->first();
+
 
         return view('livewire.home-loan', [
             "datas" => $datas,
+            "cum_interest" => $cum_interest
         ]);
     }
 
@@ -57,8 +65,6 @@ class HomeLoans extends Component
 
     public function submit()
     {
-
-
         $data = $this->scheduled_payment();
         $this->home_loan_data($data);
         $this->calculate($data);
@@ -107,27 +113,28 @@ class HomeLoans extends Component
     public function calculate($data)
     {
 
-        $last_record = HomeLoan::select('end_balance', 'principal')->orderBy('id', 'DESC')->first();
-
         $stop = null;
-        
         do {
+            $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
+
             if ($last_record != null) {
 
 
                 do {
 
-                    $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date')->orderBy('id', 'DESC')->first();
+                    $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
                     $data['beg_balance'] = $last_record->end_balance;
 
                     $daystosum = 1;
                     $date = date('Y-m-d', strtotime($last_record->date . ' + ' . $daystosum . ' days')); // add days to d-m-Y format
 
+                    $data['pmt_no'] = $last_record->pmt_no + 1;
+
                     $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
                     $data['total_payment'] = $data['sch_payment'] + $data['ext_payment'];
                     $data['principal'] = $data['total_payment'] - $data['interest'];
                     $data['end_balance'] = $data['beg_balance'] - $data['principal'];
-                    $data['cum_interest'] = $data['beg_balance'] - ($data['principal'] - $data['sch_payment']);
+                    $data['cum_interest'] = $last_record->cum_interest + $data['interest'] ;
 
                     if ($data['end_balance'] > 50) {
                         HomeLoan::create([
@@ -139,7 +146,7 @@ class HomeLoans extends Component
                             "tot_payment" => $data['total_payment'],
                             "principal" => $data['principal'],
                             "interest" => $data['interest'],
-                            "pmt_no" => 1,
+                            "pmt_no" => $data['pmt_no'],
                             "end_balance" => $data['end_balance'],
                             "cum_interest" => $data['cum_interest']
                         ]);
@@ -148,6 +155,8 @@ class HomeLoans extends Component
                         $stop = 1;
                     }
                 } while ($stop == 0);
+
+
             } else {
 
                 $data['beg_balance'] = $data['loan_amount'];
@@ -156,7 +165,6 @@ class HomeLoans extends Component
                 $data['total_payment'] = $data['sch_payment'] + $data['ext_payment'];
                 $data['principal'] = $data['total_payment'] - $data['interest'];
                 $data['end_balance'] = $data['beg_balance'] - $data['principal'];
-                $data['cum_interest'] = $data['beg_balance'] - ($data['principal'] - $data['sch_payment']);
 
                 HomeLoan::create([
                     "user_id" => Auth::user()->id,
@@ -170,9 +178,17 @@ class HomeLoans extends Component
                     "pmt_no" => 1,
                     "end_balance" => $data['end_balance'],
                     "date" => $data['date'],
-                    "cum_interest" => $data['cum_interest']
+                    "cum_interest" => $data['interest']
                 ]);
             }
         } while ($stop == 0);
+
+
+    }
+
+    public function resetTables()
+    {
+        DB::table('home_loans')->delete();
+        DB::table('home_loans_datas')->delete();
     }
 }

@@ -11,14 +11,14 @@
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                              <label>Loan Amount</label>
-                                             <input wire:model="loan" type="text" class="form-control numeric" placeholder="Enter your loan amount">
+                                             <input wire:model.defer="loan" type="text" class="form-control numeric" placeholder="Enter your loan amount">
                                              @error('loan')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                              <label>Annual Interest Rate (%)</label>
-                                             <input wire:model="int_rate" class="form-control" placeholder="3">
+                                             <input wire:model.defer="int_rate" class="form-control" placeholder="3">
                                              @error('int_rate')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
@@ -28,14 +28,14 @@
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                              <label>Loan Period (Years)</label>
-                                             <input wire:model="period" class="form-control" placeholder="30 (In Years)">
+                                             <input wire:model.defer="period" class="form-control" placeholder="30 (In Years)">
                                              @error('period')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                                    <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                              <label>Number Of Payments (Motnhs)</label>
-                                             <input wire:model="nb_pay" class="form-control" placeholder="30 (Per year)">
+                                             <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
                                              @error('nb_pay')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
@@ -62,7 +62,7 @@
                          </div>
                          <div class="card-footer">
                               <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
-                              <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
+                              <button class="btn btn-sm btn-danger" wire:click="resetTables"> Reset</button>
                          </div>
                     </div>
                </form>
@@ -74,9 +74,16 @@
                     <div class="card-header"><strong>Loan Summary</strong> <small>Output Data</small></div>
                     <div class="card-body">
                          <div class="row">
-                              <div class="col-sm-12">
+                              <div class="col-sm-12 col-md-6">
                                    <div class="form-group">
                                         <label for="name">Scheduled Payment</label>
+                                        <input class="form-control" placeholder="No data" disabled>
+                                   </div>
+                              </div>
+
+                              <div class="col-sm-12 col-md-6">
+                                   <div class="form-group">
+                                        <label for="name">Cumulative Interest</label>
                                         <input class="form-control" placeholder="No data" disabled>
                                    </div>
                               </div>
@@ -140,7 +147,7 @@
                          </thead>
                          <tbody>
                               @foreach($datas as $data) <tr>
-                                   <td>{{ $loop->index+1 }}</td>
+                                   <td>{{ $data->pmt_no }}</td>
                                    <td>{{ $data->pay_date }}</td>
                                    <td>{{ $data->beg_balance }}</td>
                                    <td>{{ $data->sch_payment }}</td>
@@ -149,7 +156,7 @@
                                    <td>{{ $data->principal }}</td>
                                    <td>{{ $data->interest }}</td>
                                    <td>{{ $data->end_balance }}</td>
-                                   <td>No Data</td>
+                                   <td>{{ $data->cum_interest }}</td>
                                    </tr>
                                    @endforeach
                          </tbody>
