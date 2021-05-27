@@ -9,7 +9,7 @@ class HomeLoan extends Model
 {
     use HasFactory;
 
-    protected $fillabe = [ 'pmt_no', 'pay_date', 'beg_balance', 'sch_payment', 'ext_payment', 'tot_payment', 'principal', 'interest', 'end_balance'];
+    protected $fillable = ['user_id', 'pmt_no', 'pay_date', 'beg_balance', 'sch_payment', 'ext_payment', 'tot_payment', 'principal', 'interest', 'end_balance', 'cum_interest'];
 
     public function user()
     {

@@ -139,19 +139,19 @@
                               </tr>
                          </thead>
                          <tbody>
-                              @for($i=0; $i<30 ; $i++) <tr>
-                                   <td>1</td>
-                                   <td>2012/01/01</td>
-                                   <td>$235,000.00</td>
-                                   <td>$990.77</td>
-                                   <td>$1,200.00</td>
-                                   <td>$2,190.77</td>
-                                   <td>$1,630.27</td>
-                                   <td>$587.50</td>
-                                   <td>$233,369.73</td>
+                              @foreach($datas as $data) <tr>
+                                   <td>{{ $loop->index+1 }}</td>
+                                   <td>{{ $data->pay_date }}</td>
+                                   <td>{{ $data->beg_balance }}</td>
+                                   <td>{{ $data->sch_payment }}</td>
+                                   <td>{{ $data->ext_payment }}</td>
+                                   <td>{{ $data->tot_payment }}</td>
+                                   <td>{{ $data->principal }}</td>
+                                   <td>{{ $data->interest }}</td>
+                                   <td>{{ $data->end_balance }}</td>
                                    <td>No Data</td>
                                    </tr>
-                                   @endfor
+                                   @endforeach
                          </tbody>
                     </table>
                </div>

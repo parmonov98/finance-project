@@ -20,13 +20,15 @@ class CreateHomeLoansTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('pmt_no');
             $table->date('pay_date');
-            $table->bigInteger('beg_balance');
-            $table->bigInteger('sch_payment');
-            $table->bigInteger('ext_payment');
-            $table->bigInteger('tot_payment');
-            $table->bigInteger('principal');
-            $table->bigInteger('interest');
-            $table->bigInteger('end_balance');
+            $table->unsignedDecimal('beg_balance', $precision = 20, $scale = 2);
+            $table->decimal('sch_payment', $precision = 20, $scale = 2);
+            $table->decimal('ext_payment', $precision = 20, $scale = 2);
+            $table->decimal('tot_payment', $precision = 20, $scale = 2);
+            $table->decimal('principal', $precision = 20, $scale = 2);
+            $table->decimal('interest', $precision = 20, $scale = 2);
+            $table->decimal('end_balance', $precision = 20, $scale = 2);
+            $table->decimal('cum_interest', $precision = 20, $scale = 2);
+            
         });
     }
 

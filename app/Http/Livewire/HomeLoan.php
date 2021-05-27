@@ -3,10 +3,11 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Models\HomeLoan;
 use App\Models\HomeLoanData;
 use Illuminate\Support\Facades\Auth;
 
-class HomeLoan extends Component
+class HomeLoans extends Component
 {
 
     public $loan; 
@@ -47,6 +48,7 @@ class HomeLoan extends Component
         $data['nb_payments'] = $this->nb_pay; //months
         $data['loan_period'] = $this->period; // years
         $data['loan_amount'] = $this->loan; // loan amount
+        $data['ext_payment'] = $this->ext_pay;
 
         return $data;
     }
@@ -103,13 +105,24 @@ class HomeLoan extends Component
 
     public function calculate($data)
     {
-    
+
+        $data['beg_balance'] = $data['loan_amount'];
         $data['interest'] = round($data['loan_amount'], 2)*(round($data['interest_rate'], 2)/12); // Interest
-        $data['total_payment'] = $data['sch_payment']+$this->ext_pay;
+        $data['total_payment'] = $data['sch_payment']+$data['ext_payment'];
         $data['principal'] = $data['total_payment'] - $data['interest'];
         $data['end_balance'] = $data['loan_amount'] - $data['principal'];
 
-        dd($data['end_balance']);
+        HomeLoan::create([
+            "user_id" => Auth::user()->id,
+            "beg_balance" => $data['loan_amount'],
+            "pay_date" => now(),
+            "sch_payment" => $data['sch_payment'],
+            "ext_payment" => $data['ext_payment'],
+            "tot_payment" => $data['total_payment'],
+            "principal" => $data['principal'],
+            "interest" => $data['interest'],
+            "end_balance" => $data['end_balance']
+        ]);
 
 
     }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-@livewire('home-loan')
+@livewire('home-loans')
 @endsection
 
 @push('scripts')
