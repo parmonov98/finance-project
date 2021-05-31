@@ -16,6 +16,7 @@ class HomeLoans extends Component
     public $nb_pay;
     public $date;
     public $ext_pay;
+    public $change;
 
     protected $rules = [
         'loan' => 'required|numeric',
@@ -37,8 +38,8 @@ class HomeLoans extends Component
         return view('livewire.home-loan');
     }
 
-    public function formatVariables(){
-
+    public function formatVariables()
+    {
         $this->validate();
 
         $data['date'] = date('d-m-Y', strtotime($this->date)); //start of payments;
@@ -57,15 +58,17 @@ class HomeLoans extends Component
     {
         // $daystosum = 1;
         // $start_date = date('d-m-Y', strtotime($this->date.' + '.$daystosum.' days')); // convert to d-m-Y format
-        $data = $this->scheduled_payment();
+        $data = $this->formatVariables();
+
+        $this->changeValues();
+        $this->scheduled_payment($data);
         $this->home_loan_data($data);
         $this->calculate($data);
 
     }
 
-    public function scheduled_payment()
+    public function scheduled_payment($data)
     {
-        $data = $this->formatVariables();
         $up = $data['interest_rate']*$data['loan_amount'];
         $pow = pow(1+($data['interest_rate']/$data['nb_payments']), -$data['nb_payments']*$data['loan_period'] );
         $data['sch_payment'] = $up / ($data['nb_payments']*(1-$pow));
@@ -123,8 +126,11 @@ class HomeLoans extends Component
             "interest" => $data['interest'],
             "end_balance" => $data['end_balance']
         ]);
+    }
 
-
+    public function changeValues()
+    {
+        dd("hehe");
     }
 
 }

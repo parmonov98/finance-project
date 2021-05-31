@@ -16,6 +16,7 @@ class HomeLoans extends Component
     public $nb_pay;
     public $date;
     public $ext_pay;
+    public $change;
 
     protected $listeners = ['tablesTruncated' => 'render'];
 
@@ -67,9 +68,22 @@ class HomeLoans extends Component
 
     public function submit()
     {
-        $data = $this->scheduled_payment();
-        $this->home_loan_data($data);
-        $this->calculate($data);
+        $data = $this->formatVariables();
+
+        // $data = $this->scheduled_payment($data);
+        // $this->home_loan_data($data);
+        if(is_null($this->change))
+        {   
+            $data = $this->scheduled_payment($data);
+            $this->home_loan_data($data);
+            $this->calculate($data);
+        }
+        else
+        {
+            $data = $this->scheduled_payment($data);
+            $this->home_loan_data($data);
+            $this->reCalculate($data);
+        }
     }
 
     public function formatVariables()
@@ -87,9 +101,8 @@ class HomeLoans extends Component
         return $data;
     }
 
-    public function scheduled_payment()
+    public function scheduled_payment($data)
     {
-        $data = $this->formatVariables();
         $up = $data['interest_rate'] * $data['loan_amount'];
         $pow = pow(1 + ($data['interest_rate'] / $data['nb_payments']), -$data['nb_payments'] * $data['loan_period']);
         $data['sch_payment'] = $up / ($data['nb_payments'] * (1 - $pow));
@@ -277,12 +290,24 @@ class HomeLoans extends Component
         } while ($stop == 0);
     }
 
-    public function resetTables()
+    public function ResetTables()
     {
         $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay' ]);
         HomeLoan::truncate();
         HomeLoanData::truncate();
-        // DB::table('home_loans')->delete();
-        // DB::table('home_loans_datas')->delete();
     }
+
+    public function Recalculate()
+    {
+        $records = HomeLoan::select('pay_date')->get();
+        foreach($records as $record)
+        {
+            if($record->pay_date == $this->date ){
+                dd($record->pay_date . ' | ' . $this->date);
+            }
+        }
+
+    } 
+
+
 }

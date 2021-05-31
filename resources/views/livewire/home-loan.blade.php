@@ -36,7 +36,7 @@
                                         <div class="form-group">
                                              <label>Number Of Payments (Months)</label>
                                              <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
-                                             @error('nb_pay')<span class="span-error">{{ $message }}</span>@enderror
+                                             @error('nb_pay')    <span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                               </div>
@@ -62,8 +62,8 @@
                          </div>
                          <div class="card-footer">
                               <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
-                              <button class="btn btn-sm btn-primary" type="submit"> Changes values</button>
-                              <button class="btn btn-sm btn-danger" wire:click="resetTables"> Reset</button>
+                              <button class="btn btn-sm btn-primary" wire:click="Recalculate"> Changes values</button>
+                              <button class="btn btn-sm btn-danger" type="button" wire:click="resetTables"> Reset</button>
                          </div>
                     </div>
                </form>
