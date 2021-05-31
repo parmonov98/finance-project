@@ -53,7 +53,7 @@
                                         <div class="form-group">
                                              <div class="form-group">
                                                   <label>Extra Payments</label>
-                                                  <input wire:model="ext_pay" class="form-control" placeholder="Optional">
+                                                  <input @change="removeValidationError(errors.{{$date}})" wire:model="ext_pay" class="form-control" placeholder="Optional">
                                                   @error('ext_pay')<span class="span-error">{{ $message }}</span>@enderror
                                              </div>
                                         </div>
@@ -62,8 +62,8 @@
                          </div>
                          <div class="card-footer">
                               <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
-                              <button class="btn btn-sm btn-primary" wire:click="Recalculate"> Changes values</button>
-                              <button class="btn btn-sm btn-danger" type="button" wire:click="resetTables"> Reset</button>
+                              <!-- <button class="btn btn-sm btn-primary" wire:click="Recalculate"> Changes values</button> -->
+                              <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
                          </div>
                     </div>
                </form>

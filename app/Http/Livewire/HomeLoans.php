@@ -7,6 +7,7 @@ use App\Models\HomeLoan;
 use App\Models\HomeLoanData;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class HomeLoans extends Component
 {
@@ -26,13 +27,14 @@ class HomeLoans extends Component
         'date' => 'required|date',
         'int_rate' => 'required|numeric',
         'nb_pay' => 'required|numeric',
-        'ext_pay' => 'required|numeric'
+        'ext_pay' => 'required|numeric',
+        'date' => 'required|date|date_format:Y/m/d',
     ];
 
     protected $messages = [
         '*.required' => 'This field is required',
         '*.numeric' => 'This field must be a number',
-        '*.date' => 'This field must be a date'
+        '*.date' => 'This field must a date',
     ];
 
     public function render()
@@ -69,26 +71,15 @@ class HomeLoans extends Component
     public function submit()
     {
         $data = $this->formatVariables();
-
-        // $data = $this->scheduled_payment($data);
-        // $this->home_loan_data($data);
-        if(is_null($this->change))
-        {   
-            $data = $this->scheduled_payment($data);
-            $this->home_loan_data($data);
-            $this->calculate($data);
-        }
-        else
-        {
-            $data = $this->scheduled_payment($data);
-            $this->home_loan_data($data);
-            $this->reCalculate($data);
-        }
+        $data = $this->scheduled_payment($data);
+        $this->home_loan_data($data);
+        $this->calculate($data);
+      
     }
 
     public function formatVariables()
     {
-
+        // throw ValidationException::withMessages(['date' => 'This value is incorrect']);
         $this->validate();
         // $data['date'] = date('d-m-Y', strtotime($this->date)); // convert to d-m-Y format;
         $data['date'] = $this->date;
@@ -97,6 +88,7 @@ class HomeLoans extends Component
         $data['loan_period'] = $this->period; // years
         $data['loan_amount'] = $this->loan; // loan amount
         $data['ext_payment'] = $this->ext_pay;
+        dd("hehe");
 
         return $data;
     }
@@ -258,7 +250,7 @@ class HomeLoans extends Component
                             "cum_interest" => $data['cum_interest'],
                         ]);
 
-                        $stop = 0;
+                        $stop = 0;  
                     } else {
                         $stop = 1;
                     }
@@ -303,7 +295,7 @@ class HomeLoans extends Component
         foreach($records as $record)
         {
             if($record->pay_date == $this->date ){
-                dd($record->pay_date . ' | ' . $this->date);
+                
             }
         }
 
