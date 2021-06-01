@@ -53,7 +53,7 @@
                                         <div class="form-group">
                                              <div class="form-group">
                                                   <label>Extra Payments</label>
-                                                  <input @change="removeValidationError(errors.{{$date}})" wire:model="ext_pay" class="form-control" placeholder="Optional">
+                                                  <input wire:model="ext_pay" class="form-control" placeholder="Optional">
                                                   @error('ext_pay')<span class="span-error">{{ $message }}</span>@enderror
                                              </div>
                                         </div>
@@ -61,13 +61,78 @@
                               </div>
                          </div>
                          <div class="card-footer">
-                              <button class="btn btn-sm btn-primary" type="submit"> Calculate</button>
-                              <!-- <button class="btn btn-sm btn-primary" wire:click="Recalculate"> Changes values</button> -->
+                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="submit">Calculate</button>
+                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="Recalculate">Changes values</button>
                               <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
                          </div>
                     </div>
                </form>
+          </div>
+          <div class="col-sm-12 col-md-6"  @if(is_null($savings)) echo 'style="display: none;"' @endif>
+               <form wire:submit.prevent="submit">
+                    <div class="card">
+                         <div class="card-header"><strong>Amortization Calculator</strong> <small>Modify Data</small></div>
+                         <div class="card-body">
+                              <div class="row">
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Loan Amount</label>
+                                             <input wire:model.defer="loan" type="text" class="form-control numeric" placeholder="Enter your loan amount">
+                                             @error('loan')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Annual Interest Rate (%)</label>
+                                             <input wire:model.defer="int_rate" class="form-control" placeholder="3">
+                                             @error('int_rate')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                              </div>
 
+                              <div class="row">
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Loan Period (Years)</label>
+                                             <input wire:model.defer="period" class="form-control" placeholder="30 (In Years)">
+                                             @error('period')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Number Of Payments (Months)</label>
+                                             <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
+                                             @error('nb_pay')    <span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                              </div>
+
+                              <div class="row">
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Date Input</label>
+                                             <input wire:model="date" class="form-control" id="date-input" type="date" name="date-input" placeholder="date">
+                                             @error('date')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <div class="form-group">
+                                                  <label>Extra Payments</label>
+                                                  <input wire:model="ext_pay" class="form-control" placeholder="Optional">
+                                                  @error('ext_pay')<span class="span-error">{{ $message }}</span>@enderror
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="card-footer">
+                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="submit">Calculate</button>
+                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="Recalculate">Changes values</button>
+                              <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
+                         </div>
+                    </div>
+               </form>
           </div>
           <!-- Second Card -->
           <div class="col-sm-12 col-md-6">

@@ -28,7 +28,7 @@ class HomeLoans extends Component
         'int_rate' => 'required|numeric',
         'nb_pay' => 'required|numeric',
         'ext_pay' => 'required|numeric',
-        'date' => 'required|date|date_format:Y/m/d',
+        'date' => 'required|date',
     ];
 
     protected $messages = [
@@ -43,23 +43,23 @@ class HomeLoans extends Component
         $cum_interest = HomeLoan::select('cum_interest')->orderBy('id', 'DESC')->first();
         $additional_data = HomeLoan::select('sch_payment')->first();
         $sch_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
-        $start_date = HomeLoan::select( 'pay_date')->first();
+        $start_date = HomeLoan::select('pay_date')->first();
 
-        $from = date( $start_date ? $start_date->pmt_date : null );
+        $from = date($start_date ? $start_date->pmt_date : null);
         $to = today()->format('Y-m-d');
         $actual_no_pay = HomeLoan::whereBetween('pay_date', [$from, $to])->get()->count();
 
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
-        if(!is_null($cum_interest_ext) && !is_null($cum_interest))
+        if (!is_null($cum_interest_ext) && !is_null($cum_interest))
             $savings = $cum_interest_ext->cum_interest  -  $cum_interest->cum_interest;
         else
             $savings = null;
 
         return view('livewire.home-loan', [
             "datas" => $datas,
-            "cum_interest" => $cum_interest ? $cum_interest->cum_interest : 'No Data' ,
+            "cum_interest" => $cum_interest ? $cum_interest->cum_interest : 'No Data',
             "sch_payment" => $additional_data ? $additional_data->sch_payment : "No Data",
             "sch_no_pay" => $sch_no_pay ? $sch_no_pay->pmt_no : "No Data",
             "actual_no_pay" => $actual_no_pay ? $actual_no_pay : "No Data",
@@ -74,7 +74,6 @@ class HomeLoans extends Component
         $data = $this->scheduled_payment($data);
         $this->home_loan_data($data);
         $this->calculate($data);
-      
     }
 
     public function formatVariables()
@@ -88,7 +87,6 @@ class HomeLoans extends Component
         $data['loan_period'] = $this->period; // years
         $data['loan_amount'] = $this->loan; // loan amount
         $data['ext_payment'] = $this->ext_pay;
-        dd("hehe");
 
         return $data;
     }
@@ -119,12 +117,12 @@ class HomeLoans extends Component
             ]);
         } else if ($db_data) {
 
-            if($data['date'] != $db_data->start_date){
+            if ($data['date'] != $db_data->start_date) {
                 $db_data->start_date = $data['date'];
                 $db_data->save();
             }
 
-            if($data['loan_amount'] != $db_data->loan_amount){
+            if ($data['loan_amount'] != $db_data->loan_amount) {
                 HomeLoanData::truncate();
                 HomeLoanData::create([
                     "loan_amount" => $data['loan_amount'],
@@ -136,8 +134,6 @@ class HomeLoans extends Component
                     "user_id" => Auth::user()->id
                 ]);
             }
-
-            
         }
     }
 
@@ -250,13 +246,13 @@ class HomeLoans extends Component
                             "cum_interest" => $data['cum_interest'],
                         ]);
 
-                        $stop = 0;  
+                        $stop = 0;
                     } else {
                         $stop = 1;
                     }
                 } while ($stop == 0);
             } else {
-                
+
                 $data['beg_balance'] = $data['loan_amount'];
 
                 $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
@@ -284,22 +280,40 @@ class HomeLoans extends Component
 
     public function ResetTables()
     {
-        $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay' ]);
+        $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
         HomeLoan::truncate();
         HomeLoanData::truncate();
     }
 
     public function Recalculate()
     {
-        $records = HomeLoan::select('pay_date')->get();
-        foreach($records as $record)
+
+        // $data = $this->formatVariables();
+        // $data = $this->scheduled_payment($data);
+        // $this->home_loan_data($data);
+        dd("hehe");
+        $record_date = HomeLoan::where('pay_date', $this->date)->first();
+
+        if (!is_null($record_date)) 
         {
-            if($record->pay_date == $this->date ){
+            
+            $from = $record_date->pay_date;
+            $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
+            $records = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->get();
+
+            // if($records->first()->id == 1)
+            // {
                 
-            }
+            // }
+            // else
+            // {
+
+            // }
+
+
+            
+        } else {
+            throw ValidationException::withMessages(['date' => 'This value doesn\'t exits in the table']);
         }
-
-    } 
-
-
+    }
 }
