@@ -39,15 +39,16 @@ class HomeLoans extends Component
 
     public function render()
     {
-        $datas = HomeLoan::all();
+        $datas = HomeLoan::orderBy('pay_date', 'ASC')->get();
         $cum_interest = HomeLoan::select('cum_interest')->orderBy('id', 'DESC')->first();
         $additional_data = HomeLoan::select('sch_payment')->first();
         $sch_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
         $start_date = HomeLoan::select('pay_date')->first();
 
-        $from = date($start_date ? $start_date->pmt_date : null);
+        $from = date($start_date ? $start_date->pay_date : null);
         $to = today()->format('Y-m-d');
         $actual_no_pay = HomeLoan::whereBetween('pay_date', [$from, $to])->get()->count();
+
 
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
 
@@ -61,6 +62,7 @@ class HomeLoans extends Component
             "datas" => $datas,
             "cum_interest" => $cum_interest ? $cum_interest->cum_interest : 'No Data',
             "sch_payment" => $additional_data ? $additional_data->sch_payment : "No Data",
+            "check" => $savings,
             "sch_no_pay" => $sch_no_pay ? $sch_no_pay->pmt_no : "No Data",
             "actual_no_pay" => $actual_no_pay ? $actual_no_pay : "No Data",
             "savings" => $savings ? $savings : "No Data",
@@ -68,7 +70,7 @@ class HomeLoans extends Component
         ]);
     }
 
-    public function submit()
+    public function Inputdata()
     {
         $data = $this->formatVariables();
         $data = $this->scheduled_payment($data);
@@ -139,11 +141,9 @@ class HomeLoans extends Component
 
     public function calculate($data)
     {
-
         $stop = null;
         do {
             $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
-
 
             if ($last_record != null) {
 
@@ -155,9 +155,7 @@ class HomeLoans extends Component
                     $daystosum = 1;
                     $date = date('Y-m-d', strtotime($last_record->pay_date . ' + ' . $daystosum . ' months')); // add days to d-m-Y format
 
-
                     $data['pmt_no'] = $last_record->pmt_no + 1;
-
 
                     $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
                     $data['total_payment'] = $data['sch_payment'] + $data['ext_payment'];
@@ -285,35 +283,65 @@ class HomeLoans extends Component
         HomeLoanData::truncate();
     }
 
-    public function Recalculate()
+    public function Modifydata()
     {
-
-        // $data = $this->formatVariables();
-        // $data = $this->scheduled_payment($data);
-        // $this->home_loan_data($data);
-        dd("hehe");
         $record_date = HomeLoan::where('pay_date', $this->date)->first();
 
-        if (!is_null($record_date)) 
-        {
-            
+        if (!is_null($record_date)) {
+
+            $data = $this->formatVariables();
+            $data = $this->scheduled_payment($data);
+            $this->home_loan_data($data);
+
             $from = $record_date->pay_date;
             $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
-            $records = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->get();
+            HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
-            // if($records->first()->id == 1)
-            // {
-                
-            // }
-            // else
-            // {
-
-            // }
-
-
-            
+            $this->Recalculate($data);
         } else {
             throw ValidationException::withMessages(['date' => 'This value doesn\'t exits in the table']);
         }
+    }
+
+    public function Recalculate($data)
+    {
+        $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
+
+        $stop = null;
+        do {
+            $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
+            $data['beg_balance'] = $last_record->end_balance;
+
+            $daystosum = 1;
+            $date = date('Y-m-d', strtotime($last_record->pay_date . ' + ' . $daystosum . ' months')); // add days to d-m-Y format
+
+            $data['pmt_no'] = $last_record->pmt_no + 1;
+
+            $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
+            $data['total_payment'] = $data['sch_payment'] + $data['ext_payment'];
+            $data['principal'] = $data['total_payment'] - $data['interest'];
+            $data['end_balance'] = $data['beg_balance'] - $data['principal'];
+            $data['cum_interest'] = $last_record->cum_interest + $data['interest'];
+
+            if ($data['end_balance'] > 50) {
+                HomeLoan::create([
+                    "user_id" => Auth::user()->id,
+                    "beg_balance" => $data['beg_balance'],
+                    "pay_date" => $date,
+                    "sch_payment" => $data['sch_payment'],
+                    "ext_payment" => $data['ext_payment'],
+                    "tot_payment" => $data['total_payment'],
+                    "principal" => $data['principal'],
+                    "interest" => $data['interest'],
+                    "pmt_no" => $data['pmt_no'],
+                    "end_balance" => $data['end_balance'],
+                    "cum_interest" => $data['cum_interest'],
+                ]);
+
+                $stop = 0;
+            } else {
+                $stop = 1;
+            }
+        } while ($stop == 0);
     }
 }
