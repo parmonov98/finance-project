@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProgramSuper;
+use App\Models\LongTermInvestmentsData;
 use Illuminate\Http\Request;
 
-class ProgramSuperController extends Controller
+class LongTermInvestmentsDataController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,21 +41,21 @@ class ProgramSuperController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProgramSuper  $programSuper
+     * @param  \App\Models\LongTermInvestmentsData  $longTermInvestmentsData
      * @return \Illuminate\Http\Response
      */
-    public function show(ProgramSuper $programSuper)
+    public function show(LongTermInvestmentsData $longTermInvestmentsData)
     {
-        return view('dashboard.program-super.show');
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ProgramSuper  $programSuper
+     * @param  \App\Models\LongTermInvestmentsData  $longTermInvestmentsData
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProgramSuper $programSuper)
+    public function edit(LongTermInvestmentsData $longTermInvestmentsData)
     {
         //
     }
@@ -64,10 +64,10 @@ class ProgramSuperController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProgramSuper  $programSuper
+     * @param  \App\Models\LongTermInvestmentsData  $longTermInvestmentsData
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProgramSuper $programSuper)
+    public function update(Request $request, LongTermInvestmentsData $longTermInvestmentsData)
     {
         //
     }
@@ -75,10 +75,10 @@ class ProgramSuperController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProgramSuper  $programSuper
+     * @param  \App\Models\LongTermInvestmentsData  $longTermInvestmentsData
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProgramSuper $programSuper)
+    public function destroy(LongTermInvestmentsData $longTermInvestmentsData)
     {
         //
     }

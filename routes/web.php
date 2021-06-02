@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeLoanController;
 use App\Http\Controllers\ProgramPayController;
+use App\Http\Controllers\ProgramSuperController;
 use App\Http\Controllers\InvestPersonalController;
 use App\Http\Controllers\MonthlyNetworthController;
 use App\Http\Controllers\LongTermInvestmentController;

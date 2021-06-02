@@ -21,7 +21,7 @@
             </svg>Invest Personal</a>
         </li>
 
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('investpersonal.show') }}">
+        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('programsuper.show') }}">
             <svg class="c-sidebar-nav-icon">
                 <use xlink:href="vendors/@coreui/icons/svg/f    ree.svg#cil-speedometer"></use>
             </svg>Super</a>
