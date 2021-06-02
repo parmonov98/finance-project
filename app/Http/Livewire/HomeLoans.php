@@ -22,12 +22,12 @@ class HomeLoans extends Component
     protected $listeners = ['tablesTruncated' => 'render'];
 
     protected $rules = [
-        'loan' => 'required|numeric',
-        'period' => 'required|numeric',
+        'loan' => 'required|numeric|min:0|not_in:0',
+        'period' => 'required|numeric|min:0|not_in:0',
         'date' => 'required|date',
-        'int_rate' => 'required|numeric',
-        'nb_pay' => 'required|numeric',
-        'ext_pay' => 'required|numeric',
+        'int_rate' => 'required|numeric|min:0|not_in:0',
+        'nb_pay' => 'required|numeric|min:0|not_in:0',
+        'ext_pay' => 'required|numeric|min:0|not_in:0',
         'date' => 'required|date',
     ];
 
@@ -35,6 +35,15 @@ class HomeLoans extends Component
         '*.required' => 'This field is required',
         '*.numeric' => 'This field must be a number',
         '*.date' => 'This field must a date',
+        '*.min:0' => 'This field must be greated than 0',
+        '*.not_in:0' => 'This field must be greated than 0'
+    ];
+
+    protected $validationAttributes = [
+        'loan' => 'loan amount',
+        'int_rate' => 'interest rate',
+        'nb_pay' => 'number of payments',
+        'ext_pay' => 'extra payments', 
     ];
 
     public function render()
@@ -45,11 +54,12 @@ class HomeLoans extends Component
         $sch_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
         $start_date = HomeLoan::select('pay_date')->first();
 
+        $home_loan_data = DB::table('home_loans_datas')->first();
+        // dd($home_loan_data);
+
         $from = date($start_date ? $start_date->pay_date : null);
         $to = today()->format('Y-m-d');
         $actual_no_pay = HomeLoan::whereBetween('pay_date', [$from, $to])->get()->count();
-
-
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
@@ -57,6 +67,8 @@ class HomeLoans extends Component
             $savings = $cum_interest_ext->cum_interest  -  $cum_interest->cum_interest;
         else
             $savings = null;
+
+        
 
         return view('livewire.home-loan', [
             "datas" => $datas,
@@ -72,13 +84,13 @@ class HomeLoans extends Component
 
     public function Inputdata()
     {
-        $data = $this->formatVariables();
+        $data = $this->FormatVariable();
         $data = $this->scheduled_payment($data);
         $this->home_loan_data($data);
         $this->calculate($data);
     }
 
-    public function formatVariables()
+    public function FormatVariable()
     {
         // throw ValidationException::withMessages(['date' => 'This value is incorrect']);
         $this->validate();
@@ -115,6 +127,7 @@ class HomeLoans extends Component
                 "no_payments" => $data['nb_payments'],
                 "start_date" => $data['date'],
                 "sch_payment" => $data['sch_payment'],
+                "opt_payment" => $data['ext_payment'],
                 "user_id" => Auth::user()->id
             ]);
         } else if ($db_data) {
@@ -133,6 +146,7 @@ class HomeLoans extends Component
                     "no_payments" => $data['nb_payments'],
                     "start_date" => $data['date'],
                     "sch_payment" => $data['sch_payment'],
+                    "opt_payment" => $data['ext_payment'],
                     "user_id" => Auth::user()->id
                 ]);
             }
@@ -289,7 +303,7 @@ class HomeLoans extends Component
 
         if (!is_null($record_date)) {
 
-            $data = $this->formatVariables();
+            $data = $this->FormatVariable();
             $data = $this->scheduled_payment($data);
             $this->home_loan_data($data);
 

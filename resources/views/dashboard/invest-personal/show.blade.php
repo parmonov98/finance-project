@@ -1,4 +1,4 @@
 @extends('layouts.app')
 @section('content')
-@livewire('invest-personal')
+@livewire('invest-personals')
 @endsection

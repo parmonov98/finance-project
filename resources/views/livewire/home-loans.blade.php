@@ -49,6 +49,7 @@
                                     @error('date')<span class="span-error">{{ $message }}</span>@enderror
                                 </div>
                             </div>
+                            
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <div class="form-group">

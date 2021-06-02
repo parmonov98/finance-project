@@ -1,54 +1,74 @@
 <div>
-    <div class="card">
-        <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6">
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="ccnumber">Return on invest (Min)</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">0</span>
-                                    <span class="input-group-text">%</span>
-                                </div>
-                                <input type="number" class="form-control" min="-2" max="0">
+    <form wire:submit.prevent="InputData">
+        <div class="card">
+            <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">
+                        <label for="ccnumber">Return on invest (Min)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">0</span>
+                                <span class="input-group-text">%</span>
                             </div>
+                            <input wire:model.defer="min" class="form-control" min="-2" max="0">
                         </div>
-                        <div class="col-6">
-                            <label for="ccnumber">Return on invest (Max)</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">0</span>
-                                    <span class="input-group-text">%</span>
-                                </div>
-                                <input type="number" class="form-control" min="0" max="10">
+                        @error('min')<span class="span-error">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="col-4">
+                        <label>Return on invest (Max)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">0</span>
+                                <span class="input-group-text">%</span>
                             </div>
+                            <input wire:model.defer="max" class="form-control" min="0" max="10">
+                        </div>
+                        @error('max')<span class="span-error">{{ $message }}</span>@enderror
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Monthly Invest</label>
+                            <input class="form-control" wire:model.defer="monthlyInvest" type="text" placeholder=500>
+                            @error('monthlyInvest')<span class="span-error">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6">
-                    <div class="form-group">
-                        <label for="ccnumber">Inflation</label>
-                        <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Date Input</label>
+                            <input wire:model.defer="date" class="form-control" id="date-input" type="date" name="date-input" placeholder="date">
+                            @error('date')<span class="span-error">{{ $message }}</span>@enderror
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="ccnumber">Fees/Taxes</label>
-                        <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fees/Taxes</label>
+                            <input class="form-control" wire:model.defer="fees" type="text" placeholder="1500">
+                            @error('fees')<span class="span-error">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Inflation</label>
+                            <input class="form-control" wire:model.defer="inflation" type="text" placeholder="10">
+                            @error('inflation')<span class="span-error">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card-footer">
-            <button class="btn btn-sm btn-primary" type="submit"> Submit</button>
-            <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-primary" wire:submit="InputData"> Submit</button>
+                <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
+            </div>
         </div>
-    </div>
+    </form>
+
     <div class="card">
         <div class="card-header"><i class="fa fa-align-justify"></i> Invest Personal Table</div>
         <div class="card-body">
