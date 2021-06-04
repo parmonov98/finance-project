@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\HomeLoanData;
+use App\Models\MonthlyNetworth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -27,7 +28,7 @@ class HomeLoans extends Component
         'date' => 'required|date',
         'int_rate' => 'required|numeric|min:0|not_in:0',
         'nb_pay' => 'required|numeric|min:0|not_in:0',
-        'ext_pay' => 'required|numeric|min:0|not_in:0',
+        'ext_pay' => 'required|numeric|min:0',
         'date' => 'required|date',
     ];
 
@@ -192,6 +193,11 @@ class HomeLoans extends Component
                             "cum_interest" => $data['cum_interest'],
                         ]);
 
+                        MonthlyNetworth::create([
+                            "user_id" => Auth::user()->id,
+                            "date" => $date
+                        ]);
+
                         $stop = 0;
                     } else {
                         $stop = 1;
@@ -219,6 +225,12 @@ class HomeLoans extends Component
                     "end_balance" => $data['end_balance'],
                     "cum_interest" => $data['interest'],
                 ]);
+
+                MonthlyNetworth::create([
+                    "user_id" => Auth::user()->id,
+                    "date" => $data['date']
+                ]);
+
             }
         } while ($stop == 0);
 
@@ -295,6 +307,7 @@ class HomeLoans extends Component
         $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
         HomeLoan::truncate();
         HomeLoanData::truncate();
+        MonthlyNetworth::truncate();
     }
 
     public function Modifydata()

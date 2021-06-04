@@ -104,34 +104,36 @@ class InvestPersonals extends Component
     public function Calculate($data)
     {
 
-        
+        for($i=0; $i<30; $i++){
 
-        $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
-        $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+            $data['return_on_invest'] = 4/100;
 
-        $data['interest'] = round(($data['return_on_invest'] * $data['monthlyInvest']) / 12, 2);
+            $data['interest'] = round(($data['return_on_invest'] * $data['monthlyInvest']) / 12, 2);
 
-        $data['after_fees'] = round((($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'], 2);
+            $data['after_fees'] = round((($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'], 2);
 
-        $data['total_invested'] = round($data['monthlyInvest'] + $data['interest'] - $data['after_fees'], 2);
+            $data['total_invested'] = round($data['monthlyInvest'] + $data['interest'] - $data['after_fees'], 2);
 
-        $total = InvestPersonal::select('total_invested')->orderBy('id', 'DESC')->first();
+            $total = InvestPersonal::select('total_invested')->orderBy('id', 'DESC')->first();
 
-            if(!is_null($total))
-                $data['total_invested'] += $total->total_invested;
+                if(!is_null($total))
+                    $data['total_invested'] += $total->total_invested;
 
-        InvestPersonal::create([
-            "user_id" => Auth::user()->id,
-            "fees" => $data['fees'],
-            "monthly_account_fee" => $data['monthlyFee'],
-            "inflation" => $data['inflation'],
-            "monthly_invest" => $data['monthlyInvest'],
-            "interest" => $data['interest'],
-            "after_fees" => $data['after_fees'],
-            "total_invested" => $data['total_invested'],
-            "date" => $data['date'],
-            "return_on_invest" => $data['return_on_invest']
-        ]);
+            InvestPersonal::create([
+                "user_id" => Auth::user()->id,
+                "fees" => $data['fees'],
+                "monthly_account_fee" => $data['monthlyFee'],
+                "inflation" => $data['inflation'],
+                "monthly_invest" => $data['monthlyInvest'],
+                "interest" => $data['interest'],
+                "after_fees" => $data['after_fees'],
+                "total_invested" => $data['total_invested'],
+                "date" => $data['date'],
+                "return_on_invest" => $data['return_on_invest']
+            ]);
+        }
     }
 }

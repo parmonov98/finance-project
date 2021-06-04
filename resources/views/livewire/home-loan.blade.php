@@ -37,7 +37,7 @@
                                         <div class="form-group">
                                              <label>Number Of Payments (Months)</label>
                                              <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
-                                             @error('nb_pay')    <span class="span-error">{{ $message }}</span>@enderror
+                                             @error('nb_pay') <span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                               </div>
@@ -76,7 +76,7 @@
                          <div class="card-body">
                               <div class="row">
                                    <div class="col-sm-12 col-md-6">
-                                        <div class="form-group">      
+                                        <div class="form-group">
                                              <label>Loan Amount</label>
                                              <input wire:model.defer="loan" type="text" class="form-control numeric" placeholder="Enter your loan amount">
                                              @error('loan')<span class="span-error">{{ $message }}</span>@enderror
@@ -102,7 +102,7 @@
                                         <div class="form-group">
                                              <label>Number Of Payments (Months)</label>
                                              <input wire:model.defer="nb_pay" class="form-control" placeholder="30 (Per year)">
-                                             @error('nb_pay')    <span class="span-error">{{ $message }}</span>@enderror
+                                             @error('nb_pay') <span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                               </div>
@@ -223,7 +223,7 @@
                                    <td>{{ $data->interest }}</td>
                                    <td>{{ $data->end_balance }}</td>
                                    <td>{{ $data->cum_interest }}</td>
-                                   </tr>
+                              </tr>
                               @endforeach
                          </tbody>
                     </table>
