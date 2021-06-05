@@ -103,7 +103,8 @@ class LongTermInvestments extends Component
     }
 
     public function Calculate($data)
-    {
+    {   
+        for($i=0; $i<30; $i++){
 
         $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
@@ -132,5 +133,6 @@ class LongTermInvestments extends Component
             "date" => $data['date'],
             "return_on_invest" => $data['return_on_invest']
         ]);
+    }
     }
 }

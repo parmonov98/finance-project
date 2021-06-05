@@ -191,18 +191,19 @@
                               </tr>
                               <tr>
                                    <th>Home</th>
-                                   @foreach($monthlyNetworths as $data) 
+                                   @foreach($home_values as $data) 
                                    <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Investment Super</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 224</td>
-                                        @endfor
+                                   @foreach($investSupers as $data) 
+                                   <td>{{ $data->tota_invested ? '$ ' . $data->total_invested : '' }}</td>
+                                   @endforeach
                               </tr>
                               <tr>
                                    <th>Cash</th>
-                                   @foreach($monthlyNetworths as $data) 
+                                   @foreach($cashs as $data) 
                                    <td>{{ $data->cash ? '$ ' . $data->cash : '' }}</td>
                                    @endforeach
                               </tr>
@@ -220,7 +221,7 @@
                               </tr>
                               <tr>
                                    <th>Other Investments</th>
-                                   @foreach($monthlyNetworths as $data) 
+                                   @foreach($other_invests as $data) 
                                         <td>{{ $data->other_invest ? '$' . $data->other_invest : '' }}</td>
                                    @endforeach
                               </tr>
@@ -237,8 +238,9 @@
                               </tr>
                               <tr>
                                    <th>Total Debt</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 888</td>
-                                        @endfor
+                                   @foreach($home_values as $data) 
+                                   <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
+                                   @endforeach
                               </tr>
 
                               <tr>

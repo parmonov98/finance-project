@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\HomeLoan;
+use App\Models\ProgramSuper;
 use App\Models\InvestPersonal;
 use App\Models\MonthlyNetworth;
 use App\Models\LongTermInvestment;
@@ -60,15 +61,25 @@ class MonthlyNetworths extends Component
 
         $home_loan = HomeLoan::select('pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
 
-        $monthlyNetworth = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
 
+        // ASSETS
+        $home_values = MonthlyNetworth::select('home_value')->whereBetween('date', [$from, $to])->get();
+        $cashs = MonthlyNetworth::select('cash')->whereBetween('date', [$from, $to])->get();
         $investPersonals = InvestPersonal::whereBetween('date', [$from, $to])->get();
-
         $longTermInvests = LongTermInvestment::whereBetween('date', [$from, $to])->get();
+        $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
+        $other_invests = MonthlyNetworth::select('other_invest')->whereBetween('date', [$from, $to])->get();
+
+
+
+
 
         return view('livewire.monthly-networths', [
             "home_loan" => $home_loan,
-            "monthlyNetworths" => $monthlyNetworth,
+            "home_values" => $home_values,
+            "cashs" => $cashs,
+            "other_invests" => $other_invests,
+            "investSupers" => $investSupers,
             "investPersonals" => $investPersonals,
             "longTermInvests" => $longTermInvests
         ]);
