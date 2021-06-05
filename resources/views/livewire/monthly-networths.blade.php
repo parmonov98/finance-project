@@ -1,61 +1,6 @@
 <div>
      <div class="row">
           <div class="col-sm-12 col-lg-6">
-               <form wire:submit.prevent="InputData">
-                    <div class="card">
-                         <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
-                         <div class="card-body">
-                              <div class="row">
-                                   <div class="col-sm-12 col-md-6">
-                                        <div class="form-group">
-                                             <label>Home Value</label>
-                                             <input wire:model.defer="home_value" type="text" class="form-control numeric" placeholder="Enter home value">
-                                             @error('home_value')<span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                   </div>
-                                   <div class="col-sm-12 col-md-6">
-                                        <div class="form-group">
-                                             <label>Home App (%)</label>
-                                             <input wire:model.defer="home_app" class="form-control" placeholder="3" placeholder="Enter home appreciation">
-                                             @error('home_app')<span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                   </div>
-                              </div>
-
-                              <div class="row">
-                                   <div class="col-sm-12 col-md-6">
-                                        <div class="form-group">
-                                             <label>Cash (Years)</label>
-                                             <input wire:model.defer="cash" class="form-control" placeholder="Enter cash">
-                                             @error('cash')<span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                   </div>
-                                   <div class="col-sm-12 col-md-6">
-                                        <div class="form-group">
-                                             <label>Other Investments</label>
-                                             <input wire:model.defer="other_invest" class="form-control" placeholder="Enter other investments">
-                                             @error('other_invest') <span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                   </div>
-                              </div>
-                              <div class="row">
-                                   <div class="col-6">
-                                        <div class="form-group">
-                                             <label>Date Input</label>
-                                             <input class="form-control" id="date-input" type="date" name="date-input" placeholder="date" disabled>
-                                             @error('date')<span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                   </div>
-                              </div>
-                         </div>
-                         <div class="card-footer">
-                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="InputData">Calculate</button>
-                              <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
-                         </div>
-                    </div>
-               </form>
-          </div>
-          <div class="col-sm-12 col-lg-6">
                <form wire:submit.prevent="ModifyData">
                     <div class="card">
                          <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
@@ -99,6 +44,61 @@
                                              <label>Date Input</label>
                                              <input wire:model.defer="date_mod" class="form-control" id="date-input" type="date" name="date-input" placeholder="date">
                                              @error('date_mod')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="card-footer">
+                              <button class="btn btn-sm btn-primary" type="submit" wire:submit="ModifyData">Calculate</button>
+                              <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
+                         </div>
+                    </div>
+               </form>
+          </div>
+          <div class="col-sm-12 col-lg-6">
+               <form wire:submit.prevent="InputData">
+                    <div class="card">
+                         <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
+                         <div class="card-body">
+                              <div class="row">
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Home Value</label>
+                                             <input wire:model.defer="home_value" type="text" class="form-control numeric" placeholder="Enter home value">
+                                             @error('home_value')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Home App (%)</label>
+                                             <input wire:model.defer="home_app" class="form-control" placeholder="3" placeholder="Enter home appreciation">
+                                             @error('home_app')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                              </div>
+
+                              <div class="row">
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Cash (Years)</label>
+                                             <input wire:model.defer="cash" class="form-control" placeholder="Enter cash" disabled>
+                                             @error('cash')<span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                                   <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                             <label>Other Investments</label>
+                                             <input wire:model.defer="other_invest" class="form-control" placeholder="Enter other investments" disabled>
+                                             @error('other_invest') <span class="span-error">{{ $message }}</span>@enderror
+                                        </div>
+                                   </div>
+                              </div>
+                              <div class="row">
+                                   <div class="col-6">
+                                        <div class="form-group">
+                                             <label>Date Input</label>
+                                             <input class="form-control" id="date-input" type="date" name="date-input" placeholder="date" disabled>
+                                             @error('date')<span class="span-error">{{ $message }}</span>@enderror
                                         </div>
                                    </div>
                               </div>
@@ -191,38 +191,38 @@
                               </tr>
                               <tr>
                                    <th>Home</th>
-                                   @foreach($home_values as $data) 
+                                   @foreach($home_values as $data)
                                    <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Investment Super</th>
-                                   @foreach($investSupers as $data) 
+                                   @foreach($investSupers as $data)
                                    <td>{{ $data->total_invested ? '$ ' . $data->total_invested : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Cash</th>
-                                   @foreach($cashs as $data) 
+                                   @foreach($cashs as $data)
                                    <td>{{ $data->cash ? '$ ' . $data->cash : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Investment Personal</th>
-                                   @foreach($investPersonals as $data) 
+                                   @foreach($investPersonals as $data)
                                    <td>{{ $data->total_invested ? '$ ' .$data->total_invested : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Long Term Investment</th>
-                                   @foreach($longTermInvests as $data) 
+                                   @foreach($longTermInvests as $data)
                                    <td>{{ $data->total_invested ? '$ ' . $data->total_invested : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
                                    <th>Other Investments</th>
-                                   @foreach($other_invests as $data) 
-                                        <td>{{ $data->other_invest ? '$' . $data->other_invest : '' }}</td>
+                                   @foreach($other_invests as $data)
+                                   <td>{{ $data->other_invest ? '$' . $data->other_invest : '' }}</td>
                                    @endforeach
                               </tr>
 
@@ -238,7 +238,7 @@
                               </tr>
                               <tr>
                                    <th>Total Debt</th>
-                                   @foreach($home_values as $data) 
+                                   @foreach($home_values as $data)
                                    <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
                                    @endforeach
                               </tr>
