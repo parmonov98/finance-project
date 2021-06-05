@@ -168,7 +168,7 @@
                               <tr>
                                    <th class="table-header">Date</th>
                                    @foreach($home_loan as $data)
-                                   <td>{{ $data->pay_date }}</td>
+                                   <td>{{ $data->formatDate() }}</td>
                                    @endforeach
                               </tr>
                               <tr>
@@ -198,7 +198,7 @@
                               <tr>
                                    <th>Investment Super</th>
                                    @foreach($investSupers as $data) 
-                                   <td>{{ $data->tota_invested ? '$ ' . $data->total_invested : '' }}</td>
+                                   <td>{{ $data->total_invested ? '$ ' . $data->total_invested : '' }}</td>
                                    @endforeach
                               </tr>
                               <tr>
