@@ -245,32 +245,37 @@
 
                               <tr>
                                    <th>Total Assets</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 1,217</td>
-                                        @endfor
+                                   @foreach($assets as $data) 
+                                        <td>{{ $data ? '$ ' . $data : '' }}</td>
+                                   @endforeach
                               </tr>
 
                               <tr>
                                    <th>Difference</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 383</td>
-                                        @endfor
+                                   @foreach($difference as $data) 
+                                        <td>{{ $data ? '$ ' . $data : '' }}</td>
+                                   @endforeach
                               </tr>
 
                               <tr>
                                    <th>Difference - Super</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 200</td>
-                                        @endfor
+                                   @foreach($differenceSuper as $data) 
+                                        <td>{{ $data ? '$ ' . $data : '' }}</td>
+                                   @endforeach
                               </tr>
 
                               <tr>
                                    <th style="background-color: #e5fbff;">Running Diff - Cash + Equity</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 142</td>
-                                        @endfor
+                                   @foreach($runningDiff as $data) 
+                                        <td>{{ $data ? $data : ''  }}</td>
+                                   @endforeach
                               </tr>
 
                               <tr>
                                    <th style="background-color: #e5fbff;">Running Diff - Overrall</th>
-                                   @for($i=0;$i<24;$i++) <td>$ 165</td>
-                                        @endfor
+                                   @foreach($overallDiff as $data) 
+                                        <td>{{ $data ? $data : '' }}</td>
+                                   @endforeach
                               </tr>
 
 
