@@ -1,96 +1,65 @@
 <div>
     <div class="row">
-        <div class="col-8">
-            <div class="card">
-                <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="name">Quick Home Loan Repay</label>
-                                <input class="form-control" id="name" type="text" placeholder="Enter your name">
-                            </div>
-                        </div>
+        <div class="col-12">
+            <form wire:submit="InputData">
+                <div class="card">
+                    <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
+                    <div class="card-body">
+                        <div class="row">
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Debt</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">House Loan</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter your home loan">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">House Loan</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">Home Worth</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter your home worth">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Investment Super</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">Investment Super</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter your investment super">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Cash</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">Cash</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter cash">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Invest Personal</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">Invest Personal</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter your investment personal">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Long Term Investment</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
+                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label for="ccnumber">Long Term Investment</label>
+                                    <input class="form-control" id="ccnumber" type="text" placeholder="Enter your long term investment">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Total Debt</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
-                            </div>
-                        </div>
-
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Total Assets</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Difference</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-3">
-                            <div class="form-group">
-                                <label for="ccnumber">Difference Super</label>
-                                <input class="form-control" id="ccnumber" type="text" placeholder="0000 0000 0000 0000">
-                            </div>
                         </div>
 
                     </div>
-
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-primary" type="submit" wire:submit="InputData"> Submit</button>
+                        <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
+                    </div>
                 </div>
-
-                <div class="card-footer">
-                    <button class="btn btn-sm btn-primary" type="submit"> Submit</button>
-                    <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="col-4">
+        <!-- <div class="col-4">
             <div class="card">
                 <div class="card-header"><strong>Add a new column</strong> <small></small></div>
                 <div class="card-body">
@@ -101,7 +70,7 @@
                                 <input class="form-control" id="name" type="text" placeholder="Enter your name">
                             </div>
                         </div>
-                        <!-- <div class="col-12">
+                        <div class="col-12">
                             <div class="form-group">
                                 <label for="name">Quick Home Loan Repay</label>
                                 <input class="form-control" id="name" type="text" placeholder="Enter your name">
@@ -112,17 +81,15 @@
                                 <label for="name">Quick Home Loan Repay</label>
                                 <input class="form-control" id="name" type="text" placeholder="Enter your name">
                             </div>
-                        </div> -->
-
+                        </div>
                     </div>
-
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-sm btn-primary" type="submit"> Submit</button>
                     <button class="btn btn-sm btn-danger" type="reset"> Reset</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 
@@ -166,15 +133,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
         </div>
     </div>
 </div>
