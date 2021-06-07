@@ -32,6 +32,8 @@ class CreateProgram5YRNetworthsTable extends Migration
             $table->decimal('real_invest_personal', $precision = 20, $scale = 2)->nullable();
             $table->decimal('real_long_term_invest', $precision = 20, $scale = 2)->nullable();
 
+            $table->boolean('approximate')->nullabe()->default(false);
+
         });
     }
 

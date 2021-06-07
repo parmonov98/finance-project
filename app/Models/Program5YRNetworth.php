@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Program5YRNetworth extends Model
 {
     use HasFactory;
+
+    protected $fillable = [ 'date', 'user_id'];
+
 }

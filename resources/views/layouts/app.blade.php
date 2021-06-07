@@ -19,7 +19,10 @@
             top: 0;
             z-index: 2;
             background-color: white;
+            white-space: nowrap;
         }
+
+        
         .span-error{
             color: #c22e00  ;
             font-size: 12px;

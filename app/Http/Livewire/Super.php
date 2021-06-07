@@ -104,7 +104,7 @@ class Super extends Component
 
     public function Calculate($data)
     {
-        for($i=0 ; $i<30 ; $i++){
+        for($i=0 ; $i<360 ; $i++){
         $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
         $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
