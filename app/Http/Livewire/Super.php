@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Models\HomeLoan;
 use App\Models\SuperData;
 use App\Http\Livewire\Super;
 use App\Models\ProgramSuper;
@@ -104,7 +105,12 @@ class Super extends Component
 
     public function Calculate($data)
     {
-        for($i=0 ; $i<360 ; $i++){
+
+        $dates = HomeLoan::select('pay_date')->all();
+
+        foreach($dates as $date)
+        {
+            
         $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
         $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;

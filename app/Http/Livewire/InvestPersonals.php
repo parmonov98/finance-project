@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Models\HomeLoan;
 use App\Models\InvestPersonal;
 use App\Models\InvestPersonalData;
 use Illuminate\Support\Facades\Auth;
@@ -104,7 +105,10 @@ class InvestPersonals extends Component
     public function Calculate($data)
     {
 
-        for($i=0; $i<360; $i++){
+        $dates = HomeLoan::select('pay_date')->all();
+
+        foreach($dates as $date)
+        {
 
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 

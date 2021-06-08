@@ -35,15 +35,18 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
-Route::get('/Invest-Personal', [InvestPersonalController::class,'show'])->name('investpersonal.show');
 
-Route::get('/Program-Super', [ProgramSuperController::class, 'show'])->name('programsuper.show');
+Route::middleware('check')->group(function () {
+    
+    Route::get('/Invest-Personal', [InvestPersonalController::class, 'show'])->name('investpersonal.show');
 
-Route::get('/Long-Term-Investement', [LongTermInvestmentController::class, 'show'])->name('longterminvestment.show');
+    Route::get('/Program-Super', [ProgramSuperController::class, 'show'])->name('programsuper.show');
 
-Route::get('/Program-5-Year-Networth', [Program5YRNetworthController::class, 'show'])->name('5yrnetworth.show');
+    Route::get('/Long-Term-Investement', [LongTermInvestmentController::class, 'show'])->name('longterminvestment.show');
 
-Route::get('/Program-Pay', [ProgramPayController::class, 'show'])->name('programpay.show');
+    Route::get('/Program-5-Year-Networth', [Program5YRNetworthController::class, 'show'])->name('5yrnetworth.show');
 
-Route::get('/Monthly-networth', [MonthlyNetworthController::class, 'show'])->name('monthlynetworth.show');
+    Route::get('/Program-Pay', [ProgramPayController::class, 'show'])->name('programpay.show');
 
+    Route::get('/Monthly-networth', [MonthlyNetworthController::class, 'show'])->name('monthlynetworth.show');
+});
