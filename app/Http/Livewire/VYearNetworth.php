@@ -52,8 +52,6 @@ class VYearNetworth extends Component
     {
         $data = Program5YRNetworth::all()->count();
 
-        $dates = HomeLoan::select('pay_date')->get();
-
         if($data == 0)
         {   
             $dates = HomeLoan::select('pay_date')->get();
@@ -84,7 +82,7 @@ class VYearNetworth extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
-        $home_loans = HomeLoan::select('pay_date', 'beg_balance')->whereBetween('pay_date', [$from, $to])->get();
+        $home_loans = HomeLoan::whereBetween('pay_date', [$from, $to])->get();
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
 
         // ASSETS
@@ -94,12 +92,12 @@ class VYearNetworth extends Component
         $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
 
         return view('livewire.v-year-networth', [
-            "home_loans" => $home_loans,
-            "programVYear" => $programVYear,
-            "investPersonals" => $investPersonals, 
-            "longTermInvests" => $longTermInvests, 
-            "investSupers" => $investSupers, 
-            "monthlyNetworths" => $monthlyNetworths
+            "home_loans" => $home_loans ? $home_loans : null,
+            "programVYear" => $programVYear ? $programVYear : null,
+            "investPersonals" => $investPersonals ? $investPersonals : null, 
+            "longTermInvests" => $longTermInvests ? $longTermInvests : null, 
+            "investSupers" => $investSupers ? $investSupers : null, 
+            "monthlyNetworths" => $monthlyNetworths ? $monthlyNetworths : null
         ]);
     }
 

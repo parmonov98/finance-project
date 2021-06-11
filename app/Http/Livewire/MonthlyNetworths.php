@@ -50,7 +50,7 @@ class MonthlyNetworths extends Component
     {
         $this->show_data = 5;
         $start_date = HomeLoan::select('pay_date')->first();
-        if(!is_null($start_date))
+        if (!is_null($start_date))
             $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show_data . "  years"));
         else
             $end_date = null;
@@ -70,10 +70,14 @@ class MonthlyNetworths extends Component
         $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
         $other_invests = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
 
-        $value1 = null; $value2 = null; $value3 = null; $value4 = null; $value5 = null; $value6 = null;
+        $value1 = null;
+        $value2 = null;
+        $value3 = null;
+        $value4 = null;
+        $value5 = null;
+        $value6 = null;
 
-        foreach($dates as $date)
-        {
+        foreach ($dates as $date) {
             $home_value = MonthlyNetworth::select('home_value')->Where('date', $date->date)->first();
             $cash = MonthlyNetworth::select('cash')->Where('date', $date->date)->first();
             $investPersonal = InvestPersonal::select('total_invested')->Where('date', $date->date)->first();
@@ -82,49 +86,48 @@ class MonthlyNetworths extends Component
             $other_invest = MonthlyNetworth::select('other_invest')->Where('date', $date->date)->first();
 
 
-            $value1 += $home_value->home_value ? $home_value->home_value : 0; 
+            $value1 += $home_value->home_value ? $home_value->home_value : 0;
             $value2 += $cash->cash ? $cash->cash : 0;
-            $value3 += $investPersonal ? $investPersonal->total_invested : 0 ;
-            $value4 += $longTermInvest ? $longTermInvest->total_invested : 0 ;
-            $value5 += $investSuper ? $investSuper->total_invested : 0 ;
-            $value6 += $other_invest->other_invest ? $other_invest->other_invest : 0 ;
+            $value3 += $investPersonal ? $investPersonal->total_invested : 0;
+            $value4 += $longTermInvest ? $longTermInvest->total_invested : 0;
+            $value5 += $investSuper ? $investSuper->total_invested : 0;
+            $value6 += $other_invest->other_invest ? $other_invest->other_invest : 0;
 
-            $assets[] = $value1 + $value2 + $value3 + $value4 + $value5 + $value6; 
+            $assets[] = $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
         }
         // End ASSETS
 
         // DIFFERENCE
-        foreach($home_values as $key => $record)
-            $difference[] = $assets[$key] - $record->home_value ;
+        foreach ($home_values as $key => $record)
+            $difference[] = $assets[$key] - $record->home_value;
 
         // End DIFFERENCE
 
 
         // DIFFERENCE SUPER 
-        foreach($investSupers as $key => $record)
+        foreach ($investSupers as $key => $record)
             $differenceSuper[] = $difference[$key] - $record->total_invested;
 
         // End DIFFERENCE SUPER
 
+        if (isset($differenceSuper) && is_null($differenceSuper)) {
+            // RUNNING DIFF
+            foreach ($differenceSuper as $key => $record) {
+                if (!$key == 0)
+                    $runningDiff[] = $differenceSuper[$key] - $differenceSuper[$key - 1];
+                else
+                    $runningDiff[] = $differenceSuper[$key];
+            }
+            // End RUNNING DIFF
 
-        // RUNNING DIFF
-        foreach($differenceSuper as $key => $record)
-        {
-            if(!$key == 0)
-                $runningDiff[] = $differenceSuper[$key] - $differenceSuper[$key-1]; 
-            else
-                $runningDiff[] = $differenceSuper[$key];
+            foreach ($difference as $key => $record) {
+                if (!$key == 0)
+                    $overallDiff[] = $difference[$key] - $difference[$key - 1];
+                else
+                    $overallDiff[] = $difference[$key];
+            }
         }
-        // End RUNNING DIFF
 
-
-        foreach($difference as $key => $record)
-        {
-            if(!$key == 0)
-                $overallDiff[] = $difference[$key] - $difference[$key-1];
-            else
-                $overallDiff[] = $difference[$key];
-        }
 
         return view('livewire.monthly-networths', [
             "home_loan" => $home_loan,
@@ -134,11 +137,11 @@ class MonthlyNetworths extends Component
             "investSupers" => $investSupers,
             "investPersonals" => $investPersonals,
             "longTermInvests" => $longTermInvests,
-            "assets" => $assets,
-            "difference" => $difference,
-            "differenceSuper" => $differenceSuper,
-            "runningDiff" => $runningDiff,
-            "overallDiff" => $overallDiff
+            "assets" => isset($assets) ? $assets : null ,
+            "difference" => isset($difference) ? $difference : null,
+            "differenceSuper" => isset($differenceSuper) ? $differenceSuper : null,
+            "runningDiff" => isset($runningDiff) ? $runningDiff : null,
+            "overallDiff" => isset($overallDiff) ? $overallDiff : null
         ]);
     }
 
@@ -148,29 +151,24 @@ class MonthlyNetworths extends Component
             'home_value' => 'required|numeric|min:0',
             'home_app' => 'required|numeric|min:0',
         ]);
-        
+
         $dates = MonthlyNetworth::all();
-        foreach($dates as $record){
-            if($record->passed == false)
-            {
-                if($record->id == 1)
-                {
+        foreach ($dates as $record) {
+            if ($record->passed == false) {
+                if ($record->id == 1) {
                     $record->home_value = $data['home_value'];
                     $record->home_app = $data['home_app'];
                     $record->passed = true;
                     $record->save();
-                }
-                else
-                {
-                    $last_record = MonthlyNetworth::where('id', $record->id-1)->first();
-                    $record->home_value = $last_record->home_value*$data['home_app'];
+                } else {
+                    $last_record = MonthlyNetworth::where('id', $record->id - 1)->first();
+                    $record->home_value = $last_record->home_value * $data['home_app'];
                     $record->home_app = $data['home_app'];
                     $record->passed = true;
                     $record->save();
                 }
             }
         }
-        
     }
 
     public function ModifyData()
@@ -182,45 +180,36 @@ class MonthlyNetworths extends Component
 
         $record = MonthlyNetworth::where('date', $date['date_mod'])->first();
 
-        if(!is_null($record))
-        {
+        if (!is_null($record)) {
             $check_value = false;
             $check_app = false;
 
 
-            if(($this->cash_mod == null || $this->other_invest_mod == null) && ($this->home_value_mod == null && $this->home_app_mod == null ) )
-            {
+            if (($this->cash_mod == null || $this->other_invest_mod == null) && ($this->home_value_mod == null && $this->home_app_mod == null)) {
                 $this->validate([
                     "cash_mod" => 'required|numeric|min:0',
                     "other_invest_mod" => 'required|numeric|min:0'
                 ]);
-            }
-            else if(($this->cash_mod == null || $this->other_invest_mod == null) && ($this->home_value_mod != null || $this->home_app_mod != null ))
-            {
+            } else if (($this->cash_mod == null || $this->other_invest_mod == null) && ($this->home_value_mod != null || $this->home_app_mod != null)) {
 
-                if($this->home_value_mod != null)
-                {
+                if ($this->home_value_mod != null) {
                     $var_1 = $this->validate([
                         "home_value_mod" => 'numeric|min:0',
                     ]);
                     $check_value = true;
                 }
-    
-                if($this->home_app_mod != null)
-                {
+
+                if ($this->home_app_mod != null) {
                     $var_2 = $this->validate([
                         "home_app_mod" => 'numeric|min:0',
-                    ]); 
+                    ]);
                     $check_app = true;
                 }
 
-                if($check_value != true || $check_app != true)
-                {
+                if ($check_value != true || $check_app != true) {
                     throw ValidationException::withMessages(['home_value_mod' => 'Both of the inputs must be added']);
                     throw ValidationException::withMessages(['home_app_mod' => 'Both of the inputs must be added']);
-                }
-                else
-                {
+                } else {
                     $selectedRecord = MonthlyNetworth::where('date', $date['date_mod'])->first();
 
                     $selectedRecord->home_value = $var_1['home_value_mod'];
@@ -230,32 +219,25 @@ class MonthlyNetworths extends Component
                     $from = date($date['date_mod'] ? $date['date_mod'] : null);
                     $to = MonthlyNetworth::select('date')->orderBy('id', 'DESC')->first();
 
-                    $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date] )->get();
+                    $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date])->get();
 
 
-                    $first_loop = false; 
+                    $first_loop = false;
 
-                    foreach($dates as $record){
-                        
-                        if($record->id == 1)
-                        {
+                    foreach ($dates as $record) {
+
+                        if ($record->id == 1) {
                             $record->home_value =  $var_1['home_value_mod'];
                             $record->home_app = $var_2['home_app_mod'];
                             $record->passed = true;
                             $record->save();
-                            
-                        }
-                        else
-                        {
-                            $last_record = MonthlyNetworth::where('id', $record->id-1)->first();
-                            if($first_loop == false)
-                            {
-                                $record->home_value = $var_1['home_value_mod']*$var_2['home_app_mod'];
+                        } else {
+                            $last_record = MonthlyNetworth::where('id', $record->id - 1)->first();
+                            if ($first_loop == false) {
+                                $record->home_value = $var_1['home_value_mod'] * $var_2['home_app_mod'];
                                 $first_loop = true;
-                            }
-                            else
-                            {
-                                $record->home_value = $last_record->home_value*$var_2['home_app_mod'];
+                            } else {
+                                $record->home_value = $last_record->home_value * $var_2['home_app_mod'];
                             }
 
                             $record->passed = true;
@@ -263,33 +245,26 @@ class MonthlyNetworths extends Component
                         }
                     }
                 }
-            }
-            else if (($this->cash_mod != null || $this->other_invest_mod != null) && ($this->home_value_mod != null || $this->home_app_mod != null ))
-            {
+            } else if (($this->cash_mod != null || $this->other_invest_mod != null) && ($this->home_value_mod != null || $this->home_app_mod != null)) {
 
-                if($this->home_value_mod != null)
-                {
+                if ($this->home_value_mod != null) {
                     $var_1 = $this->validate([
                         "home_value_mod" => 'numeric|min:0',
                     ]);
                     $check_value = true;
                 }
-    
-                if($this->home_app_mod != null)
-                {
+
+                if ($this->home_app_mod != null) {
                     $var_2 = $this->validate([
                         "home_app_mod" => 'numeric|min:0',
-                    ]); 
+                    ]);
                     $check_app = true;
                 }
 
-                if($check_value != true || $check_app != true)
-                {
+                if ($check_value != true || $check_app != true) {
                     throw ValidationException::withMessages(['home_value_mod' => 'Both of the inputs must be added']);
                     throw ValidationException::withMessages(['home_app_mod' => 'Both of the inputs must be added']);
-                }
-                else
-                {
+                } else {
                     $data = $this->validate([
                         "cash_mod" => 'numeric|min:0',
                         "other_invest_mod" => 'numeric|min:0',
@@ -298,22 +273,19 @@ class MonthlyNetworths extends Component
                     $from = date($date['date_mod'] ? $date['date_mod'] : null);
                     $to = MonthlyNetworth::select('date')->orderBy('id', 'DESC')->first();
 
-                    $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date] )->get();
+                    $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date])->get();
 
-                    foreach($dates as $record){
-                        if($record->id == 1)
-                        {
-                            $record->home_value = $var_1['home_value_mod']*$var_2['home_app_mod'];
+                    foreach ($dates as $record) {
+                        if ($record->id == 1) {
+                            $record->home_value = $var_1['home_value_mod'] * $var_2['home_app_mod'];
                             $record->home_app = $var_2['home_app_mod'];
                             $record->cash = $data['cash_mod'];
                             $record->other_invest = $data['other_invest_mod'];
                             $record->passed = true;
                             $record->save();
-                        }
-                        else
-                        {
-                            $last_record = MonthlyNetworth::where('id', $record->id-1)->first();
-                            $record->home_value = $last_record->home_value*$var_2['home_app_mod'];
+                        } else {
+                            $last_record = MonthlyNetworth::where('id', $record->id - 1)->first();
+                            $record->home_value = $last_record->home_value * $var_2['home_app_mod'];
                             $record->home_app = $var_2['home_app_mod'];
                             $record->cash = $data['cash_mod'];
                             $record->other_invest = $data['other_invest_mod'];
@@ -321,14 +293,8 @@ class MonthlyNetworths extends Component
                             $record->save();
                         }
                     }
-
                 }
-                
-                
-
-            }
-            else if (($this->cash_mod != null || $this->other_invest_mod != null) && ($this->home_value_mod == null || $this->home_app_mod == null ))
-            {
+            } else if (($this->cash_mod != null || $this->other_invest_mod != null) && ($this->home_value_mod == null || $this->home_app_mod == null)) {
 
                 $data = $this->validate([
                     "cash_mod" => 'numeric|min:0',
@@ -338,31 +304,24 @@ class MonthlyNetworths extends Component
                 $from = date($date['date_mod'] ? $date['date_mod'] : null);
                 $to = MonthlyNetworth::select('date')->orderBy('id', 'DESC')->first();
 
-                $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date] )->get();
+                $dates = MonthlyNetworth::whereBetween('date', [$from, $to->date])->get();
 
-                foreach($dates as $record){
-                    if($record->id == 1)
-                    {
+                foreach ($dates as $record) {
+                    if ($record->id == 1) {
                         $record->cash = $data['cash_mod'];
                         $record->other_invest = $data['other_invest_mod'];
                         $record->passed = true;
                         $record->save();
-                    }
-                    else
-                    {
-                        $last_record = MonthlyNetworth::where('id', $record->id-1)->first();
+                    } else {
+                        $last_record = MonthlyNetworth::where('id', $record->id - 1)->first();
                         $record->cash = $data['cash_mod'];
                         $record->other_invest = $data['other_invest_mod'];
                         $record->passed = true;
                         $record->save();
                     }
                 }
-
             }
-            
-        }
-        else if (is_null($record))
-        {
+        } else if (is_null($record)) {
             throw ValidationException::withMessages(['date_mod' => 'This value doesn\'t exits in the table']);
         }
     }
@@ -372,5 +331,3 @@ class MonthlyNetworths extends Component
         return null;
     }
 }
-
-

@@ -1,6 +1,6 @@
 <div>
      <div class="row">
-          <div class="col-sm-12 col-lg-6">
+          <div class="col-12">
                <form wire:submit.prevent="ModifyData">
                     <div class="card">
                          <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
@@ -55,7 +55,7 @@
                     </div>
                </form>
           </div>
-          <div class="col-sm-12 col-lg-6">
+          <!-- <div class="col-sm-12 col-lg-6">
                <form wire:submit.prevent="InputData">
                     <div class="card">
                          <div class="card-header"><strong>Amortization Calculator</strong> <small>Input Data</small></div>
@@ -109,7 +109,7 @@
                          </div>
                     </div>
                </form>
-          </div>
+          </div> -->
      </div>
 
 
@@ -119,31 +119,6 @@
                <div class="card-header"><i class="fa fa-align-justify"></i> Striped Table</div>
                <div class="card-body">
                     <div class="tableFixHead">
-                         <!-- <table class="table table-responsive- table-striped">
-                         <thead>
-                              <tr>
-                                   <th scope="row">Date</th>
-                                   @for($i=0;$i<12;$i++) <th scope="row">2012/01/01</th>
-                                        @endfor
-
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                   <td>2020-02-02</td>
-                              </tr>
-                              <td>2012/01/01</td>
-                              <td>$235,000.00</td>
-                              <td>$990.77</td>
-                              <td>$1,200.00</td>
-                              <td>$2,190.77</td>
-                              <td>$1,630.27</td>
-                              <td>$587.50</td>
-                              <td>$233,369.73</td>
-                              <td>No Data</td>
-
-                              </tbody>
-                         </table> -->
                          <style>
                               .table-header-bold {
                                    font-weight: 700;
@@ -165,19 +140,20 @@
                               <tr>
                                    <th class="table-header-bold">Debt</th>
                               </tr>
+                              
                               <tr>
                                    <th class="table-header">Date</th>
                                    @foreach($home_loan as $data)
                                    <td>{{ $data->formatDate() }}</td>
                                    @endforeach
                               </tr>
+
                               <tr>
                                    <th class="table-header">House Loan</th>
                                    @foreach($home_loan as $data)
                                    <td>{{ $data->end_balance }}</td>
                                    @endforeach
                               </tr>
-
 
                               <tr>
                                    <th></th>
@@ -189,24 +165,28 @@
                               <tr>
                                    <th class="table-header-bold">Assets</th>
                               </tr>
+
                               <tr>
                                    <th>Home</th>
                                    @foreach($home_values as $data)
                                    <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
                                    @endforeach
                               </tr>
+
                               <tr>
                                    <th>Investment Super</th>
                                    @foreach($investSupers as $data)
                                    <td>{{ $data->total_invested ? '$ ' . $data->total_invested : '' }}</td>
                                    @endforeach
                               </tr>
+
                               <tr>
                                    <th>Cash</th>
                                    @foreach($cashs as $data)
                                    <td>{{ $data->cash ? '$ ' . $data->cash : '' }}</td>
                                    @endforeach
                               </tr>
+
                               <tr>
                                    <th>Investment Personal</th>
                                    @foreach($investPersonals as $data)
@@ -230,7 +210,7 @@
                                    <th></th>
                                    @for($i=0;$i<24;$i++) <td>
                                         </td>
-                                        @endfor
+                                   @endfor
                               </tr>
 
                               <tr>
@@ -242,41 +222,52 @@
                                    <td>{{ $data->home_value ? '$ ' . $data->home_value : '' }}</td>
                                    @endforeach
                               </tr>
-
+                              @if(isset($assets))
                               <tr>
                                    <th>Total Assets</th>
                                    @foreach($assets as $data) 
                                         <td>{{ $data ? '$ ' . $data : '' }}</td>
                                    @endforeach
                               </tr>
+                              @endif
 
+                              
                               <tr>
                                    <th>Difference</th>
-                                   @foreach($difference as $data) 
-                                        <td>{{ $data ? '$ ' . $data : '' }}</td>
-                                   @endforeach
+                                   @if(isset($difference))
+                                        @foreach($difference as $data) 
+                                             <td>{{ $data ? '$ ' . $data : '' }}</td>
+                                        @endforeach
+                                   @endif
                               </tr>
-
+                              
                               <tr>
                                    <th>Difference - Super</th>
-                                   @foreach($differenceSuper as $data) 
-                                        <td>{{ $data ? '$ ' . $data : '' }}</td>
-                                   @endforeach
+                                   @if(isset($differenceSuper))
+                                        @foreach($differenceSuper as $data) 
+                                             <td>{{ $data ? '$ ' . $data : '' }}</td>
+                                        @endforeach
+                                   @endif
                               </tr>
 
                               <tr>
                                    <th style="background-color: #e5fbff;">Running Diff - Cash + Equity</th>
-                                   @foreach($runningDiff as $data) 
-                                        <td>{{ $data ? $data : ''  }}</td>
-                                   @endforeach
+                                   @if(isset($runningDiff))
+                                        @foreach($runningDiff as $data) 
+                                             <td>{{ $data ? $data : ''  }}</td>
+                                        @endforeach
+                                   @endif
                               </tr>
-
+                              
                               <tr>
                                    <th style="background-color: #e5fbff;">Running Diff - Overrall</th>
-                                   @foreach($overallDiff as $data) 
-                                        <td>{{ $data ? $data : '' }}</td>
-                                   @endforeach
+                                   @if(isset($overallDiff))
+                                        @foreach($overallDiff as $data) 
+                                             <td>{{ $data ? $data : '' }}</td>
+                                        @endforeach
+                                   @endif
                               </tr>
+                              
 
 
 

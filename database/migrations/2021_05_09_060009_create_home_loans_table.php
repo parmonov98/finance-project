@@ -16,7 +16,7 @@ class CreateHomeLoansTable extends Migration
         Schema::create('home_loans', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('pmt_no');
             $table->date('pay_date');
@@ -33,7 +33,7 @@ class CreateHomeLoansTable extends Migration
         Schema::create('home_loans_savings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('pmt_no');
             $table->date('pay_date');

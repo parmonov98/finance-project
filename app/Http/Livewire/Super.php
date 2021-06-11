@@ -5,7 +5,6 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\SuperData;
-use App\Http\Livewire\Super;
 use App\Models\ProgramSuper;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,7 +105,7 @@ class Super extends Component
     public function Calculate($data)
     {
 
-        $dates = HomeLoan::select('pay_date')->all();
+        $dates = HomeLoan::select('pay_date')->get();
 
         foreach($dates as $date)
         {

@@ -7,7 +7,6 @@ use App\Models\HomeLoan;
 use App\Models\LongTermInvestment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LongTermInvestmentsData;
-use App\Http\Livewire\LongTermInvestments;
 
 class LongTermInvestments extends Component
 {
@@ -107,7 +106,7 @@ class LongTermInvestments extends Component
     {   
 
 
-        $dates = HomeLoan::select('pay_date')->all();
+        $dates = HomeLoan::select('pay_date')->get();
 
         foreach($dates as $date)
         {
