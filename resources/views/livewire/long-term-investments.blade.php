@@ -113,7 +113,7 @@
                         <td>{{ $data->return_on_invest*100 }}%</td>
                         <td>{{ $data->fees }}%</td>
                         <td>${{ $data->monthly_account_fee }}</td>
-                        <td>{{ $data->inflation}}</td>
+                        <td>{{ $data->inflation*100}} %</td>
                         <td>{{ $data->monthly_invest }}</td>
                         <td>{{ $data->interest }}</td>
                         <td>{{ $data->after_fees }}</td>
