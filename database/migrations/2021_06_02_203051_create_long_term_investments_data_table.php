@@ -16,7 +16,7 @@ class CreateLongTermInvestmentsDataTable extends Migration
         Schema::create('long_term_investments_data', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->decimal('min', $precision = 20, $scale = 2);
             $table->decimal('max', $precision = 20, $scale = 2);

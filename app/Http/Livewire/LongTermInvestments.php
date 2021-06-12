@@ -19,7 +19,7 @@ class LongTermInvestments extends Component
     public $monthlyFee;
 
     protected $rules = [
-        "min" => 'required|numeric|min:-2|max:0',
+        "min" => 'required|numeric|max:-2|max:0',
         'max' => 'required|numeric|min:0|max:7',
         'inflation' => 'required|numeric|min:0|not_in:0',
         'fees' => 'required|numeric',
@@ -135,7 +135,7 @@ class LongTermInvestments extends Component
             "interest" => $data['interest'],
             "after_fees" => $data['after_fees'],
             "total_invested" => $data['total_invested'],
-            "date" => $data['date'],
+            "date" => $date->pay_date,
             "return_on_invest" => $data['return_on_invest']
         ]);
     }

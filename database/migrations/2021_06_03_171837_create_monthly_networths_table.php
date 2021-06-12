@@ -16,7 +16,7 @@ class CreateMonthlyNetworthsTable extends Migration
         Schema::create('monthly_networths', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->decimal('home_value', $precision = 20, $scale = 2)->nullable();
             $table->decimal('home_app', $precision = 20, $scale = 2)->nullable();

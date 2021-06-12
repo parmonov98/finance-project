@@ -109,7 +109,7 @@
                 </thead>
                 <tbody>
                     @foreach($datas as $data) <tr>
-                        <td>{{ $data->date }}</td>
+                        <td>{{ $data->formatDate() }}</td>
                         <td>{{ $data->return_on_invest*100 }}%</td>
                         <td>{{ $data->fees }}%</td>
                         <td>${{ $data->monthly_account_fee }}</td>

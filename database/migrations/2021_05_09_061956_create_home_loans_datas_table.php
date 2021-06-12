@@ -16,7 +16,7 @@ class CreateHomeLoansDatasTable extends Migration
         Schema::create('home_loans_datas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->decimal('loan_amount', $precision = 20, $scale = 2);
             $table->decimal('int_rate', $precision = 20, $scale = 2);

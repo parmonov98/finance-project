@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LongTermInvestment extends Model
 {
@@ -18,7 +19,7 @@ class LongTermInvestment extends Model
 
     public function formatDate()
     {
-        return Carbon::parse($this->pay_date)->format('d-m-Y');
+        return Carbon::parse($this->date)->format('d-m-Y');
     }
     
 }

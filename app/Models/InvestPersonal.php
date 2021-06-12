@@ -19,6 +19,6 @@ class InvestPersonal extends Model
 
     public function formatDate()
     {
-        return Carbon::parse($this->pay_date)->format('d-m-Y');
+        return Carbon::parse($this->date)->format('d-m-Y');
     }
 }

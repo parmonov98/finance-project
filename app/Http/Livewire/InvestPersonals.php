@@ -134,7 +134,7 @@ class InvestPersonals extends Component
                 "interest" => $data['interest'],
                 "after_fees" => $data['after_fees'],
                 "total_invested" => $data['total_invested'],
-                "date" => $data['date'],
+                "date" => $date->pay_date,
                 "return_on_invest" => $data['return_on_invest']
             ]);
         }
