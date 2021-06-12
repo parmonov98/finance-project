@@ -27,14 +27,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/Landing-Page', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 
 Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
+
+Route::get('/Landing-page', function(){
+    return view('landing');
+});
 
 Route::middleware('check')->group(function () {
     

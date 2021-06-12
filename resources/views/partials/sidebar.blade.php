@@ -3,11 +3,6 @@
         Finance App
     </div>
     <ul class="c-sidebar-nav ps">
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('home') }}">
-            <svg class="c-sidebar-nav-icon">
-                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
-            </svg>Home</a>
-        </li>
 
         <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('homeloan.show') }}">
             <svg class="c-sidebar-nav-icon">
