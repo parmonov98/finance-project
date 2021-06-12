@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="{{ asset('https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css') }}" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     @livewireStyles
     @stack('css')
@@ -49,19 +49,12 @@
         @include('partials.footer')
     </div>
 
-    <script src="{{ asset('https://unpkg.com/@popperjs/core@2') }}"></script>
-    <script src="{{ asset('https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js') }}"></script>
+    <script src="{{ asset('https://unpkg.com/@coreui/coreui/dist/js/coreui.bundle.min.js') }}"></script>
 
-    <script src="{{ asset('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script>
-    <!--[if IE]><!-->
-    <script src="{{ asset('vendors/@coreui/icons/js/svgxuse.min.js') }}"></script>
-    <!--<![endif]-->
-
-    <script src="{{ asset('vendors/@coreui/chartjs/js/coreui-chartjs.bundle.js') }}"></script>
-    <script src="{{ asset('vendors/@coreui/utils/js/coreui-utils.js') }}"></script>
     <script src="js/main.js"></script>
     @livewireScripts
     @stack('scripts')
+
     <script src="{{ asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
     <script src="{{ asset('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/masking-input.js') }}" data-autoinit="true"></script>
 
