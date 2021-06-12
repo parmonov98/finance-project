@@ -188,12 +188,15 @@
                               </div>
                          </div>
                     </div>
+                    <div class="card-footer">
+                         <button class="btn btn-sm" type="submit" disabled>Check table below</button>
+                    </div>
                </div>
           </div>
      </div>
      <!-- Second row for the tables -->
      <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> Striped Table</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i>Home Loan Table</div>
           <div class="card-body">
                <div class="tableFixHead">
                     <table class="table table-responsive-sm table-striped">
@@ -215,14 +218,14 @@
                               @foreach($datas as $data) <tr>
                                    <td>{{ $loop->index+1 }}</td>
                                    <td>{{ $data->formatDate() }}</td>
-                                   <td>{{ $data->beg_balance }}</td>
-                                   <td>{{ $data->sch_payment }}</td>
-                                   <td>{{ $data->ext_payment }}</td>
-                                   <td>{{ $data->tot_payment }}</td>
-                                   <td>{{ $data->principal }}</td>
-                                   <td>{{ $data->interest }}</td>
-                                   <td>{{ $data->end_balance }}</td>
-                                   <td>{{ $data->cum_interest }}</td>
+                                   <td>$ {{ $data->formatNumber($data->beg_balance) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->ext_payment) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->tot_payment) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->beg_balance) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->principal) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->interest) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->end_balance) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->cum_interest) }}</td>
                               </tr>
                               @endforeach
                          </tbody>

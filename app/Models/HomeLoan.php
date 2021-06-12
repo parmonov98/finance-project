@@ -21,4 +21,9 @@ class HomeLoan extends Model
     {
         return Carbon::parse($this->pay_date)->format('d-m-Y');
     }
+
+    public function formatNumber($number)
+    {
+        return number_format($number, 2, ',', ' ');
+    }
 }

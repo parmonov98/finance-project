@@ -44,7 +44,7 @@ class HomeLoans extends Component
         'loan' => 'loan amount',
         'int_rate' => 'interest rate',
         'nb_pay' => 'number of payments',
-        'ext_pay' => 'extra payments', 
+        'ext_pay' => 'extra payments',
     ];
 
     public function render()
@@ -64,12 +64,13 @@ class HomeLoans extends Component
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
+
         if (!is_null($cum_interest_ext) && !is_null($cum_interest))
             $savings = $cum_interest_ext->cum_interest  -  $cum_interest->cum_interest;
         else
             $savings = null;
 
-        
+
 
         return view('livewire.home-loan', [
             "datas" => $datas,
@@ -78,7 +79,7 @@ class HomeLoans extends Component
             "check" => $savings,
             "sch_no_pay" => $sch_no_pay ? $sch_no_pay->pmt_no : "No Data",
             "actual_no_pay" => $actual_no_pay ? $actual_no_pay : "No Data",
-            "savings" => $savings ? $savings : "No Data",
+            "savings" => $savings ? $savings : "0",
             "total_early_pay" => $total_early_pay ? $total_early_pay : "No Data",
         ]);
     }
@@ -230,11 +231,10 @@ class HomeLoans extends Component
                     "user_id" => Auth::user()->id,
                     "date" => $data['date']
                 ]);
-
             }
         } while ($stop == 0);
 
-
+        $stop = null;
         do {
             $last_record = DB::table('home_loans_savings')->select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
 
@@ -244,7 +244,6 @@ class HomeLoans extends Component
 
                     $last_record = DB::table('home_loans_savings')->select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest', 'cum_interest')->orderBy('id', 'DESC')->first();
                     $data['beg_balance'] = $last_record->end_balance;
-
 
                     $data['pmt_no'] = $last_record->pmt_no + 1;
 
@@ -307,6 +306,7 @@ class HomeLoans extends Component
         $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
         HomeLoan::truncate();
         HomeLoanData::truncate();
+        DB::table('home_loans_savings')->truncate();
         MonthlyNetworth::truncate();
     }
 
@@ -315,7 +315,6 @@ class HomeLoans extends Component
         $record_date = HomeLoan::where('pay_date', $this->date)->first();
 
         if (!is_null($record_date)) {
-
             $data = $this->FormatVariable();
             $data = $this->scheduled_payment($data);
             $this->home_loan_data($data);
@@ -323,8 +322,15 @@ class HomeLoans extends Component
             $from = $record_date->pay_date;
             $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
             HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->delete();
+            DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
-            $this->Recalculate($data);
+            $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
+
+            if (isset($data['beg_balance'])) {
+                $data['beg_balance'] = $last_record->end_balance;
+                $this->Recalculate($data);
+            } else
+                $this->calculate($data);
         } else {
             throw ValidationException::withMessages(['date' => 'This value doesn\'t exits in the table']);
         }
@@ -357,6 +363,43 @@ class HomeLoans extends Component
                     "pay_date" => $date,
                     "sch_payment" => $data['sch_payment'],
                     "ext_payment" => $data['ext_payment'],
+                    "tot_payment" => $data['total_payment'],
+                    "principal" => $data['principal'],
+                    "interest" => $data['interest'],
+                    "pmt_no" => $data['pmt_no'],
+                    "end_balance" => $data['end_balance'],
+                    "cum_interest" => $data['cum_interest'],
+                ]);
+
+                $stop = 0;
+            } else {
+                $stop = 1;
+            }
+        } while ($stop == 0);
+
+        $stop = null;
+
+        do {
+
+            $last_record = DB::table('home_loans_savings')->select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest', 'cum_interest')->orderBy('id', 'DESC')->first();
+            $data['beg_balance'] = $last_record->end_balance;
+
+            $data['pmt_no'] = $last_record->pmt_no + 1;
+
+            $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
+            $data['total_payment'] = $data['sch_payment'];
+            $data['principal'] = $data['total_payment'] - $data['interest'];
+            $data['end_balance'] = $data['beg_balance'] - $data['principal'];
+            $data['cum_interest'] = $last_record->cum_interest + $data['interest'];
+
+            if ($data['end_balance'] > 50) {
+
+                DB::table('home_loans_savings')->insert([
+                    "user_id" => Auth::user()->id,
+                    "beg_balance" => $data['beg_balance'],
+                    "pay_date" => $date,
+                    "sch_payment" => $data['sch_payment'],
+                    "ext_payment" => 0,
                     "tot_payment" => $data['total_payment'],
                     "principal" => $data['principal'],
                     "interest" => $data['interest'],

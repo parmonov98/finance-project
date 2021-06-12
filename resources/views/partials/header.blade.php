@@ -13,7 +13,7 @@
         </svg>
     </button>
     <ul class="c-header-nav d-md-down-none">
-        <li class="c-header-nav-item px-3"><a class="c-header-nav-link" href="#">Home</a></li>
+        <li class="c-header-nav-item px-3"><a class="c-header-nav-link" href="{{ route('landingPage') }}">Home Page</a></li>
         <li class="c-header-nav-item px-3"><a class="c-header-nav-link" href="#">Home Loan</a></li>
     </ul>
     <ul class="c-header-nav ml-auto mr-4">

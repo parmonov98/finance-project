@@ -33,7 +33,7 @@ Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.sh
 
 Route::get('/Landing-page', function(){
     return view('landing');
-});
+})->name('landingPage');
 
 Route::middleware('check')->group(function () {
     
