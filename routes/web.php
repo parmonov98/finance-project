@@ -29,9 +29,6 @@ Auth::routes();
 
 Route::get('/Landing-Page', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
-
-
 Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
 Route::get('/Landing-page', function(){
