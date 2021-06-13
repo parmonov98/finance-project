@@ -105,7 +105,7 @@ class MonthlyNetworths extends Component
 
         // End DIFFERENCE SUPER
 
-        if (isset($differenceSuper) && is_null($differenceSuper)) {
+        if (isset($differenceSuper) && !is_null($differenceSuper)) {
             // RUNNING DIFF
             foreach ($differenceSuper as $key => $record) {
                 if (!$key == 0)
@@ -116,7 +116,7 @@ class MonthlyNetworths extends Component
             // End RUNNING DIFF
 
             foreach ($difference as $key => $record) {
-                if (!$key == 0)
+                if ($key != 0)
                     $overallDiff[] = $difference[$key] - $difference[$key - 1];
                 else
                     $overallDiff[] = $difference[$key];
