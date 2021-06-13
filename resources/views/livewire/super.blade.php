@@ -1,7 +1,7 @@
 <div>
     <form wire:submit.prevent="InputData">
         <div class="card">
-            <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
+            <div class="card-header"><strong>Super</strong> <small>Form</small></div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-4 mb-2">
@@ -84,14 +84,14 @@
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-sm btn-primary" wire:submit="InputData"> Submit</button>
+                <button class="btn btn-sm btn-primary" wire:submit="InputData"> Calculate</button>
                 <!-- <button class="btn btn-sm btn-danger" type="reset"> Reset</button> -->
             </div>
         </div>
     </form>
 
     <div class="card">
-        <div class="card-header"><i class="fa fa-align-justify"></i> Invest Personal Table</div>
+        <div class="card-header"><i class="fa fa-align-justify"></i> Super Table</div>
         <div class="card-body">
             <table class="table table-responsive-sm table-striped">
                 <thead>
@@ -112,12 +112,12 @@
                         <td>{{ $data->formatDate() }}</td>
                         <td>{{ $data->return_on_invest*100 }}%</td>
                         <td>{{ $data->fees }}%</td>
-                        <td>${{ $data->monthly_account_fee }}</td>
-                        <td>{{ $data->inflation*100}} %</td>
-                        <td>{{ $data->monthly_invest }}</td>
-                        <td>{{ $data->interest }}</td>
-                        <td>{{ $data->after_fees }}</td>
-                        <td>{{ $data->total_invested  }}</td>
+                        <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
+                        <td>{{ $data->inflation*100}}%</td>
+                        <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>
+                        <td>$ {{ $data->formatNumber($data->interest) }}</td>
+                        <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
+                        <td>$ {{ $data->formatNumber($data->total_invested)  }}</td>
                         </tr>
                     @endforeach
                 </tbody>

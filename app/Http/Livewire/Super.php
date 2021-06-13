@@ -56,6 +56,14 @@ class Super extends Component
         $data = $this->FormatVariable();
         $this->InvestPersonalData($data);
         $this->Calculate($data);
+
+        $check = ProgramSuper::select('total_invested')->orderBy('id', 'DESC')->first();
+
+        if(!$check)
+            $this->Calculate($data);
+        else
+            $this->Recalculate($data);   
+
     }
 
     public function FormatVariable()
@@ -137,6 +145,40 @@ class Super extends Component
             "date" => $date->pay_date,
             "return_on_invest" => $data['return_on_invest']
         ]);
+        }
     }
+
+    public function Recalculate($data)
+    {
+        $from = $data['date'];
+        $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
+        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->get();
+        ProgramSuper::whereBetween('date', [$from, $to->pay_date])->delete();
+
+        foreach($dates as $date)
+        {
+                $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+
+                $return_on_invest = rand($data['min'], $data['max']) / 100;
+
+                $interest = round(($return_on_invest * $data['monthlyInvest']) / 12, 2);
+
+                $after_fees = round((($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'], 2);
+
+                $total_invested = round($monthlyInvest + $interest - $after_fees, 2);
+
+            ProgramSuper::create([
+                "user_id" => Auth::user()->id,
+                "fees" => $data['fees'],
+                "monthly_account_fee" => $data['monthlyFee'],
+                "inflation" => $data['inflation'],
+                "monthly_invest" => $monthlyInvest,
+                "interest" => $interest,
+                "after_fees" => $after_fees,
+                "total_invested" => $total_invested,
+                "date" => $date->pay_date,
+                "return_on_invest" => $return_on_invest
+            ]);
+        }
     }
 }

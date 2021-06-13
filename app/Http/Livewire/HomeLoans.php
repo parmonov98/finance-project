@@ -70,8 +70,6 @@ class HomeLoans extends Component
         else
             $savings = null;
 
-
-
         return view('livewire.home-loan', [
             "datas" => $datas,
             "cum_interest" => $cum_interest ? $cum_interest->cum_interest : 'No Data',

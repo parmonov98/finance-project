@@ -55,7 +55,13 @@ class InvestPersonals extends Component
     {
         $data = $this->FormatVariable();
         $this->InvestPersonalData($data);
-        $this->Calculate($data);
+
+        $check = InvestPersonal::select('total_invested')->orderBy('id', 'DESC')->first();
+
+        if(!$check)
+            $this->Calculate($data);
+        else
+            $this->Recalculate($data);    
     }
 
     public function FormatVariable()
@@ -88,7 +94,6 @@ class InvestPersonals extends Component
                 "user_id" => Auth::user()->id
             ]);
         } else if ($db_data) {
-
             InvestPersonalData::truncate();
             InvestPersonalData::create([
                 "min" => $data['min'],
@@ -104,7 +109,6 @@ class InvestPersonals extends Component
 
     public function Calculate($data)
     {
-
         $dates = HomeLoan::select('pay_date')->get();
 
         foreach($dates as $date)
@@ -120,11 +124,6 @@ class InvestPersonals extends Component
 
             $data['total_invested'] = round($data['monthlyInvest'] + $data['interest'] - $data['after_fees'], 2);
 
-            $total = InvestPersonal::select('total_invested')->orderBy('id', 'DESC')->first();
-
-                if(!is_null($total))
-                    $data['total_invested'] += $total->total_invested;
-
             InvestPersonal::create([
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
@@ -136,6 +135,40 @@ class InvestPersonals extends Component
                 "total_invested" => $data['total_invested'],
                 "date" => $date->pay_date,
                 "return_on_invest" => $data['return_on_invest']
+            ]);
+        }
+    }
+
+    public function Recalculate($data)
+    {
+        $from = $data['date'];
+        $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
+        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->get();
+        InvestPersonal::whereBetween('date', [$from, $to->pay_date])->delete();
+
+        foreach($dates as $date)
+        {
+                $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+
+                $return_on_invest = rand($data['min'], $data['max']) / 100;
+
+                $interest = round(($return_on_invest * $data['monthlyInvest']) / 12, 2);
+
+                $after_fees = round((($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'], 2);
+
+                $total_invested = round($monthlyInvest + $interest - $after_fees, 2);
+
+            InvestPersonal::create([
+                "user_id" => Auth::user()->id,
+                "fees" => $data['fees'],
+                "monthly_account_fee" => $data['monthlyFee'],
+                "inflation" => $data['inflation'],
+                "monthly_invest" => $monthlyInvest,
+                "interest" => $interest,
+                "after_fees" => $after_fees,
+                "total_invested" => $total_invested,
+                "date" => $date->pay_date,
+                "return_on_invest" => $return_on_invest
             ]);
         }
     }

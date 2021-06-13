@@ -70,12 +70,7 @@ class MonthlyNetworths extends Component
         $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
         $other_invests = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
 
-        $value1 = null;
-        $value2 = null;
-        $value3 = null;
-        $value4 = null;
-        $value5 = null;
-        $value6 = null;
+        $value1 = null; $value2 = null; $value3 = null; $value4 = null; $value5 = null; $value6 = null;
 
         foreach ($dates as $date) {
             $home_value = MonthlyNetworth::select('home_value')->Where('date', $date->date)->first();
@@ -93,7 +88,7 @@ class MonthlyNetworths extends Component
             $value5 += $investSuper ? $investSuper->total_invested : 0;
             $value6 += $other_invest->other_invest ? $other_invest->other_invest : 0;
 
-            $assets[] = $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
+            $assets[] =  $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
         }
         // End ASSETS
 
