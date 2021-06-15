@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\HomeLoan;
+use App\Models\InvestPersonal;
+use App\Models\InvestPersonalData;
 use App\Models\LongTermInvestment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LongTermInvestmentsData;
@@ -71,7 +73,7 @@ class LongTermInvestments extends Component
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
         $data['inflation'] = $this->inflation / 100; // inflation
-        $data['fees'] = $this->fees / 100; // fees percentages
+        $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
         $data['date'] = $this->date;
@@ -154,11 +156,11 @@ class LongTermInvestments extends Component
 
                 $return_on_invest = rand($data['min'], $data['max']) / 100;
 
-                $interest = round(($return_on_invest * $data['monthlyInvest']) / 12, 2);
+                $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
 
-                $after_fees = round((($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'], 2);
+                $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
 
-                $total_invested = round($monthlyInvest + $interest - $after_fees, 2);
+                $total_invested = $monthlyInvest + $interest - $after_fees;
 
             LongTermInvestment::create([
                 "user_id" => Auth::user()->id,
@@ -174,5 +176,7 @@ class LongTermInvestments extends Component
             ]);
         }
     }
+
+    
 
 }

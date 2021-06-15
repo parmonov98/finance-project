@@ -59,13 +59,12 @@ class VYearNetworth extends Component
             foreach($dates as $date)
             {
                 Program5YRNetworth::create([
-                    "date" => $date->pay_date,
+                    "date"   => $date->pay_date,
                     "user_id" => Auth::user()->id
                 ]);
             } 
 
         }
-
     }
 
     public function render()

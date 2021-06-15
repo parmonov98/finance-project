@@ -83,6 +83,7 @@
 
             <div class="card-footer">
                 <button class="btn btn-sm btn-primary" wire:submit="InputData"> Calculate</button>
+                <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset Table</button>
                 <!-- <button class="btn btn-sm btn-danger" type="reset"> Reset</button> -->
             </div>
         </div>

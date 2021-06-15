@@ -53,14 +53,15 @@ class HomeLoans extends Component
         $cum_interest = HomeLoan::select('cum_interest')->orderBy('id', 'DESC')->first();
         $additional_data = HomeLoan::select('sch_payment')->first();
         $sch_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
-        $start_date = HomeLoan::select('pay_date')->first();
+        $savings_no_pay = DB::table('home_loans_savings')->select('pmt_no')->orderBy('id', 'DESC')->first();
+        $actual_no_pay = null;
+        if(!is_null($sch_no_pay) && !is_null($savings_no_pay))
+            $actual_no_pay = $savings_no_pay->pmt_no - $sch_no_pay->pmt_no;
 
-        $home_loan_data = DB::table('home_loans_datas')->first();
-        // dd($home_loan_data);
+        $start_date = HomeLoan::select('pay_date')->first();
 
         $from = date($start_date ? $start_date->pay_date : null);
         $to = today()->format('Y-m-d');
-        $actual_no_pay = HomeLoan::whereBetween('pay_date', [$from, $to])->get()->count();
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
@@ -389,6 +390,7 @@ class HomeLoans extends Component
             $data['principal'] = $data['total_payment'] - $data['interest'];
             $data['end_balance'] = $data['beg_balance'] - $data['principal'];
             $data['cum_interest'] = $last_record->cum_interest + $data['interest'];
+
 
             if ($data['end_balance'] > 50) {
 

@@ -219,9 +219,9 @@
                                    <td>{{ $loop->index+1 }}</td>
                                    <td>{{ $data->formatDate() }}</td>
                                    <td>$ {{ $data->formatNumber($data->beg_balance) }}</td>
+                                   <td>$ {{ $data->formatNumber($data->sch_payment) }}</td>
                                    <td>$ {{ $data->formatNumber($data->ext_payment) }}</td>
                                    <td>$ {{ $data->formatNumber($data->tot_payment) }}</td>
-                                   <td>$ {{ $data->formatNumber($data->beg_balance) }}</td>
                                    <td>$ {{ $data->formatNumber($data->principal) }}</td>
                                    <td>$ {{ $data->formatNumber($data->interest) }}</td>
                                    <td>$ {{ $data->formatNumber($data->end_balance) }}</td>
