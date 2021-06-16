@@ -62,7 +62,9 @@ class HomeLoans extends Component
 
         $from = date($start_date ? $start_date->pay_date : null);
         $to = today()->format('Y-m-d');
+
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
+        
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
 
@@ -78,7 +80,7 @@ class HomeLoans extends Component
             "check" => $savings,
             "sch_no_pay" => $sch_no_pay ? $sch_no_pay->pmt_no : "No Data",
             "actual_no_pay" => $actual_no_pay ? $actual_no_pay : "No Data",
-            "savings" => $savings ? $savings : "0",
+            "savings" => $savings ? $savings : "No Data",
             "total_early_pay" => $total_early_pay ? $total_early_pay : "No Data",
         ]);
     }
@@ -390,32 +392,31 @@ class HomeLoans extends Component
     public function RecalculateSavings($data)
     {
 
-        $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
+        $last_record = DB::table('home_loans_savings')->select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
+
         $stop = null;
-
         do {
-
-            $last_record = DB::table('home_loans_savings')->select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest', 'cum_interest')->orderBy('id', 'DESC')->first();
+            $last_record = DB::table('home_loans_savings')->select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
             $data['beg_balance'] = $last_record->end_balance;
 
-            $data['pmt_no'] = $last_record->pmt_no + 1;
             $daystosum = 1;
             $date = date('Y-m-d', strtotime($last_record->pay_date . ' + ' . $daystosum . ' months')); // add days to d-m-Y format
 
+            $data['pmt_no'] = $last_record->pmt_no + 1;
+
             $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
-            $data['total_payment'] = $data['sch_payment'];
+            $data['total_payment'] = $data['sch_payment'] + $data['ext_payment'];
             $data['principal'] = $data['total_payment'] - $data['interest'];
             $data['end_balance'] = $data['beg_balance'] - $data['principal'];
             $data['cum_interest'] = $last_record->cum_interest + $data['interest'];
 
             if ($data['end_balance'] > 50) {
-
                 DB::table('home_loans_savings')->insert([
                     "user_id" => Auth::user()->id,
                     "beg_balance" => $data['beg_balance'],
                     "pay_date" => $date,
                     "sch_payment" => $data['sch_payment'],
-                    "ext_payment" => 0,
+                    "ext_payment" => $data['ext_payment'],
                     "tot_payment" => $data['total_payment'],
                     "principal" => $data['principal'],
                     "interest" => $data['interest'],
