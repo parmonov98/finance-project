@@ -85,7 +85,7 @@
 
             <div class="card-footer">
                 <button class="btn btn-sm btn-primary" wire:submit="InputData"> Calculate</button>
-                <!-- <button class="btn btn-sm btn-danger" type="reset"> Reset</button> -->
+                <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset Table</button>
             </div>
         </div>
     </form>
@@ -111,7 +111,7 @@
                     @foreach($datas as $data) <tr>
                         <td>{{ $data->formatDate() }}</td>
                         <td>{{ $data->return_on_invest*100 }}%</td>
-                        <td>{{ $data->fees }}%</td>
+                        <td>{{ $data->fees*100 }}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
                         <td>{{ $data->inflation*100}}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>

@@ -19,8 +19,8 @@ class Super extends Component
     public $monthlyFee;
 
     protected $rules = [
-        "min" => 'required|numeric|max:-2|max:0',
-        'max' => 'required|numeric|min:0|max:7',
+        "min" => 'required|numeric',
+        'max' => 'required|numeric',
         'inflation' => 'required|numeric|min:0|not_in:0',
         'fees' => 'required|numeric',
         'date' => 'required|date',
@@ -44,7 +44,7 @@ class Super extends Component
 
     public function render()
     {
-        $datas = ProgramSuper::all();
+        $datas = ProgramSuper::orderBy('date')->get();
 
         return view('livewire.super', [
             "datas" => $datas,
@@ -55,7 +55,6 @@ class Super extends Component
     {
         $data = $this->FormatVariable();
         $this->InvestPersonalData($data);
-        $this->Calculate($data);
 
         $check = ProgramSuper::select('total_invested')->orderBy('id', 'DESC')->first();
 
@@ -112,39 +111,32 @@ class Super extends Component
 
     public function Calculate($data)
     {
-
-        $dates = HomeLoan::select('pay_date')->get();
+        $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
 
         foreach($dates as $date)
         {
-            
-        $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
-        $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-        $data['interest'] = round(($data['return_on_invest'] * $data['monthlyInvest']) / 12, 2);
+            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
 
-        $data['after_fees'] = round((($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'], 2);
+            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
-        $data['total_invested'] = round($data['monthlyInvest'] + $data['interest'] - $data['after_fees'], 2);
+            $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
 
-        $total = ProgramSuper::select('total_invested')->orderBy('id', 'DESC')->first();
-
-            if(!is_null($total))
-                $data['total_invested'] += $total->total_invested;
-
-                ProgramSuper::create([
-            "user_id" => Auth::user()->id,
-            "fees" => $data['fees'],
-            "monthly_account_fee" => $data['monthlyFee'],
-            "inflation" => $data['inflation'],
-            "monthly_invest" => $data['monthlyInvest'],
-            "interest" => $data['interest'],
-            "after_fees" => $data['after_fees'],
-            "total_invested" => $data['total_invested'],
-            "date" => $date->pay_date,
-            "return_on_invest" => $data['return_on_invest']
-        ]);
+            ProgramSuper::create([
+                "user_id" => Auth::user()->id,
+                "fees" => $data['fees'],
+                "monthly_account_fee" => $data['monthlyFee'],
+                "inflation" => $data['inflation'],
+                "monthly_invest" => $data['monthlyInvest'], 
+                "interest" => $data['interest'],
+                "after_fees" => $data['after_fees'],
+                "total_invested" => $data['total_invested'],
+                "date" => $date->pay_date,
+                "return_on_invest" => $data['return_on_invest']
+            ]);
         }
     }
 
@@ -152,33 +144,33 @@ class Super extends Component
     {
         $from = $data['date'];
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
-        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->get();
-        ProgramSuper::whereBetween('date', [$from, $to->pay_date])->delete();
+        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
+        $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
 
-        foreach($dates as $date)
+        foreach($dates as $key => $date)
         {
-                $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $return_on_invest = rand($data['min'], $data['max']) / 100;
+            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
+            $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
+            $total_invested = $monthlyInvest + $interest - $after_fees;
 
-                $return_on_invest = rand($data['min'], $data['max']) / 100;
-
-                $interest = round(($return_on_invest * $data['monthlyInvest']) / 12, 2);
-
-                $after_fees = round((($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'], 2);
-
-                $total_invested = round($monthlyInvest + $interest - $after_fees, 2);
-
-            ProgramSuper::create([
-                "user_id" => Auth::user()->id,
-                "fees" => $data['fees'],
-                "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => $data['inflation'],
-                "monthly_invest" => $monthlyInvest,
-                "interest" => $interest,
-                "after_fees" => $after_fees,
-                "total_invested" => $total_invested,
-                "date" => $date->pay_date,
-                "return_on_invest" => $return_on_invest
-            ]);
+            $change[$key]->fees = $data['fees']; 
+            $change[$key]->monthly_account_fee = $data['monthlyFee']; 
+            $change[$key]->inflation = $data['inflation'];
+            $change[$key]->monthly_invest = $monthlyInvest;
+            $change[$key]->interest = $interest;
+            $change[$key]->after_fees = $after_fees; 
+            $change[$key]->total_invested = $total_invested;            
+            $change[$key]->date = $date->pay_date;
+            $change[$key]->return_on_invest = $return_on_invest;
+            $change[$key]->save();
         }
+    }
+
+    public function ResetTables()
+    {
+        ProgramSuper::truncate();
+        SuperData::truncate();
     }
 }
