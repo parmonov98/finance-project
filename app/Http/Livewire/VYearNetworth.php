@@ -63,7 +63,6 @@ class VYearNetworth extends Component
                     "user_id" => Auth::user()->id
                 ]);
             } 
-
         }
     }
 
@@ -128,7 +127,12 @@ class VYearNetworth extends Component
         {
             throw ValidationException::withMessages(['date_mod' => 'This value doesn\'t exits in the table']);
         }
+    }
 
+
+    public function ResetTables()
+    {
+        Program5YRNetworth::truncate();
     }
     
 }

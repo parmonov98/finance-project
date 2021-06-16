@@ -327,14 +327,16 @@ class HomeLoans extends Component
             DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
             $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
-
-            if (isset($data['beg_balance'])) 
+            
+            if (isset($last_record['end_balance'])) 
             {
                 $data['beg_balance'] = $last_record->end_balance;
                 $this->Recalculate($data);
                 $this->RecalculateSavings($data);   
             } else
+            {
                 $this->calculate($data);
+            }
         } else {
             throw ValidationException::withMessages(['date' => 'This value doesn\'t exits in the table']);
         }
@@ -342,6 +344,7 @@ class HomeLoans extends Component
 
     public function Recalculate($data)
     {
+       
         $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
 
         $stop = null;
@@ -396,6 +399,8 @@ class HomeLoans extends Component
             $data['beg_balance'] = $last_record->end_balance;
 
             $data['pmt_no'] = $last_record->pmt_no + 1;
+            $daystosum = 1;
+            $date = date('Y-m-d', strtotime($last_record->pay_date . ' + ' . $daystosum . ' months')); // add days to d-m-Y format
 
             $data['interest'] = round($data['beg_balance'], 2) * (round($data['interest_rate'], 2) / 12); // Interest
             $data['total_payment'] = $data['sch_payment'];
