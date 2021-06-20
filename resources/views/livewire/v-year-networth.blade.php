@@ -211,8 +211,8 @@
                                 else 
                                     echo '<td> No data</td>';
 
-                                if(isset($monthlyNetworths[$key]->cash))
-                                    echo '<td> ' . $monthlyNetworths[$key]->cash . '  </td>';
+                                if(isset($monthlyNetworths->cash))
+                                    echo '<td> ' . $monthlyNetworths->cash . '  </td>';
                                 else
                                     echo '<td> No data</td>';
 

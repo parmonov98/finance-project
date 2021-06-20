@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use Exception;
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\ProgramSuper;
@@ -54,22 +56,44 @@ class VYearNetworth extends Component
 
         if($data == 0)
         {   
-            $dates = HomeLoan::select('pay_date')->get();
+            $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
 
-            foreach($dates as $date)
+            $first = $dates[0];
+
+
+            $i = 0 ;
+
+            $tab[] = null;
+
+            while(true)
             {
-                Program5YRNetworth::create([
-                    "date"   => $date->pay_date,
-                    "user_id" => Auth::user()->id
-                ]);
-            } 
+                $monthsToAdd = $i*6;
+
+                $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
+                $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
+
+                $i++;
+
+                if(!is_null($data))
+                {
+                    Program5YRNetworth::create([
+                        "date"   => $data->pay_date,
+                        "user_id" => Auth::user()->id
+                    ]); 
+                }
+                else
+                    break;
+
+
+            }
+
         }
     }
 
     public function render()
     {
         $this->InitializeTable();
-        $this->showData = 5;
+        $this->showData = 100;
 
         $start_date = HomeLoan::select('pay_date')->first();
         if(!is_null($start_date))
@@ -80,8 +104,12 @@ class VYearNetworth extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
-        $home_loans = HomeLoan::whereBetween('pay_date', [$from, $to])->get();
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
+        $home_loans = array();
+
+        foreach($programVYear as $date)
+            array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first()); 
+
 
         // ASSETS
         $monthlyNetworths = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
