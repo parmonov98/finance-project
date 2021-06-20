@@ -105,17 +105,21 @@ class VYearNetworth extends Component
         $to = date($end_date ? $end_date : null);
 
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
+
         $home_loans = array();
+        $monthlyNetworths = array();
+        $investPersonals = array();
+        $longTermInvests = array();
+        $investSupers = array();
 
         foreach($programVYear as $date)
+        {
             array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first()); 
-
-
-        // ASSETS
-        $monthlyNetworths = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
-        $investPersonals = InvestPersonal::whereBetween('date', [$from, $to])->get();
-        $longTermInvests = LongTermInvestment::whereBetween('date', [$from, $to])->get();
-        $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
+            array_push($monthlyNetworths, MonthlyNetworth::where('date', $date->date)->first());
+            array_push($investPersonals, InvestPersonal::where('date', $date->date)->first());
+            array_push($longTermInvests, LongTermInvestment::where('date', $date->date)->first()) ;
+            array_push($investSupers, ProgramSuper::where('date', $date->date)->first());
+        }
 
         return view('livewire.v-year-networth', [
             "home_loans" => $home_loans ? $home_loans : null,

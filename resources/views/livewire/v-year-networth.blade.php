@@ -111,12 +111,9 @@
                         foreach($home_loans as $key => $home_loan)
                         {
                             
-                            if(isset($monthlyNetworths[$key]->home_value) && isset($longTermInvests[$key]->total_invested) && isset($home_loans[$key]->beg_balance) && isset($investSupers[$key]->total_invested))
-                            {
                                 $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
                                 $difference = $total_assets - $home_loans[$key]->beg_balance;
                                 $difference_super = $total_assets - $home_loans[$key]->beg_balance - $investSupers[$key]->total_invested;
-                            }
                             
                             
 
@@ -180,13 +177,9 @@
                             echo '</tr> ';
 
 
-                            if(isset($programVYear[$key]->home_worth) && isset($programVYear[$key]->long_term_invest) && isset($programVYear[$key]->house_loan) && isset($programVYear[$key]->invest_super))
-                            {
                                 $total_assets_real = $programVYear[$key]->home_worth + $programVYear[$key]->long_term_invest;
                                 $difference_real = $total_assets_real - $programVYear[$key]->house_loan;
                                 $difference_super_real = $total_assets_real - $programVYear[$key]->house_loan - $programVYear[$key]->invest_super;
-                            }
-                            
                             
 
                             echo ' <tr> ' ; 
@@ -222,7 +215,7 @@
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->long_term_invest))
-                                    echo '<td>' . $programVYear[$key]->long_term_investl . '</td>';
+                                    echo '<td>' . $programVYear[$key]->long_term_invest . '</td>';
                                 else 
                                     echo '<td> No data</td>';
 
