@@ -89,19 +89,11 @@
             Program Super Table
             <span class="float-right">
                 <div class="form-group row">
-                    <select class="form-control" id="ccyear">
-                        <option>2014</option>
-                        <option>2015</option>
-                        <option>2016</option>
-                        <option>2017</option>
-                        <option>2018</option>
-                        <option>2019</option>
-                        <option>2020</option>
-                        <option>2021</option>
-                        <option>2022</option>
-                        <option>2023</option>
-                        <option>2024</option>
-                        <option>2025</option>
+                    <select wire:model="show"  class="form-control" id="ccyear">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
                     </select>
                 </div> 
             </span>

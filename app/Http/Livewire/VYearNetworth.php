@@ -22,7 +22,7 @@ class VYearNetworth extends Component
     public $cash;
     public $investPersonal;
     public $longTermInvest;
-    public $showData;
+    public $show = 1;
     public $date;
 
     protected $rules = [
@@ -94,11 +94,10 @@ class VYearNetworth extends Component
     public function render()
     {
         $this->InitializeTable();
-        $this->showData = 100;
 
         $start_date = HomeLoan::select('pay_date')->first();
         if(!is_null($start_date))
-            $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->showData . "  years"));
+            $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
         else
             $end_date = null;
 
