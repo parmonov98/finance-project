@@ -79,7 +79,7 @@
                               }
                          </style>
 
-                         <table class="table table-responsive" style=" white-space: nowrap;">
+                         <table class="table table-responsive-xl table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xs " style=" white-space: nowrap;">
                               <tr>
                                    <th class="table-header-bold">Debt</th>
                               </tr>
