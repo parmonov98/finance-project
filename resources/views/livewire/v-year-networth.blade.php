@@ -84,9 +84,28 @@
         
     </div>
 
-
     <div class="card">
-        <div class="card-header"><i class="fa fa-align-justify"></i> Program Super Table</div>
+        <div class="card-header">
+            Program Super Table
+            <span class="float-right">
+                <div class="form-group row">
+                    <select class="form-control" id="ccyear">
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                        <option>2017</option>
+                        <option>2018</option>
+                        <option>2019</option>
+                        <option>2020</option>
+                        <option>2021</option>
+                        <option>2022</option>
+                        <option>2023</option>
+                        <option>2024</option>
+                        <option>2025</option>
+                    </select>
+                </div> 
+            </span>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-responsive-sm table-striped">
@@ -110,10 +129,12 @@
 
                         foreach($home_loans as $key => $home_loan)
                         {
-                            
+                            if(isset($monthlyNetworths[$key]->home_value) && isset($longTermInvests[$key]->total_invested) && isset($home_loans[$key]->beg_balance) && isset($investSupers[$key]->total_invested))
+                            {
                                 $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
                                 $difference = $total_assets - $home_loans[$key]->beg_balance;
                                 $difference_super = $total_assets - $home_loans[$key]->beg_balance - $investSupers[$key]->total_invested;
+                            }
                             
                             
 
@@ -177,9 +198,13 @@
                             echo '</tr> ';
 
 
+                            if(isset($programVYear[$key]->home_worth) && isset($programVYear[$key]->long_term_invest) && isset($programVYear[$key]->house_loan) && isset($programVYear[$key]->invest_super))
+                            {
                                 $total_assets_real = $programVYear[$key]->home_worth + $programVYear[$key]->long_term_invest;
                                 $difference_real = $total_assets_real - $programVYear[$key]->house_loan;
                                 $difference_super_real = $total_assets_real - $programVYear[$key]->house_loan - $programVYear[$key]->invest_super;
+                            }
+                            
                             
 
                             echo ' <tr> ' ; 
@@ -204,8 +229,8 @@
                                 else 
                                     echo '<td> No data</td>';
 
-                                if(isset($monthlyNetworths->cash))
-                                    echo '<td> ' . $monthlyNetworths->cash . '  </td>';
+                                if(isset($monthlyNetworths[$key]->cash))
+                                    echo '<td> ' . $monthlyNetworths[$key]->cash . '  </td>';
                                 else
                                     echo '<td> No data</td>';
 

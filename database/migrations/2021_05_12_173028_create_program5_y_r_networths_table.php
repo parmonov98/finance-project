@@ -25,12 +25,12 @@ class CreateProgram5YRNetworthsTable extends Migration
             $table->decimal('invest_personal', $precision = 20, $scale = 2)->nullable();
             $table->decimal('long_term_invest', $precision = 20, $scale = 2)->nullable();
 
-            $table->decimal('real_house_loan', $precision = 20, $scale = 2)->nullable();
-            $table->decimal('real_home_worth', $precision = 20, $scale = 2)->nullable();
-            $table->decimal('real_invest_super', $precision = 20, $scale = 2)->nullable();
-            $table->decimal('real_cash', $precision = 20, $scale = 2)->nullable();
-            $table->decimal('real_invest_personal', $precision = 20, $scale = 2)->nullable();
-            $table->decimal('real_long_term_invest', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_house_loan', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_home_worth', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_invest_super', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_cash', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_invest_personal', $precision = 20, $scale = 2)->nullable();
+            // $table->decimal('real_long_term_invest', $precision = 20, $scale = 2)->nullable();
 
             $table->boolean('approximate')->nullabe()->default(false);
 

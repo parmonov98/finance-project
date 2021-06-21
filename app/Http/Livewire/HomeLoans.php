@@ -311,7 +311,6 @@ class HomeLoans extends Component
         HomeLoan::truncate();
         HomeLoanData::truncate();
         DB::table('home_loans_savings')->truncate();
-        MonthlyNetworth::truncate();
     }
 
     public function Modifydata()

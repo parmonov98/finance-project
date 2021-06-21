@@ -58,32 +58,33 @@ class VYearNetworth extends Component
         {   
             $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
 
-            $first = $dates[0];
-
-
-            $i = 0 ;
-
-            $tab[] = null;
-
-            while(true)
+            if(!is_null($dates))
             {
-                $monthsToAdd = $i*6;
+                $first = $dates[0];
+                $i = 0 ;
+                $tab[] = null;
 
-                $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
-                $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
-
-                $i++;
-
-                if(!is_null($data))
+                while(true)
                 {
-                    Program5YRNetworth::create([
-                        "date"   => $data->pay_date,
-                        "user_id" => Auth::user()->id
-                    ]); 
-                }
-                else
-                    break;
+                    $monthsToAdd = $i*6;
 
+                    $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
+                    $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
+
+                    $i++;
+
+                    if(!is_null($data))
+                    {
+                        Program5YRNetworth::create([
+                            "date"   => $data->pay_date,
+                            "user_id" => Auth::user()->id
+                        ]); 
+                    }
+                    else
+                        break;
+
+
+                }
 
             }
 
@@ -122,7 +123,7 @@ class VYearNetworth extends Component
         }
 
         return view('livewire.v-year-networth', [
-            "home_loans" => $home_loans ? $home_loans : null,
+            "home_loans" => $home_loans ,
             "programVYear" => $programVYear ? $programVYear : null,
             "investPersonals" => $investPersonals ? $investPersonals : null, 
             "longTermInvests" => $longTermInvests ? $longTermInvests : null, 
