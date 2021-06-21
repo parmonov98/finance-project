@@ -108,7 +108,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-responsive-sm table-striped">
+                <table class="table table-responsive-xl table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xs  table-striped">
                     <thead>
                         <tr>
                             <th>Quick Home Loan Repay</th>
@@ -125,6 +125,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    
                         @php
 
                         foreach($home_loans as $key => $home_loan)

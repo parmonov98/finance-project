@@ -7,11 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
     @livewireStyles
     @stack('css')
-
-
     <style>
         th {
             position: -webkit-sticky;
@@ -28,7 +25,6 @@
             font-size: 12px;
         }
     </style>
-
 
     <title>Finance App</title>
 </head>
@@ -49,14 +45,10 @@
         @include('partials.footer')
     </div>
 
-    <script src="{{ asset('https://unpkg.com/@coreui/coreui/dist/js/coreui.bundle.min.js') }}"></script>
-
     <script src="js/main.js"></script>
     @livewireScripts
     @stack('scripts')
 
-    <script src="{{ asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
-    <script src="{{ asset('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/masking-input.js') }}" data-autoinit="true"></script>
 
 
 </body>
