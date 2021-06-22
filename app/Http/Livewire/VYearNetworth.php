@@ -97,7 +97,19 @@ class VYearNetworth extends Component
 
         $start_date = HomeLoan::select('pay_date')->first();
         if(!is_null($start_date))
-            $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
+        {
+            if($this->show < 1)
+                $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . 6 . "  months"));
+            else if($this->show >= 1 )
+                $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
+            else if ($this->show = "x")
+                $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
+
+
+
+
+        }   
+            
         else
             $end_date = null;
 
