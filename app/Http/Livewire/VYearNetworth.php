@@ -45,7 +45,7 @@ class VYearNetworth extends Component
         "houseLoan" => "house loan",
         "homeWorth" => "home worth",
         "investSuper" => "invest super",
-        "cash" => "cash", 
+        "cash" => "cash",
         "investPersonal" => "invest personal",
         "longTermInvest" => "long term invest"
     ];
@@ -55,10 +55,11 @@ class VYearNetworth extends Component
         $data = Program5YRNetworth::all()->count();
 
         if($data == 0)
-        {   
+        {
             $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
+            // dd($dates);
 
-            if(!is_null($dates))
+            if(!is_null($dates) && $dates->count() > 0)
             {
                 $first = $dates[0];
                 $i = 0 ;
@@ -78,7 +79,7 @@ class VYearNetworth extends Component
                         Program5YRNetworth::create([
                             "date"   => $data->pay_date,
                             "user_id" => Auth::user()->id
-                        ]); 
+                        ]);
                     }
                     else
                         break;
@@ -108,8 +109,8 @@ class VYearNetworth extends Component
 
 
 
-        }   
-            
+        }
+
         else
             $end_date = null;
 
@@ -126,7 +127,7 @@ class VYearNetworth extends Component
 
         foreach($programVYear as $date)
         {
-            array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first()); 
+            array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first());
             array_push($monthlyNetworths, MonthlyNetworth::where('date', $date->date)->first());
             array_push($investPersonals, InvestPersonal::where('date', $date->date)->first());
             array_push($longTermInvests, LongTermInvestment::where('date', $date->date)->first()) ;
@@ -136,9 +137,9 @@ class VYearNetworth extends Component
         return view('livewire.v-year-networth', [
             "home_loans" => $home_loans ,
             "programVYear" => $programVYear ? $programVYear : null,
-            "investPersonals" => $investPersonals ? $investPersonals : null, 
-            "longTermInvests" => $longTermInvests ? $longTermInvests : null, 
-            "investSupers" => $investSupers ? $investSupers : null, 
+            "investPersonals" => $investPersonals ? $investPersonals : null,
+            "longTermInvests" => $longTermInvests ? $longTermInvests : null,
+            "investSupers" => $investSupers ? $investSupers : null,
             "monthlyNetworths" => $monthlyNetworths ? $monthlyNetworths : null
         ]);
     }
@@ -156,7 +157,7 @@ class VYearNetworth extends Component
             $this->validate();
 
             $record = Program5YRNetworth::where('date', $date)->first();
-            
+
             $record->house_loan = $this->houseLoan;
             $record->home_worth = $this->homeWorth;
             $record->invest_super = $this->investSuper;
@@ -178,5 +179,5 @@ class VYearNetworth extends Component
     {
         Program5YRNetworth::truncate();
     }
-    
+
 }

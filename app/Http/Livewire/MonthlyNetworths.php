@@ -46,6 +46,18 @@ class MonthlyNetworths extends Component
         'date_mod' => 'date'
     ];
 
+    protected $listeners = ['saved' => 'render', 'updated'];
+
+    public function saved()
+    {
+        $this->emitTo('home-loan-update-modal', 'saved');
+        $this->render();
+    }
+    public function openUpdateHomeLoanModal($homeLoan)
+    {
+        $this->emitTo('home-loan-update-modal', 'edit', $homeLoan);
+    }
+
     public function render()
     {
         $this->show_data = 5;
@@ -58,7 +70,9 @@ class MonthlyNetworths extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
-        $home_loan = HomeLoan::select('pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
+        $home_loan = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
+
+        // dd($home_loan);
 
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
 
@@ -92,6 +106,8 @@ class MonthlyNetworths extends Component
         }
         // End ASSETS
 
+        // dd($assets);
+
         // DIFFERENCE
         foreach ($home_values as $key => $record)
             $difference[] = $assets[$key] - $record->home_value;
@@ -99,7 +115,7 @@ class MonthlyNetworths extends Component
         // End DIFFERENCE
 
 
-        // DIFFERENCE SUPER 
+        // DIFFERENCE SUPER
         foreach ($investSupers as $key => $record)
             $differenceSuper[] = $difference[$key] - $record->total_invested;
 

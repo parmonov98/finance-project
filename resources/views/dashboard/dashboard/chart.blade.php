@@ -1,4 +1,6 @@
 @extends('layouts.app')
 @section('content')
-  @livewire('monthly-networths')
+
+  <livewire:chart-dashboard />
+
 @endsection

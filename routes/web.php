@@ -29,6 +29,11 @@ Auth::routes();
 
 Route::get('/Landing-Page', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/chart', function (){
+    return view('dashboard.dashboard.chart', );
+})->name('chart.show');
+
+
 Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
 Route::get('/Landing-page', function(){
@@ -36,7 +41,7 @@ Route::get('/Landing-page', function(){
 })->name('landingPage');
 
 Route::middleware('check')->group(function () {
-    
+
     Route::get('/Invest-Personal', [InvestPersonalController::class, 'show'])->name('investpersonal.show');
 
     Route::get('/Program-Super', [ProgramSuperController::class, 'show'])->name('programsuper.show');

@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-
+// use ConsoleTVs\Charts\Registrar as Charts;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // $charts->register([
+        //     \App\Charts\DashboardChart::class
+        // ]);
         Schema::defaultStringLength(191);
     }
 }
