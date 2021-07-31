@@ -224,7 +224,14 @@
                                    <td>$ {{ $data->formatNumber($data->tot_payment) }}</td>
                                    <td>$ {{ $data->formatNumber($data->principal) }}</td>
                                    <td>$ {{ $data->formatNumber($data->interest) }}</td>
-                                   <td>$ {{ $data->formatNumber($data->end_balance) }}</td>
+                                   <td>$
+                                   <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"
+                                            wire:click="openUpdateHomeLoanModal({{ $data->id }})"
+                                            class="btn border btn-sm">
+                                        ${{ $data->formatNumber($data->end_balance) }}
+                                    </button>
+                                   {{-- {{ $data->formatNumber($data->end_balance) }} --}}
+                                   </td>
                                    <td>$ {{ $data->formatNumber($data->cum_interest) }}</td>
                               </tr>
                               @endforeach
@@ -233,4 +240,8 @@
                </div>
           </div>
      </div>
+
+
+    <livewire:home-loan-update-modal />
+    <br />
 </div>

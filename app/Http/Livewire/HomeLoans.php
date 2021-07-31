@@ -20,7 +20,9 @@ class HomeLoans extends Component
     public $ext_pay;
     public $change;
 
-    protected $listeners = ['tablesTruncated' => 'render'];
+    public $end_balance = 0;
+
+    protected $listeners = ['tablesTruncated' => 'render', 'saved'];
 
     protected $rules = [
         'loan' => 'required|numeric|min:0|not_in:0',
@@ -47,6 +49,40 @@ class HomeLoans extends Component
         'ext_pay' => 'extra payments',
     ];
 
+    public function openUpdateHomeLoanModal(HomeLoan $homeLoan)
+    {
+        $this->emitTo('home-loan-update-modal', 'edit', $homeLoan);
+    }
+
+
+    // public function edit(HomeLoan $home_loan)
+    // {
+    //     $this->end_balance = $home_loan->end_balance;
+    // }
+
+
+    public function saved(HomeLoan $home_loan, $start_date)
+    {
+        $db_data = HomeLoanData::get()->first();
+        // ddd($home_loan, $db_data);
+        $this->loan = $home_loan->end_balance;
+
+        $paidRecords = HomeLoan::where('pay_date', '<', $home_loan->pay_date)->where('user_id', auth()->id())->get();
+
+        // dd($paidRecords);
+
+        $this->date = $start_date;
+        $this->int_rate = $db_data->int_rate * 100;
+        $this->period = round(round($db_data->loan_period * 12 - $paidRecords->count(), 1) / 12, 1);
+        // dd($this->period);
+        $this->ext_pay = $db_data->opt_payment;
+        $this->nb_pay = $db_data->no_payments;
+        $this->emitTo('home-loan-update-modal', 'close');
+        $this->Modifydata();
+
+        $this->render();
+    }
+
     public function render()
     {
         $datas = HomeLoan::orderBy('pay_date', 'ASC')->get();
@@ -64,7 +100,7 @@ class HomeLoans extends Component
         $to = today()->format('Y-m-d');
 
         $total_early_pay = HomeLoan::select('tot_payment')->whereBetween('pay_date', [$from, $to])->sum('tot_payment');
-        
+
 
         $cum_interest_ext = DB::table('home_loans_savings')->select('cum_interest')->orderBy('id', 'DESC')->first();
 
@@ -73,6 +109,7 @@ class HomeLoans extends Component
         else
             $savings = null;
 
+        // dd($datas);
         return view('livewire.home-loan', [
             "datas" => $datas,
             "cum_interest" => $cum_interest ? $cum_interest->cum_interest : 'No Data',
@@ -85,13 +122,6 @@ class HomeLoans extends Component
         ]);
     }
 
-    public function Inputdata()
-    {
-        $data = $this->FormatVariable();
-        $data = $this->scheduled_payment($data);
-        $this->home_loan_data($data);
-        $this->calculate($data);
-    }
 
     public function FormatVariable()
     {
@@ -102,6 +132,7 @@ class HomeLoans extends Component
         $data['interest_rate'] =  $this->int_rate / 100;
         $data['nb_payments'] = $this->nb_pay; //months
         $data['loan_period'] = $this->period; // years
+        // dd($this->loan);
         $data['loan_amount'] = $this->loan; // loan amount
         $data['ext_payment'] = $this->ext_pay;
 
@@ -111,15 +142,29 @@ class HomeLoans extends Component
     public function scheduled_payment($data)
     {
         $up = $data['interest_rate'] * $data['loan_amount'];
+        // dd($data['interest_rate'], $data['nb_payments']);
         $pow = pow(1 + ($data['interest_rate'] / $data['nb_payments']), -$data['nb_payments'] * $data['loan_period']);
         $data['sch_payment'] = $up / ($data['nb_payments'] * (1 - $pow));
 
         return $data;
     }
 
+    public function Inputdata()
+    {
+        $data = $this->FormatVariable();
+        // dd($data);
+        $data = $this->scheduled_payment($data);
+        // dd($data);
+        $this->home_loan_data($data);
+        $this->calculate($data);
+    }
+
+
     public function home_loan_data($data)
     {
         $db_data = HomeLoanData::get()->first();
+
+        // dd($data);
 
         if (!$db_data) {
 
@@ -133,6 +178,7 @@ class HomeLoans extends Component
                 "opt_payment" => $data['ext_payment'],
                 "user_id" => Auth::user()->id
             ]);
+
         } else if ($db_data) {
 
             if ($data['date'] != $db_data->start_date) {
@@ -160,6 +206,7 @@ class HomeLoans extends Component
     {
         $stop = null;
         do {
+
             $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
 
             if ($last_record != null) {
@@ -205,6 +252,7 @@ class HomeLoans extends Component
                         $stop = 1;
                     }
                 } while ($stop == 0);
+
             } else {
 
                 $data['beg_balance'] = $data['loan_amount'];
@@ -307,7 +355,7 @@ class HomeLoans extends Component
 
     public function ResetTables()
     {
-        $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
+        // $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
         HomeLoan::truncate();
         HomeLoanData::truncate();
         DB::table('home_loans_savings')->truncate();
@@ -315,10 +363,14 @@ class HomeLoans extends Component
 
     public function Modifydata()
     {
-        $record_date = HomeLoan::where('pay_date', $this->date)->first();
 
+        // dd($this);
+        // dd($this->date);
+        $record_date = HomeLoan::where('pay_date', $this->date)->first();
+        // dd($this->date, $record_date);
         if (!is_null($record_date)) {
             $data = $this->FormatVariable();
+            // dd($data);
             $data = $this->scheduled_payment($data);
             $this->home_loan_data($data);
 
@@ -328,12 +380,12 @@ class HomeLoans extends Component
             DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
             $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
-            
-            if (isset($last_record['end_balance'])) 
+
+            if (isset($last_record['end_balance']))
             {
                 $data['beg_balance'] = $last_record->end_balance;
                 $this->Recalculate($data);
-                $this->RecalculateSavings($data);   
+                $this->RecalculateSavings($data);
             } else
             {
                 $this->calculate($data);
@@ -345,7 +397,7 @@ class HomeLoans extends Component
 
     public function Recalculate($data)
     {
-       
+
         $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
 
         $stop = null;
@@ -381,6 +433,7 @@ class HomeLoans extends Component
 
                 $stop = 0;
             } else {
+                // dd($data['beg_balance'], $data['principal']);
                 $stop = 1;
             }
         } while ($stop == 0);
@@ -396,6 +449,7 @@ class HomeLoans extends Component
         $stop = null;
         do {
             $last_record = DB::table('home_loans_savings')->select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
+            // dd($last_record, $data);
             $data['beg_balance'] = $last_record->end_balance;
 
             $daystosum = 1;

@@ -164,7 +164,6 @@ class ChartDashboard extends Component
 
         $yearText = "['" . implode("','", $dates->toArray()) . "']";
 
-
         $total_debtsRecords = MonthlyNetworth::query()
                 ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
                 ->whereBetween(DB::raw('YEAR(date)'), [$this->from_year, $this->to_year])

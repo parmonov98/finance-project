@@ -48,8 +48,10 @@ class MonthlyNetworths extends Component
 
     protected $listeners = ['saved' => 'render', 'updated'];
 
-    public function saved()
+    public function saved(HomeLoan $home_loan)
     {
+
+        // dd($home_loan);
         $this->emitTo('home-loan-update-modal', 'saved');
         $this->render();
     }
