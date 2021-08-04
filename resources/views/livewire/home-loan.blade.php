@@ -1,4 +1,5 @@
 <div>
+    <x-loader/>
      <!-- First row of the two cards -->
      <div class="row">
           <!-- First Card -->

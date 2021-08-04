@@ -61,7 +61,7 @@ class InvestPersonals extends Component
         if(!$check)
             $this->Calculate($data);
         else
-            $this->Recalculate($data);    
+            $this->Recalculate($data);
     }
 
     public function FormatVariable()
@@ -91,7 +91,7 @@ class InvestPersonals extends Component
                 "fees" => $data['fees'],
                 "start_date" => $data['date'],
                 "inflation" => $data['inflation'],
-                "user_id" => Auth::user()->id
+                "user_id" => Auth::user()->id()
             ]);
         } else if ($db_data) {
             InvestPersonalData::truncate();
@@ -102,7 +102,7 @@ class InvestPersonals extends Component
                 "fees" => $data['fees'],
                 "start_date" => $data['date'],
                 "inflation" => $data['inflation'],
-                "user_id" => Auth::user()->id
+                "user_id" => Auth::user()->id()
             ]);
         }
     }
@@ -154,18 +154,18 @@ class InvestPersonals extends Component
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
             $total_invested = $monthlyInvest + $interest - $after_fees;
 
-            $change[$key]->fees = $data['fees']; 
-            $change[$key]->monthly_account_fee = $data['monthlyFee']; 
+            $change[$key]->fees = $data['fees'];
+            $change[$key]->monthly_account_fee = $data['monthlyFee'];
             $change[$key]->inflation = $data['inflation'];
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
-            $change[$key]->after_fees = $after_fees; 
-            $change[$key]->total_invested = $total_invested;            
+            $change[$key]->after_fees = $after_fees;
+            $change[$key]->total_invested = $total_invested;
             $change[$key]->date = $date->pay_date;
             $change[$key]->return_on_invest = $return_on_invest;
             $change[$key]->save();
         }
-        
+
     }
 
     public function ResetTables()
@@ -174,5 +174,5 @@ class InvestPersonals extends Component
         InvestPersonalData::truncate();
     }
 
-    
+
 }
