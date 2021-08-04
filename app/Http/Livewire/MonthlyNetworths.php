@@ -55,8 +55,9 @@ class MonthlyNetworths extends Component
         $this->emitTo('home-loan-update-modal', 'saved');
         $this->render();
     }
-    public function openUpdateHomeLoanModal($homeLoan)
+    public function openUpdateHomeLoanModal(HomeLoan $homeLoan)
     {
+//        dd(1);
         $this->emitTo('home-loan-update-modal', 'edit', $homeLoan);
     }
 

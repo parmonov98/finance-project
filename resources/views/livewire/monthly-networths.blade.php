@@ -1,5 +1,11 @@
 <div>
     <x-loader/>
+
+
+
+    <livewire:home-loan-update-modal/>
+    <br/>
+
     <div class="row">
         <div class="col-12">
             <form wire:submit.prevent="ModifyData">
@@ -234,9 +240,6 @@
             </div>
         </div>
 
-
-        <livewire:home-loan-update-modal/>
-        <br/>
 
     </div>
 </div>

@@ -91,7 +91,7 @@ class InvestPersonals extends Component
                 "fees" => $data['fees'],
                 "start_date" => $data['date'],
                 "inflation" => $data['inflation'],
-                "user_id" => Auth::user()->id()
+                "user_id" => Auth::user()->id
             ]);
         } else if ($db_data) {
             InvestPersonalData::truncate();
@@ -102,7 +102,7 @@ class InvestPersonals extends Component
                 "fees" => $data['fees'],
                 "start_date" => $data['date'],
                 "inflation" => $data['inflation'],
-                "user_id" => Auth::user()->id()
+                "user_id" => Auth::user()->id
             ]);
         }
     }
@@ -110,6 +110,8 @@ class InvestPersonals extends Component
     public function Calculate($data)
     {
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
+
+        dd($data, $dates);
 
         foreach($dates as $date)
         {
