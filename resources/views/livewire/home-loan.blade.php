@@ -1,6 +1,12 @@
 <div>
     <x-loader/>
-     <!-- First row of the two cards -->
+
+
+
+    <livewire:home-loan-update-modal/>
+    <br/>
+
+    <!-- First row of the two cards -->
      <div class="row">
           <!-- First Card -->
           @if(is_null($check))
@@ -242,7 +248,4 @@
           </div>
      </div>
 
-
-    <livewire:home-loan-update-modal />
-    <br />
 </div>

@@ -57,7 +57,8 @@
   <script>
     window.addEventListener('closeModalOfHomeLoan', event => {
       $("#updateHomeLoan").modal('hide');
-    })
+    });
+
     window.addEventListener('updatedChart', (event) => {
       console.log(event.detail);
       // var ctx = document.getElementById("canvas").getContext("2d")

@@ -22,7 +22,7 @@ class HomeLoans extends Component
 
     public $end_balance = 0;
 
-    protected $listeners = ['tablesTruncated' => 'render', 'saved'];
+    protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
 
     protected $rules = [
         'loan' => 'required|numeric|min:0|not_in:0',
@@ -64,12 +64,8 @@ class HomeLoans extends Component
     public function saved(HomeLoan $home_loan, $start_date)
     {
         $db_data = HomeLoanData::get()->first();
-        // ddd($home_loan, $db_data);
         $this->loan = $home_loan->end_balance;
-
         $paidRecords = HomeLoan::where('pay_date', '<', $home_loan->pay_date)->where('user_id', auth()->id())->get();
-
-        // dd($paidRecords);
 
         $this->date = $start_date;
         $this->int_rate = $db_data->int_rate * 100;

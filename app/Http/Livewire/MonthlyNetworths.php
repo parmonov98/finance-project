@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\HomeLoanData;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\ProgramSuper;
@@ -13,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class MonthlyNetworths extends Component
 {
+    public $home_loan;
     public $home_value_mod;
     public $cash_mod;
     public $home_app_mod;
@@ -46,20 +48,95 @@ class MonthlyNetworths extends Component
         'date_mod' => 'date'
     ];
 
-    protected $listeners = ['saved' => 'render', 'updated'];
+    protected $listeners = ['saved', 'rerender'];
 
-    public function saved(HomeLoan $home_loan)
-    {
+    public function rerender(){
 
-        // dd($home_loan);
-        $this->emitTo('home-loan-update-modal', 'saved');
+        $this->show_data = 5;
+        $start_date = HomeLoan::select('pay_date')->first();
+        if (!is_null($start_date))
+            $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show_data . "  years"));
+        else
+            $end_date = null;
+
+        $from = date($start_date ? $start_date->pay_date : null);
+        $to = date($end_date ? $end_date : null);
+
+        $home_loan = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
+
+        $this->emitTo('modal-wrapper-component', 'rerender', $home_loan);
         $this->render();
+//        $this->getRenderedChildren(['modal-wrapper-component']);
     }
-    public function openUpdateHomeLoanModal(HomeLoan $homeLoan)
+
+    public function FormatHomeVariables() :array
     {
-//        dd(1);
-        $this->emitTo('home-loan-update-modal', 'edit', $homeLoan);
+        // throw ValidationException::withMessages(['date' => 'This value is incorrect']);
+        $this->validate();
+        // $data['date'] = date('d-m-Y', strtotime($this->date)); // convert to d-m-Y format;
+        $data['date'] = $this->date;
+        $data['interest_rate'] =  $this->int_rate / 100;
+        $data['nb_payments'] = $this->nb_pay; //months
+        $data['loan_period'] = $this->period; // years
+        // dd($this->loan);
+        $data['loan_amount'] = $this->loan; // loan amount
+        $data['ext_payment'] = $this->ext_pay;
+
+        return $data;
     }
+
+    public function scheduled_payment($data)
+    {
+        $up = $data['interest_rate'] * $data['loan_amount'];
+        $pow = pow(1 + ($data['interest_rate'] / $data['nb_payments']), -$data['nb_payments'] * $data['loan_period']);
+        $data['sch_payment'] = $up / ($data['nb_payments'] * (1 - $pow));
+
+        return $data;
+    }
+
+
+    public function home_loan_data($data)
+    {
+        $db_data = HomeLoanData::get()->first();
+
+        // dd($data);
+
+        if (!$db_data) {
+
+            HomeLoanData::create([
+                "loan_amount" => $data['loan_amount'],
+                "int_rate" => $data['interest_rate'],
+                "loan_period" => $data['loan_period'],
+                "no_payments" => $data['nb_payments'],
+                "start_date" => $data['date'],
+                "sch_payment" => $data['sch_payment'],
+                "opt_payment" => $data['ext_payment'],
+                "user_id" => Auth::user()->id
+            ]);
+
+        } else if ($db_data) {
+
+            if ($data['date'] != $db_data->start_date) {
+                $db_data->start_date = $data['date'];
+                $db_data->save();
+            }
+
+            if ($data['loan_amount'] != $db_data->loan_amount) {
+                HomeLoanData::truncate();
+                HomeLoanData::create([
+                    "loan_amount" => $data['loan_amount'],
+                    "int_rate" => $data['interest_rate'],
+                    "loan_period" => $data['loan_period'],
+                    "no_payments" => $data['nb_payments'],
+                    "start_date" => $data['date'],
+                    "sch_payment" => $data['sch_payment'],
+                    "opt_payment" => $data['ext_payment'],
+                    "user_id" => Auth::user()->id
+                ]);
+            }
+        }
+    }
+
 
     public function render()
     {
@@ -73,11 +150,9 @@ class MonthlyNetworths extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
-        $home_loan = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
-
-        // dd($home_loan);
-
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
+        $this->home_loan = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
+
 
         // ASSETS
         $home_values = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
@@ -87,7 +162,12 @@ class MonthlyNetworths extends Component
         $investSupers = ProgramSuper::whereBetween('date', [$from, $to])->get();
         $other_invests = MonthlyNetworth::whereBetween('date', [$from, $to])->get();
 
-        $value1 = null; $value2 = null; $value3 = null; $value4 = null; $value5 = null; $value6 = null;
+        $value1 = null;
+        $value2 = null;
+        $value3 = null;
+        $value4 = null;
+        $value5 = null;
+        $value6 = null;
 
         foreach ($dates as $date) {
             $home_value = MonthlyNetworth::select('home_value')->Where('date', $date->date)->first();
@@ -105,7 +185,7 @@ class MonthlyNetworths extends Component
             $value5 += $investSuper ? $investSuper->total_invested : 0;
             $value6 += $other_invest->other_invest ? $other_invest->other_invest : 0;
 
-            $assets[] =  $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
+            $assets[] = $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
         }
         // End ASSETS
 
@@ -144,14 +224,14 @@ class MonthlyNetworths extends Component
 
 
         return view('livewire.monthly-networths', [
-            "home_loan" => $home_loan,
+            "home_loan" => $this->home_loan->toArray(),
             "home_values" => $home_values,
             "cashs" => $cashs,
             "other_invests" => $other_invests,
             "investSupers" => $investSupers,
             "investPersonals" => $investPersonals,
             "longTermInvests" => $longTermInvests,
-            "assets" => isset($assets) ? $assets : null ,
+            "assets" => isset($assets) ? $assets : null,
             "difference" => isset($difference) ? $difference : null,
             "differenceSuper" => isset($differenceSuper) ? $differenceSuper : null,
             "runningDiff" => isset($runningDiff) ? $runningDiff : null,
@@ -241,7 +321,7 @@ class MonthlyNetworths extends Component
                     foreach ($dates as $record) {
 
                         if ($record->id == 1) {
-                            $record->home_value =  $var_1['home_value_mod'];
+                            $record->home_value = $var_1['home_value_mod'];
                             $record->home_app = $var_2['home_app_mod'];
                             $record->passed = true;
                             $record->save();

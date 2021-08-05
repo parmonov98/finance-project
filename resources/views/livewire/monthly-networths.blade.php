@@ -1,11 +1,6 @@
 <div>
     <x-loader/>
 
-
-
-    <livewire:home-loan-update-modal/>
-    <br/>
-
     <div class="row">
         <div class="col-12">
             <form wire:submit.prevent="ModifyData">
@@ -109,13 +104,16 @@
                             @foreach ($home_loan as $data)
                                 <td>
                                     <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"
-                                            wire:click="openUpdateHomeLoanModal({{ $data->id }})"
+                                            wire:click="$emitTo('home-loan-update-modal', 'edit', {{ $data['id'] }})"
                                             class="btn border btn-sm">
-                                        ${{ $data->formatNumber($data->end_balance) }}</button>
-                                    {{-- <a role="button"
-                                      wire:click="openUpdateHomeLoanModal('{{ $data->id }}')">{{ $data->end_balance }}</a> --}}
+                                        ${{ number_format($data['end_balance'], 2, '.', ',') }}
+                                    </button>
+
                                 </td>
                             @endforeach
+                            <livewire:home-loan-update-modal/>
+{{--                            @livewire('modal-wrapper-component', ['home_loan' => $home_loan])--}}
+
                         </tr>
 
                         <tr>
@@ -242,4 +240,5 @@
 
 
     </div>
+
 </div>
