@@ -112,8 +112,6 @@
                                 </td>
                             @endforeach
                             <livewire:home-loan-update-modal/>
-{{--                            @livewire('modal-wrapper-component', ['home_loan' => $home_loan])--}}
-
                         </tr>
 
                         <tr>

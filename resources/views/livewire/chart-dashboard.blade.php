@@ -16,54 +16,56 @@
 
       var year = months.map(item => item.toString());
       console.log(year);
-      var total_debts = <?php echo $total_debts; ?>;
-      var total_assets = <?php echo $total_assets; ?>;
-      var differences = <?php echo $differences; ?>;
-      var differences_vs_super = <?php echo $differences_vs_super; ?>;
-      var runningDiff_minus_cash_plus_equity = <?php echo $runningDiff_minus_cash_plus_equity; ?>;
-      var runningDiff_minus_overall = <?php echo $runningDiff_minus_overall; ?>;
+      var total_debts = <?php echo $total_debts ?? ''; ?>;
+      {{--var total_assets = <?php echo $total_assets ?? ''; ?>;--}}
+      {{--var differences = <?php echo $differences; ?>;--}}
+      {{--var differences_vs_super = <?php echo $differences_vs_super; ?>;--}}
+      {{--var runningDiff_minus_cash_plus_equity = <?php echo $runningDiff_minus_cash_plus_equity; ?>;--}}
+      {{--var runningDiff_minus_overall = <?php echo $runningDiff_minus_overall; ?>;--}}
 
 
       window.lineChartData = {
         labels: year,
         datasets: [{
-          label: 'Total Debt',
+          label: 'Home loan',
 
           backgroundColor: "transparent",
           color: "blue",
           borderColor: 'rgb(75, 192, 192)',
           data: total_debts
-        }, {
-          label: 'Total Assets',
-          backgroundColor: "transparent",
-          borderColor: 'rgb(105, 0, 0)',
-          color: "red",
-          data: total_assets
-        }, {
-          label: 'Difference',
-          backgroundColor: "transparent",
-          borderColor: 'rgb(175, 92, 92)',
-          color: "red",
-          data: differences
-        }, {
-          label: 'Differences + Super',
-          backgroundColor: "transparent",
-          borderColor: 'rgb(175, 175, 175)',
-          color: "red",
-          data: differences_vs_super
-        }, {
-          label: 'Running diff - Cash + Equity',
-          backgroundColor: "transparent",
-          borderColor: 'rgb(5, 5, 75)',
-          color: "red",
-          data: runningDiff_minus_cash_plus_equity
-        }, {
-          label: 'Running diff - overall',
-          backgroundColor: "transparent",
-          borderColor: 'rgb(15, 15, 255)',
-          color: "red",
-          data: runningDiff_minus_overall
-        }]
+        }
+        //     {
+        //   label: 'Total Assets',
+        //   backgroundColor: "transparent",
+        //   borderColor: 'rgb(105, 0, 0)',
+        //   color: "red",
+        //   data: total_assets
+        // }, {
+        //   label: 'Difference',
+        //   backgroundColor: "transparent",
+        //   borderColor: 'rgb(175, 92, 92)',
+        //   color: "red",
+        //   data: differences
+        // }, {
+        //   label: 'Differences + Super',
+        //   backgroundColor: "transparent",
+        //   borderColor: 'rgb(175, 175, 175)',
+        //   color: "red",
+        //   data: differences_vs_super
+        // }, {
+        //   label: 'Running diff - Cash + Equity',
+        //   backgroundColor: "transparent",
+        //   borderColor: 'rgb(5, 5, 75)',
+        //   color: "red",
+        //   data: runningDiff_minus_cash_plus_equity
+        // }, {
+        //   label: 'Running diff - overall',
+        //   backgroundColor: "transparent",
+        //   borderColor: 'rgb(15, 15, 255)',
+        //   color: "red",
+        //   data: runningDiff_minus_overall
+        // }
+        ]
       };
 
       window.onload = function() {

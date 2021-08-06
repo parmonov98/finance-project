@@ -105,10 +105,6 @@ class VYearNetworth extends Component
                 $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
             else if ($this->show = "x")
                 $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
-
-
-
-
         }
 
         else

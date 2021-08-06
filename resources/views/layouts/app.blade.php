@@ -65,7 +65,7 @@
       console.log(window.myLinechart);
       //   console.log(window.lineChartData.datasets);
       //   window.myLinechart.data.labels.push(label);
-      window.myLinechart.config.data.labels = event.detail.years;
+      window.myLinechart.config.data.labels = event.detail.months;
       window.myLinechart.config.data.datasets.forEach((dataset, index) => {
         if (dataset.label == "Total Debt") {
           window.myLinechart.config.data.datasets[index].data = event.detail.total_debts;
