@@ -64,6 +64,14 @@
       $("#updateInvestPersonal").modal('hide');
         $(".modal-backdrop.show").remove();
     });
+    window.addEventListener('closeModalOfInvestmentSuper', event => {
+      $("#updateInvestmentSuper").modal('hide');
+        $(".modal-backdrop.show").remove();
+    });
+    window.addEventListener('closeModalOfLongTermInvestment', event => {
+      $("#updateLongTermInvestment").modal('hide');
+        $(".modal-backdrop.show").remove();
+    });
 
     window.addEventListener('updatedChart', (event) => {
       console.log(event.detail);

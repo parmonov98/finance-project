@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ProgramSuper;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\InvestPersonal;
@@ -12,6 +13,8 @@ use App\Models\LongTermInvestmentsData;
 
 class LongTermInvestments extends Component
 {
+    protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
+    
     public $min;
     public $max;
     public $inflation;
@@ -43,6 +46,11 @@ class LongTermInvestments extends Component
         'max' => 'max return on invest',
         'monthlyInvest' => 'monthly investment',
     ];
+
+    public function openUpdateLongTermInvestmentModal(LongTermInvestment $longTermInvestment)
+    {
+        $this->emitTo('long-term-investment-update-modal', 'edit', $longTermInvestment);
+    }
 
     public function render()
     {
@@ -111,9 +119,10 @@ class LongTermInvestments extends Component
     }
 
     public function Calculate($data)
-    {   
+    {
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();;
 
+        $totalInvestedSum = 0;
         foreach($dates as $date)
         {
 
@@ -125,7 +134,7 @@ class LongTermInvestments extends Component
 
         $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
-        $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
+        $totalInvestedSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
 
         LongTermInvestment::create([
             "user_id" => Auth::user()->id,
@@ -135,7 +144,7 @@ class LongTermInvestments extends Component
             "monthly_invest" => $data['monthlyInvest'],
             "interest" => $data['interest'],
             "after_fees" => $data['after_fees'],
-            "total_invested" => $data['total_invested'],
+            "total_invested" => $totalInvestedSum,
             "date" => $date->pay_date,
             "return_on_invest" => $data['return_on_invest']
         ]);
@@ -150,26 +159,28 @@ class LongTermInvestments extends Component
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
         $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
 
+        $totalInvestedSum = 0;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
-            $total_invested = $monthlyInvest + $interest - $after_fees;
 
-            $change[$key]->fees = $data['fees']; 
-            $change[$key]->monthly_account_fee = $data['monthlyFee']; 
+            $totalInvestedSum += $monthlyInvest + $interest - $after_fees;
+
+            $change[$key]->fees = $data['fees'];
+            $change[$key]->monthly_account_fee = $data['monthlyFee'];
             $change[$key]->inflation = $data['inflation'];
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
-            $change[$key]->after_fees = $after_fees; 
-            $change[$key]->total_invested = $total_invested;            
+            $change[$key]->after_fees = $after_fees;
+            $change[$key]->total_invested = $totalInvestedSum;
             $change[$key]->date = $date->pay_date;
             $change[$key]->return_on_invest = $return_on_invest;
             $change[$key]->save();
         }
-        
+
     }
 
     public function ResetTables()
@@ -178,6 +189,6 @@ class LongTermInvestments extends Component
         LongTermInvestmentsData::truncate();
     }
 
-    
+
 
 }

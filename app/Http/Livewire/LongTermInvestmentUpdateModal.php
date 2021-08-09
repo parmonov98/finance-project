@@ -2,15 +2,17 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\HomeLoan;
-use App\Models\SuperData;
+use App\Models\LongTermInvestment;
+use App\Models\LongTermInvestmentsData;
 use App\Models\ProgramSuper;
+use App\Models\SuperData;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
-class Super extends Component
+class LongTermInvestmentUpdateModal extends Component
 {
-    protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
+    protected $listeners = ['edit', 'saved' => '$refresh', 'tablesTruncated' => 'render', 'updated', 'close'];
 
     public $min;
     public $max;
@@ -44,19 +46,54 @@ class Super extends Component
         'monthlyInvest' => 'monthly investment',
     ];
 
-    public function openUpdateInvestmentSuperModal(ProgramSuper $programSuper)
+    public $is_open = false;
+
+    public $total_invested = 0;
+
+
+    public $longterm_investment;
+
+    public function edit(LongTermInvestment $longTermInvestment)
     {
-        $this->emitTo('investment-super-update-modal', 'edit', $programSuper);
+
+        $this->total_invested = $longTermInvestment->total_invested;
+        $this->longterm_investment = $longTermInvestment;
+
+        $longTermInvestmentData = LongTermInvestmentsData::all()->first();
+//        dd($longTermInvestmentData);
+        $this->invest_personal = $longTermInvestmentData;
+        $this->min = $longTermInvestmentData->min;
+        $this->max = $longTermInvestmentData->max;
+        $this->inflation = $longTermInvestmentData->inflation * 100;
+        $this->fees = $longTermInvestmentData->fees;
+        $this->monthlyInvest = $longTermInvestmentData->monthly_invest;
+        $this->date = $longTermInvestment->next()->date;
+        $this->monthlyFee = $longTermInvestment->monthly_account_fee;
+
+        $this->is_open = true;
+
     }
 
-
-    public function render()
+    public function save()
     {
-        $datas = ProgramSuper::orderBy('date')->get();
+        if ($this->longterm_investment !== null) {
+            $this->longterm_investment->total_invested = $this->total_invested;
+            $this->longterm_investment->save();
+            $this->longterm_investment->refresh();
 
-        return view('livewire.super', [
-            "datas" => $datas,
-        ]);
+            $this->InputData();
+
+            $this->emitTo('monthly-networths', 'rerender');
+            $this->close();
+            $this->emitTo('long-term-investments', 'rerender');
+
+        }
+    }
+
+    public function close()
+    {
+        $this->is_open = false;
+        $this->dispatchBrowserEvent('closeModalOfLongTermInvestment');
     }
 
     public function InputData()
@@ -64,13 +101,12 @@ class Super extends Component
         $data = $this->FormatVariable();
         $this->InvestPersonalData($data);
 
-        $check = ProgramSuper::select('total_invested')->orderBy('id', 'DESC')->first();
+        $check = LongTermInvestment::select('total_invested')->orderBy('id', 'DESC')->first();
 
         if(!$check)
             $this->Calculate($data);
         else
             $this->Recalculate($data);
-
     }
 
     public function FormatVariable()
@@ -79,7 +115,7 @@ class Super extends Component
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
         $data['inflation'] = $this->inflation / 100; // inflation
-        $data['fees'] = $this->fees / 100; // fees percentages
+        $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
         $data['date'] = $this->date;
@@ -89,11 +125,11 @@ class Super extends Component
 
     public function InvestPersonalData($data)
     {
-        $db_data = SuperData::get()->first();
+        $db_data = LongTermInvestmentsData::get()->first();
 
         if (!$db_data) {
 
-            SuperData::create([
+            LongTermInvestmentsData::create([
                 "min" => $data['min'],
                 "max" => $data['max'],
                 "monthly_invest" => $data['monthlyInvest'],
@@ -104,8 +140,8 @@ class Super extends Component
             ]);
         } else if ($db_data) {
 
-            SuperData::truncate();
-            SuperData::create([
+            LongTermInvestmentsData::truncate();
+            LongTermInvestmentsData::create([
                 "min" => $data['min'],
                 "max" => $data['max'],
                 "monthly_invest" => $data['monthlyInvest'],
@@ -119,11 +155,11 @@ class Super extends Component
 
     public function Calculate($data)
     {
-        $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
+        $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();;
 
-        $superSum = 0;
         foreach($dates as $date)
         {
+
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
@@ -132,10 +168,9 @@ class Super extends Component
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
-            $superSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
-            $data['total_invested'] = $superSum;
+            $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
 
-            ProgramSuper::create([
+            LongTermInvestment::create([
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
                 "monthly_account_fee" => $data['monthlyFee'],
@@ -152,12 +187,12 @@ class Super extends Component
 
     public function Recalculate($data)
     {
+
         $from = $data['date'];
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
-        $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
-
-        $superSum = 0;
+        $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
+        $totalInvestedSum = $this->total_invested;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
@@ -165,8 +200,7 @@ class Super extends Component
             $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
             $total_invested = $monthlyInvest + $interest - $after_fees;
-
-            $superSum += $monthlyInvest + $interest - $after_fees;
+            $totalInvestedSum += $monthlyInvest + $interest - $after_fees;
 
             $change[$key]->fees = $data['fees'];
             $change[$key]->monthly_account_fee = $data['monthlyFee'];
@@ -174,16 +208,21 @@ class Super extends Component
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
             $change[$key]->after_fees = $after_fees;
-            $change[$key]->total_invested = $superSum;
+            $change[$key]->total_invested = $totalInvestedSum;
             $change[$key]->date = $date->pay_date;
             $change[$key]->return_on_invest = $return_on_invest;
             $change[$key]->save();
         }
+
     }
 
     public function ResetTables()
     {
-        ProgramSuper::truncate();
-        SuperData::truncate();
+        LongTermInvestment::truncate();
+        LongTermInvestmentsData::truncate();
+    }
+    public function render()
+    {
+        return view('livewire.long-term-investment-update-modal');
     }
 }

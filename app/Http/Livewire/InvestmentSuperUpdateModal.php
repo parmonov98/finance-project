@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\HomeLoan;
-use App\Models\SuperData;
 use App\Models\ProgramSuper;
+use App\Models\SuperData;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
-class Super extends Component
+class InvestmentSuperUpdateModal extends Component
 {
-    protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
+
+    protected $listeners = ['edit', 'saved' => '$refresh', 'tablesTruncated' => 'render', 'updated', 'close'];
 
     public $min;
     public $max;
@@ -19,6 +20,8 @@ class Super extends Component
     public $monthlyInvest;
     public $date;
     public $monthlyFee;
+
+    public $is_open = false;
 
     protected $rules = [
         "min" => 'required|numeric',
@@ -44,21 +47,50 @@ class Super extends Component
         'monthlyInvest' => 'monthly investment',
     ];
 
-    public function openUpdateInvestmentSuperModal(ProgramSuper $programSuper)
+    public $total_invested = 0;
+
+    public $invest_super;
+
+    public function edit(ProgramSuper $investSuper)
     {
-        $this->emitTo('investment-super-update-modal', 'edit', $programSuper);
+
+        $this->total_invested = $investSuper->total_invested;
+        $this->invest_super = $investSuper;
+
+        $investSuperData = SuperData::all()->first();
+        $this->invest_personal = $investSuperData;
+        $this->min = $investSuperData->min;
+        $this->max = $investSuperData->max;
+        $this->inflation = $investSuperData->inflation * 100;
+        $this->fees = $investSuperData->fees;
+        $this->monthlyInvest = $investSuperData->monthly_invest;
+        $this->date = $investSuper->next()->date;
+        $this->monthlyFee = $investSuper->monthly_account_fee;
+
+        $this->is_open = true;
     }
 
-
-    public function render()
+    public function save()
     {
-        $datas = ProgramSuper::orderBy('date')->get();
+        if ($this->invest_super !== null) {
+            $this->invest_super->total_invested = $this->total_invested;
+            $this->invest_super->save();
+            $this->invest_super->refresh();
 
-        return view('livewire.super', [
-            "datas" => $datas,
-        ]);
+            $this->InputData();
+
+            $this->emitTo('monthly-networths', 'rerender');
+            $this->close();
+            $this->emitTo('super', 'rerender');
+
+        }
     }
 
+    public function close()
+    {
+        $this->is_open = false;
+        $this->dispatchBrowserEvent('closeModalOfInvestmentSuper');
+    }
     public function InputData()
     {
         $data = $this->FormatVariable();
@@ -157,16 +189,16 @@ class Super extends Component
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
         $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
 
-        $superSum = 0;
+        $totalInvestSum = $this->total_invested;
+
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
-            $total_invested = $monthlyInvest + $interest - $after_fees;
 
-            $superSum += $monthlyInvest + $interest - $after_fees;
+            $totalInvestSum += $monthlyInvest + $interest - $after_fees;
 
             $change[$key]->fees = $data['fees'];
             $change[$key]->monthly_account_fee = $data['monthlyFee'];
@@ -174,7 +206,7 @@ class Super extends Component
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
             $change[$key]->after_fees = $after_fees;
-            $change[$key]->total_invested = $superSum;
+            $change[$key]->total_invested = $totalInvestSum;
             $change[$key]->date = $date->pay_date;
             $change[$key]->return_on_invest = $return_on_invest;
             $change[$key]->save();
@@ -186,4 +218,10 @@ class Super extends Component
         ProgramSuper::truncate();
         SuperData::truncate();
     }
+
+    public function render()
+    {
+        return view('livewire.investment-super-update-modal');
+    }
+
 }

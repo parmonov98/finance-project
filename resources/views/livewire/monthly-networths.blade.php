@@ -88,6 +88,8 @@
                     </style>
                     <livewire:home-loan-update-modal/>
                     <livewire:invest-personal-update-modal/>
+                    <livewire:investment-super-update-modal/>
+                    <livewire:long-term-investment-update-modal/>
 
                     <table class="table table-responsive" style=" white-space: nowrap;">
                         <tr>
@@ -146,7 +148,14 @@
                         <tr>
                             <th>Investment Super</th>
                             @foreach ($investSupers as $data)
-                                <td>{{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}</td>
+                                <td>
+{{--                                    {{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}--}}
+                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateInvestmentSuper"
+                                            wire:click="$emitTo('investment-super-update-modal', 'edit', {{ $data['id'] }})"
+                                            class="btn border btn-sm">
+                                        ${{ $data->formatNumber($data->total_invested) }}
+                                    </button>
+                                </td>
                             @endforeach
                         </tr>
 
@@ -173,7 +182,14 @@
                         <tr>
                             <th>Long Term Investment</th>
                             @foreach ($longTermInvests as $data)
-                                <td>{{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}</td>
+                                <td>
+{{--                                    {{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}--}}
+                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateLongTermInvestment"
+                                            wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"
+                                            class="btn border btn-sm">
+                                        $ {{ $data->formatNumber($data->total_invested)  }}
+                                    </button>
+                                </td>
                             @endforeach
                         </tr>
                         <tr>

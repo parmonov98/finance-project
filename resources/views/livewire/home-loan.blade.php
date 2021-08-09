@@ -1,8 +1,6 @@
 <div>
     <x-loader/>
 
-
-
     <livewire:home-loan-update-modal/>
     <br/>
 
