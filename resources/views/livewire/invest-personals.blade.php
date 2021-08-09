@@ -1,4 +1,5 @@
 <div>
+    <x-loader/>
     <form wire:submit.prevent="InputData">
         <div class="card">
             <div class="card-header"><strong>Invest Personal</strong> <small>Form</small></div>
@@ -87,8 +88,8 @@
             </div>
         </div>
     </form>
-    
 
+    <livewire:invest-personal-update-modal/>
     <div class="card">
         <div class="card-header"><i class="fa fa-align-justify"></i> Invest Personal Table</div>
         <div class="card-body">
@@ -116,7 +117,14 @@
                         <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>
                         <td>$ {{ $data->formatNumber($data->interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
-                        <td>$ {{ $data->formatNumber($data->total_invested)  }}</td>
+                        <td>
+{{--                            <button data-toggle="modal" data-toggle="modal" data-target="#updateInvestPersonal"--}}
+{{--                                    wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"--}}
+{{--                                    class="btn border btn-sm">--}}
+{{--                                $ {{ $data->formatNumber($data->total_invested)  }}--}}
+{{--                            </button>--}}
+                            $ {{ $data->formatNumber($data->total_invested)  }}
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>

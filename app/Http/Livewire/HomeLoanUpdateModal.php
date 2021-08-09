@@ -18,7 +18,7 @@ use App\Models\HomeLoanData;
 class HomeLoanUpdateModal extends Component
 {
     protected $listeners = ['edit', 'saved' => '$refresh', 'tablesTruncated' => 'render', 'updated', 'close'];
-    // protected $listeners = ['saved' => 'render', 'updated'];
+
     public $is_open = false;
     public $end_balance = 0;
     public $home_loan = null;
@@ -72,7 +72,8 @@ class HomeLoanUpdateModal extends Component
 
     public function edit(HomeLoan $home_loan)
     {
-
+//        dd($month_date);
+//        $home_loan = HomeLoan::firstWhere('pay_date', $month_date);
         $homeLoanData = HomeLoanData::all()->first();
         $this->home_loan = $home_loan;
         $this->end_balance = $home_loan->end_balance;
@@ -90,11 +91,7 @@ class HomeLoanUpdateModal extends Component
             $this->home_loan->save();
             $this->home_loan->refresh();
 
-//            dd($this->home_loan);
-
-
             $this->update($this->home_loan, $this->home_loan->next()->pay_date);
-//            $this->emitTo('modal-wrapper-component', 'saved');
             $this->emitTo('monthly-networths', 'rerender');
 //            $this->emitTo('home-loans', 'rerender');
             $this->close();

@@ -22,8 +22,6 @@ class CheckHomeLoan
         if(!$check)
             return response()->view('check');
 
-
-
         return $next($request);
     }
 }

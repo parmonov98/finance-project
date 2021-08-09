@@ -1,7 +1,7 @@
 <div class="">
 
   <div class="modal {{ $is_open ? 'show ' : '' }} fade" id="updateHomeLoan" tabindex="-1"
-    style="{{ $is_open ? 'display:block;' : 'display:none;' }}" aria-labelledby="exampleModalLabel"
+    style="{{ $is_open ? 'display:block;' : 'display:none;' }}" aria-labelledby="updateHomeLoan"
     aria-hidden="true">
     <div class="modal-dialog modal-content">
       <form class="edit_home_loan_form " wire:submit.prevent="save">

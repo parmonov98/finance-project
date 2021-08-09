@@ -2,22 +2,18 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
 use App\Models\HomeLoan;
+use App\Models\HomeLoanData;
 use App\Models\InvestPersonal;
 use App\Models\InvestPersonalData;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
-class InvestPersonals extends Component
+class InvestPersonalUpdateModal extends Component
 {
-    public $min;
-    public $max;
-    public $inflation;
-    public $fees;
-    public $monthlyInvest;
-    public $date;
-    public $monthlyFee;
-    protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
+
+    protected $listeners = ['edit', 'saved' => '$refresh', 'tablesTruncated' => 'render', 'updated', 'close'];
+
     protected $rules = [
         "min" => 'required|numeric',
         'max' => 'required|numeric',
@@ -42,17 +38,67 @@ class InvestPersonals extends Component
         'monthlyInvest' => 'monthly investment',
     ];
 
+    public $is_open = false;
+    public $min;
+    public $max;
+    public $inflation;
+    public $fees;
+    public $monthlyInvest;
+    public $date;
+    public $monthlyFee;
+
+    public $total_invested = 0;
+
+    public $invest_personal;
+
+    public function edit(InvestPersonal $investPersonal)
+    {
+        $this->total_invested = $investPersonal->total_invested;
+
+        $InvestPersonalData = InvestPersonalData::all()->first();
+        $this->invest_personal = $investPersonal;
+        $this->min = $InvestPersonalData->min;
+        $this->max = $InvestPersonalData->max;
+        $this->inflation = $InvestPersonalData->inflation * 100;
+        $this->fees = $InvestPersonalData->fees;
+        $this->monthlyInvest = $InvestPersonalData->monthly_invest;
+        $this->date = $investPersonal->next()->date;
+        $this->monthlyFee = $investPersonal->monthly_account_fee;
+
+        $this->is_open = true;
+    }
+
+    public function save()
+    {
+        if ($this->invest_personal !== null) {
+            $this->invest_personal->total_invested = $this->total_invested;
+            $this->invest_personal->save();
+            $this->invest_personal->refresh();
+
+            $this->InputData();
+
+            $this->emitTo('monthly-networths', 'rerender');
+            $this->close();
+//            $this->emitTo('invest-personals', 'rerender');
+
+        }
+    }
+
+    public function close()
+    {
+        $this->is_open = false;
+        $this->dispatchBrowserEvent('closeModalOfInvestPersonal');
+    }
+
     public function render()
     {
-        $datas = InvestPersonal::orderBy('date')->get();
-
-        return view('livewire.invest-personals', [
-            "datas" => $datas,
-        ]);
+        return view('livewire.invest-personal-update-modal');
     }
+
 
     public function InputData()
     {
+
         $data = $this->FormatVariable();
         $this->InvestPersonalData($data);
 
@@ -111,7 +157,6 @@ class InvestPersonals extends Component
     {
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
 
-        $totalInvestSum = 0;
         foreach($dates as $date)
         {
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
@@ -122,8 +167,8 @@ class InvestPersonals extends Component
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
-            $totalInvestSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
-            $data['total_invested'] = $totalInvestSum;
+            $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
+
 
             InvestPersonal::create([
                 "user_id" => Auth::user()->id,
@@ -144,19 +189,18 @@ class InvestPersonals extends Component
     {
 
         $from = $data['date'];
+        $lastInvestPersonal = InvestPersonal::firstWhere('date', $from);
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
-
         $change = InvestPersonal::whereBetween('date', [$from, $to->pay_date])->get();
-        $totalInvestSum = 0;
+
+        $totalInvestSum = $this->total_invested;
         foreach($dates as $key => $date)
         {
-
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
-
             $totalInvestSum += $monthlyInvest + $interest - $after_fees;
             $data['total_invested'] = $totalInvestSum;
 
@@ -179,6 +223,5 @@ class InvestPersonals extends Component
         InvestPersonal::truncate();
         InvestPersonalData::truncate();
     }
-
 
 }

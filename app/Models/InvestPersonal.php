@@ -26,4 +26,16 @@ class InvestPersonal extends Model
     {
         return number_format($number, 2, ',', ' ');
     }
+
+    // in your model file
+    public function next(){
+        // get next user
+        return $this->where('id', '>', $this->id)->orderBy('id','asc')->first();
+
+    }
+    public function prev(){
+        // get prev user
+        return $this->where('id', '<', $this->id)->orderBy('id','desc')->first();
+
+    }
 }

@@ -57,6 +57,12 @@
   <script>
     window.addEventListener('closeModalOfHomeLoan', event => {
       $("#updateHomeLoan").modal('hide');
+      $(".modal-backdrop.show").remove();
+    });
+
+    window.addEventListener('closeModalOfInvestPersonal', event => {
+      $("#updateInvestPersonal").modal('hide');
+        $(".modal-backdrop.show").remove();
     });
 
     window.addEventListener('updatedChart', (event) => {

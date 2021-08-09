@@ -86,16 +86,25 @@
                         }
 
                     </style>
+                    <livewire:home-loan-update-modal/>
+                    <livewire:invest-personal-update-modal/>
 
                     <table class="table table-responsive" style=" white-space: nowrap;">
                         <tr>
                             <th class="table-header-bold">Debt</th>
-                        </tr>
 
+                        </tr>
                         <tr>
                             <th class="table-header">Date</th>
                             @foreach ($home_loan as $data)
-                                <td>{{ $data->formatDate() }}</td>
+                                <td>
+                                    {{$data->formatDate()}}
+{{--                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"--}}
+{{--                                            wire:click="$emitTo('home-loan-update-modal', 'edit', '{{ $data->pay_date }}')"--}}
+{{--                                            class="btn border btn-sm">--}}
+{{--                                        --}}
+{{--                                    </button>--}}
+                                </td>
                             @endforeach
                         </tr>
 
@@ -103,6 +112,7 @@
                             <th class="table-header">House Loan</th>
                             @foreach ($home_loan as $data)
                                 <td>
+{{--                                    ${{ number_format($data['end_balance'], 2, '.', ',') }}--}}
                                     <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"
                                             wire:click="$emitTo('home-loan-update-modal', 'edit', {{ $data['id'] }})"
                                             class="btn border btn-sm">
@@ -111,7 +121,7 @@
 
                                 </td>
                             @endforeach
-                            <livewire:home-loan-update-modal/>
+{{--                            --}}
                         </tr>
 
                         <tr>
@@ -150,7 +160,14 @@
                         <tr>
                             <th>Investment Personal</th>
                             @foreach ($investPersonals as $data)
-                                <td>{{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}</td>
+                                <td>
+{{--                                    {{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}--}}
+                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateInvestPersonal"
+                                            wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"
+                                            class="btn border btn-sm">
+                                        $ {{ $data->formatNumber($data->total_invested)  }}
+                                    </button>
+                                </td>
                             @endforeach
                         </tr>
                         <tr>

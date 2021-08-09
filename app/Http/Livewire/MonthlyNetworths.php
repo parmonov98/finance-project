@@ -48,25 +48,11 @@ class MonthlyNetworths extends Component
         'date_mod' => 'date'
     ];
 
-    protected $listeners = ['saved', 'rerender'];
+    protected $listeners = ['saved', 'rerender' => '$refresh'];
 
     public function rerender(){
 
-        $this->show_data = 5;
-        $start_date = HomeLoan::select('pay_date')->first();
-        if (!is_null($start_date))
-            $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show_data . "  years"));
-        else
-            $end_date = null;
-
-        $from = date($start_date ? $start_date->pay_date : null);
-        $to = date($end_date ? $end_date : null);
-
-        $home_loan = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
-
-        $this->emitTo('modal-wrapper-component', 'rerender', $home_loan);
         $this->render();
-//        $this->getRenderedChildren(['modal-wrapper-component']);
     }
 
     public function FormatHomeVariables() :array
