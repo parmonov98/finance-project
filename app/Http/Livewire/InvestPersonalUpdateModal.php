@@ -163,7 +163,7 @@ class InvestPersonalUpdateModal extends Component
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+            $data['interest'] += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
@@ -195,12 +195,15 @@ class InvestPersonalUpdateModal extends Component
         $change = InvestPersonal::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
+        $interestSum = $this->interest;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
+
+            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interest = $interestSum;
             $totalInvestSum += $monthlyInvest + $interest - $after_fees;
             $data['total_invested'] = $totalInvestSum;
 

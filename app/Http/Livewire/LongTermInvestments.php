@@ -14,7 +14,7 @@ use App\Models\LongTermInvestmentsData;
 class LongTermInvestments extends Component
 {
     protected $listeners = ['tablesTruncated' => 'render', 'saved', 'rerender' => '$refresh'];
-    
+
     public $min;
     public $max;
     public $inflation;
@@ -123,6 +123,7 @@ class LongTermInvestments extends Component
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();;
 
         $totalInvestedSum = 0;
+        $interestSum = 0;
         foreach($dates as $date)
         {
 
@@ -130,8 +131,8 @@ class LongTermInvestments extends Component
 
         $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-        $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
+            $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+            $data['interest'] = $interestSum;
         $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
         $totalInvestedSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
@@ -160,11 +161,14 @@ class LongTermInvestments extends Component
         $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestedSum = 0;
+        $interestSum = 0;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interest = $interestSum;
+
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
 
             $totalInvestedSum += $monthlyInvest + $interest - $after_fees;

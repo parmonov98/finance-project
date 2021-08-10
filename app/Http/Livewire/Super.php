@@ -62,6 +62,7 @@ class Super extends Component
     public function InputData()
     {
         $data = $this->FormatVariable();
+
         $this->InvestPersonalData($data);
 
         $check = ProgramSuper::select('total_invested')->orderBy('id', 'DESC')->first();
@@ -120,15 +121,21 @@ class Super extends Component
     public function Calculate($data)
     {
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
+        if($dates->count() == 0){
+            session()->flash('message', 'You have to add Home Loan data!');
+            return $this->redirect(route('homeloan.show'));
+        }
 
         $superSum = 0;
+        $interestSum = 0;
         foreach($dates as $date)
         {
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+            $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+            $data['interest'] = $interestSum;
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
@@ -158,11 +165,14 @@ class Super extends Component
         $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
 
         $superSum = 0;
+        $interestSum = 0;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
+
+            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interest = $interestSum;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
             $total_invested = $monthlyInvest + $interest - $after_fees;
 

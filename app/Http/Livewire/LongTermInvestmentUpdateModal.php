@@ -192,13 +192,18 @@ class LongTermInvestmentUpdateModal extends Component
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
         $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
+
         $totalInvestedSum = $this->total_invested;
+        $interestSum = $this->interest;
+
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
+
+            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interest = $interestSum;
             $total_invested = $monthlyInvest + $interest - $after_fees;
             $totalInvestedSum += $monthlyInvest + $interest - $after_fees;
 

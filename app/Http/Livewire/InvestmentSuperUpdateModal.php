@@ -154,13 +154,16 @@ class InvestmentSuperUpdateModal extends Component
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
 
         $superSum = 0;
+        $interestSum = 0;
         foreach($dates as $date)
         {
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+
+            $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+            $data['interest'] = $interestSum;
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
@@ -190,14 +193,15 @@ class InvestmentSuperUpdateModal extends Component
         $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
-
+        $interestSum = $this->interest;
         foreach($dates as $key => $date)
         {
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $interest = ($return_on_invest * $data['monthlyInvest']) / 12;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
 
+            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
+            $interest = $interestSum;
             $totalInvestSum += $monthlyInvest + $interest - $after_fees;
 
             $change[$key]->fees = $data['fees'];

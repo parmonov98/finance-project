@@ -4,6 +4,14 @@
     <livewire:home-loan-update-modal/>
     <br/>
 
+    <div class="row">
+            @if (session()->has('message'))
+                <div class="w-100 alert alert-warning">
+                    {{ session('message') }}
+                </div>
+            @endif
+
+    </div>
     <!-- First row of the two cards -->
      <div class="row">
           <!-- First Card -->
