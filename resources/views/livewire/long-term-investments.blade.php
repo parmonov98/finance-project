@@ -124,7 +124,7 @@
                                     data-target="#updateLongTermInvestment"
                                     wire:click="openUpdateLongTermInvestmentModal({{ $data->id }})"
                                     class="btn border btn-sm">
-                                {{ $data->formatNumber($data->total_invested)  }}
+                                $ {{ $data->formatNumber($data->total_invested)  }}
                             </button>
                         </td>
                         </tr>

@@ -79,8 +79,8 @@ class Super extends Component
         $this->validate();
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
-        $data['inflation'] = $this->inflation / 100; // inflation
-        $data['fees'] = $this->fees / 100; // fees percentages
+        $data['inflation'] = $this->inflation; // inflation
+        $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
         $data['date'] = $this->date;
@@ -128,21 +128,31 @@ class Super extends Component
 
         $superSum = 0;
         $interestSum = 0;
-        foreach($dates as $date)
+        foreach($dates as $index => $date)
         {
+
+            $programSuper = ProgramSuper::orderByDesc('date')->get()->first();
+
+            if ($programSuper != null){
+                $data['monthlyInvest'] = $programSuper->interest + $data['monthlyInvest'];
+            }
+            $data['inflation'] = $data['inflation'] / 100;
+
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
             $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+
             $data['interest'] = $interestSum;
 
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
+
             $superSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
             $data['total_invested'] = $superSum;
 
-            ProgramSuper::create([
+            $programSuper = ProgramSuper::create([
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
                 "monthly_account_fee" => $data['monthlyFee'],
@@ -154,6 +164,7 @@ class Super extends Component
                 "date" => $date->pay_date,
                 "return_on_invest" => $data['return_on_invest']
             ]);
+            $programSuper->refresh();
         }
     }
 

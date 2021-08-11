@@ -68,7 +68,7 @@ class LongTermInvestments extends Component
 
         $check = LongTermInvestment::select('total_invested')->orderBy('id', 'DESC')->first();
 
-        if(!$check)
+        if (!$check)
             $this->Calculate($data);
         else
             $this->Recalculate($data);
@@ -78,8 +78,8 @@ class LongTermInvestments extends Component
     {
         $this->validate();
         $data['min'] = $this->min;
-        $data['max'] =  $this->max;
-        $data['inflation'] = $this->inflation / 100; // inflation
+        $data['max'] = $this->max;
+        $data['inflation'] = $this->inflation; // inflation
         $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
@@ -90,6 +90,7 @@ class LongTermInvestments extends Component
 
     public function InvestPersonalData($data)
     {
+//        dd($data);
         $db_data = LongTermInvestmentsData::get()->first();
 
         if (!$db_data) {
@@ -124,31 +125,38 @@ class LongTermInvestments extends Component
 
         $totalInvestedSum = 0;
         $interestSum = 0;
-        foreach($dates as $date)
-        {
+        foreach ($dates as $date) {
 
-        $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $longTermInvestment = LongTermInvestment::orderByDesc('date')->get()->first();
 
-        $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+            if ($longTermInvestment != null){
+                $data['monthlyInvest'] = $longTermInvestment->interest + $data['monthlyInvest'];
+            }
+
+            $data['inflation'] = $data['inflation'] / 100;
+
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+
+            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
             $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
             $data['interest'] = $interestSum;
-        $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
+            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
-        $totalInvestedSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
+            $totalInvestedSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
 
-        LongTermInvestment::create([
-            "user_id" => Auth::user()->id,
-            "fees" => $data['fees'],
-            "monthly_account_fee" => $data['monthlyFee'],
-            "inflation" => $data['inflation'],
-            "monthly_invest" => $data['monthlyInvest'],
-            "interest" => $data['interest'],
-            "after_fees" => $data['after_fees'],
-            "total_invested" => $totalInvestedSum,
-            "date" => $date->pay_date,
-            "return_on_invest" => $data['return_on_invest']
-        ]);
+            LongTermInvestment::create([
+                "user_id" => Auth::user()->id,
+                "fees" => $data['fees'],
+                "monthly_account_fee" => $data['monthlyFee'],
+                "inflation" => $data['inflation'],
+                "monthly_invest" => $data['monthlyInvest'],
+                "interest" => $data['interest'],
+                "after_fees" => $data['after_fees'],
+                "total_invested" => $totalInvestedSum,
+                "date" => $date->pay_date,
+                "return_on_invest" => $data['return_on_invest']
+            ]);
         }
     }
 
@@ -162,8 +170,8 @@ class LongTermInvestments extends Component
 
         $totalInvestedSum = 0;
         $interestSum = 0;
-        foreach($dates as $key => $date)
-        {
+        foreach ($dates as $key => $date) {
+
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
@@ -192,7 +200,6 @@ class LongTermInvestments extends Component
         LongTermInvestment::truncate();
         LongTermInvestmentsData::truncate();
     }
-
 
 
 }

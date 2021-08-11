@@ -54,9 +54,9 @@ class InvestPersonalUpdateModal extends Component
     public function edit(InvestPersonal $investPersonal)
     {
         $this->total_invested = $investPersonal->total_invested;
+        $this->invest_personal = $investPersonal;
 
         $InvestPersonalData = InvestPersonalData::all()->first();
-        $this->invest_personal = $investPersonal;
         $this->min = $InvestPersonalData->min;
         $this->max = $InvestPersonalData->max;
         $this->inflation = $InvestPersonalData->inflation * 100;
@@ -79,7 +79,7 @@ class InvestPersonalUpdateModal extends Component
 
             $this->emitTo('monthly-networths', 'rerender');
             $this->close();
-//            $this->emitTo('invest-personals', 'rerender');
+            $this->emitTo('invest-personals', 'rerender');
 
         }
     }
@@ -153,38 +153,6 @@ class InvestPersonalUpdateModal extends Component
         }
     }
 
-    public function Calculate($data)
-    {
-        $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
-
-        foreach($dates as $date)
-        {
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
-
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
-
-            $data['interest'] += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
-
-            $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
-
-
-            InvestPersonal::create([
-                "user_id" => Auth::user()->id,
-                "fees" => $data['fees'],
-                "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => $data['inflation'],
-                "monthly_invest" => $data['monthlyInvest'],
-                "interest" => $data['interest'],
-                "after_fees" => $data['after_fees'],
-                "total_invested" => $data['total_invested'],
-                "date" => $date->pay_date,
-                "return_on_invest" => $data['return_on_invest']
-            ]);
-        }
-    }
-
     public function Recalculate($data)
     {
 
@@ -195,9 +163,16 @@ class InvestPersonalUpdateModal extends Component
         $change = InvestPersonal::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
-        $interestSum = $this->interest;
+        $interestSum = $this->invest_personal->interest;
         foreach($dates as $key => $date)
         {
+            $investPersonal = $change[$key];
+            if ($investPersonal != null){
+                $data['monthlyInvest'] = $data['monthlyInvest'] + $investPersonal->interest;
+            }
+
+            $data['inflation'] = $data['inflation'] / 100;
+
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];

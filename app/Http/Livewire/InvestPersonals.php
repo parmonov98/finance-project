@@ -69,7 +69,7 @@ class InvestPersonals extends Component
         $this->validate();
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
-        $data['inflation'] = $this->inflation / 100; // inflation
+        $data['inflation'] = $this->inflation; // inflation
         $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
@@ -115,14 +115,22 @@ class InvestPersonals extends Component
         $interestSum = 0;
         foreach($dates as $date)
         {
+            $investPersonal = InvestPersonal::orderByDesc('date')->get()->first();
+
+            if ($investPersonal != null){
+                $data['monthlyInvest'] = $investPersonal->interest + $data['monthlyInvest'];
+            }
+
+            $data['inflation'] = $data['inflation'] / 100;
+
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
+            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
+
             $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
             $data['interest'] = $interestSum;
-
-            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
             $totalInvestSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
             $data['total_invested'] = $totalInvestSum;

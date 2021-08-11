@@ -153,38 +153,6 @@ class LongTermInvestmentUpdateModal extends Component
         }
     }
 
-    public function Calculate($data)
-    {
-        $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();;
-
-        foreach($dates as $date)
-        {
-
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
-
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
-
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
-
-            $data['total_invested'] = $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
-
-            LongTermInvestment::create([
-                "user_id" => Auth::user()->id,
-                "fees" => $data['fees'],
-                "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => $data['inflation'],
-                "monthly_invest" => $data['monthlyInvest'],
-                "interest" => $data['interest'],
-                "after_fees" => $data['after_fees'],
-                "total_invested" => $data['total_invested'],
-                "date" => $date->pay_date,
-                "return_on_invest" => $data['return_on_invest']
-            ]);
-        }
-    }
-
     public function Recalculate($data)
     {
 
@@ -194,10 +162,17 @@ class LongTermInvestmentUpdateModal extends Component
         $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestedSum = $this->total_invested;
-        $interestSum = $this->interest;
+        $interestSum = $this->longterm_investment->interest;
 
         foreach($dates as $key => $date)
         {
+
+            $longTermInvestment = $change[$key];
+            if ($longTermInvestment != null){
+                $data['monthlyInvest'] = $data['monthlyInvest'] + $longTermInvestment->interest;
+            }
+            $data['inflation'] = $data['inflation'] / 100;
+
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];

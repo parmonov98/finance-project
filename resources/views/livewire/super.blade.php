@@ -3,6 +3,9 @@
 
     <livewire:investment-super-update-modal/>
     <br/>
+    @if($errors->any())
+        {!! implode('', $errors->all('<span class="text text-danger">:message</span>')) !!}
+    @endif
     <form wire:submit.prevent="InputData">
         <div class="card">
             <div class="card-header"><strong>Super</strong> <small>Form</small></div>
@@ -122,13 +125,13 @@
                         <td>$ {{ $data->formatNumber($data->interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
                         <td>
-{{--                            $ {{ $data->formatNumber($data->total_invested)  }}--}}
-                           <button data-toggle="modal" data-toggle="modal"
-                                   data-target="#updateInvestmentSuper"
-                                   wire:click="openUpdateInvestmentSuperModal({{ $data->id }})"
-                                   class="btn border btn-sm">
-                               {{ $data->formatNumber($data->total_invested)  }}
-                           </button>
+                            $ {{ $data->formatNumber($data->total_invested)  }}
+{{--                           <button data-toggle="modal" data-toggle="modal"--}}
+{{--                                   data-target="#updateInvestmentSuper"--}}
+{{--                                   wire:click="openUpdateInvestmentSuperModal({{ $data->id }})"--}}
+{{--                                   class="btn border btn-sm">--}}
+{{--                               $ {{ $data->formatNumber($data->total_invested)  }}--}}
+{{--                           </button>--}}
                         </td>
                         </tr>
                     @endforeach

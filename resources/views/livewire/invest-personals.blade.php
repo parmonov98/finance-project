@@ -118,12 +118,12 @@
                         <td>$ {{ $data->formatNumber($data->interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
                         <td>
-{{--                            <button data-toggle="modal" data-toggle="modal" data-target="#updateInvestPersonal"--}}
-{{--                                    wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"--}}
-{{--                                    class="btn border btn-sm">--}}
-{{--                                $ {{ $data->formatNumber($data->total_invested)  }}--}}
-{{--                            </button>--}}
-                            $ {{ $data->formatNumber($data->total_invested)  }}
+                            <button data-toggle="modal" data-toggle="modal" data-target="#updateInvestPersonal"
+                                    wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"
+                                    class="btn border btn-sm">
+                                $ {{ $data->formatNumber($data->total_invested)  }}
+                            </button>
+{{--                            $ {{ $data->formatNumber($data->total_invested)  }}--}}
                         </td>
                         </tr>
                     @endforeach
