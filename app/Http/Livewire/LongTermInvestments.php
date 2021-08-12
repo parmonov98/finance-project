@@ -125,17 +125,17 @@ class LongTermInvestments extends Component
 
         $totalInvestedSum = 0;
         $interestSum = 0;
+        $data['inflation'] = $data['inflation'] / 100 / 12;
         foreach ($dates as $date) {
 
             $longTermInvestment = LongTermInvestment::orderByDesc('date')->get()->first();
 
+//            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             if ($longTermInvestment != null){
                 $data['monthlyInvest'] = $longTermInvestment->interest + $data['monthlyInvest'];
             }
 
-            $data['inflation'] = $data['inflation'] / 100;
 
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
@@ -149,9 +149,10 @@ class LongTermInvestments extends Component
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
                 "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => $data['inflation'],
+                "inflation" => $data['inflation'] * 100 * 12,
                 "monthly_invest" => $data['monthlyInvest'],
                 "interest" => $data['interest'],
+                "total_interest" => $interestSum,
                 "after_fees" => $data['after_fees'],
                 "total_invested" => $totalInvestedSum,
                 "date" => $date->pay_date,

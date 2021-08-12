@@ -181,6 +181,7 @@ class InvestmentSuperUpdateModal extends Component
             $change[$key]->inflation = $data['inflation'];
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
+            $change[$key]->total_interest = $interestSum;
             $change[$key]->after_fees = $after_fees;
             $change[$key]->total_invested = $totalInvestSum;
             $change[$key]->date = $date->pay_date;

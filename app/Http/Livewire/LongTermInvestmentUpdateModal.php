@@ -64,7 +64,7 @@ class LongTermInvestmentUpdateModal extends Component
         $this->invest_personal = $longTermInvestmentData;
         $this->min = $longTermInvestmentData->min;
         $this->max = $longTermInvestmentData->max;
-        $this->inflation = $longTermInvestmentData->inflation * 100;
+        $this->inflation = $longTermInvestmentData->inflation;
         $this->fees = $longTermInvestmentData->fees;
         $this->monthlyInvest = $longTermInvestmentData->monthly_invest;
         $this->date = $longTermInvestment->next()->date;
@@ -171,7 +171,6 @@ class LongTermInvestmentUpdateModal extends Component
             if ($longTermInvestment != null){
                 $data['monthlyInvest'] = $data['monthlyInvest'] + $longTermInvestment->interest;
             }
-            $data['inflation'] = $data['inflation'] / 100;
 
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;

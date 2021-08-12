@@ -132,11 +132,16 @@ class Super extends Component
         foreach($dates as $index => $date)
         {
 
-            $programSuper = ProgramSuper::orderByDesc('date')->get()->first();
+            // getting last ProgramSuper record as previous month investment value
+            $previousprogramSuper = ProgramSuper::orderByDesc('date')->get()->first();
 
-            if ($programSuper != null){
-                $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
+
+            // previous month's interest is added up to current month's invest value
+            if ($previousprogramSuper != null){
+                $data['monthlyInvest'] = $data['monthlyInvest'] + $previousprogramSuper->interest;
             }
+            // calcing monthly invest value after inflation
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
@@ -146,9 +151,9 @@ class Super extends Component
 
             $interestSum += $data['interest'];
 
-            $superSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
+            // calcing total invest by adding intersetSum and subtracting after_fees
+            $superSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
             $data['total_invested'] = $superSum;
-
 
             $programSuper = ProgramSuper::create([
                 "user_id" => Auth::user()->id,
