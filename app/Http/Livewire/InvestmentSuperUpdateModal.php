@@ -62,7 +62,7 @@ class InvestmentSuperUpdateModal extends Component
         $this->investSuperData = $investSuperData;
         $this->min = $investSuperData->min;
         $this->max = $investSuperData->max;
-        $this->inflation = $investSuperData->inflation * 100;
+        $this->inflation = $investSuperData->inflation;
         $this->fees = $investSuperData->fees;
         $this->monthlyInvest = $investSuperData->monthly_invest;
         $this->date = $investSuper->next()->date;
@@ -111,7 +111,7 @@ class InvestmentSuperUpdateModal extends Component
         $this->validate();
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
-        $data['inflation'] = $this->inflation / 100; // inflation
+        $data['inflation'] = $this->inflation; // inflation
         $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
@@ -159,13 +159,13 @@ class InvestmentSuperUpdateModal extends Component
 
         $totalInvestSum = $this->total_invested;
         $interestSum = $this->invest_super->interest;
+
         foreach($dates as $key => $date)
         {
             $longTermInvestment = $change[$key];
             if ($longTermInvestment != null){
                 $data['monthlyInvest'] = $data['monthlyInvest'] + $longTermInvestment->interest;
             }
-            $data['inflation'] = $data['inflation'] / 100;
 
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
             $return_on_invest = rand($data['min'], $data['max']) / 100;

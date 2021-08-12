@@ -125,6 +125,7 @@ class Super extends Component
             session()->flash('message', 'You have to add Home Loan data!');
             return $this->redirect(route('homeloan.show'));
         }
+        $data['inflation'] = ($data['inflation'] / 100) / 12;
 
         $superSum = 0;
         $interestSum = 0;
@@ -134,31 +135,29 @@ class Super extends Component
             $programSuper = ProgramSuper::orderByDesc('date')->get()->first();
 
             if ($programSuper != null){
-                $data['monthlyInvest'] = $programSuper->interest + $data['monthlyInvest'];
+                $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
             }
-            $data['inflation'] = $data['inflation'] / 100;
-
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $data['interest'] = $interestSum;
-
             $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
 
+            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
 
-            $superSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
+            $interestSum += $data['interest'];
+
+            $superSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
             $data['total_invested'] = $superSum;
+
 
             $programSuper = ProgramSuper::create([
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
                 "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => $data['inflation'],
+                "inflation" => ($data['inflation'] * 100) * 12,
                 "monthly_invest" => $data['monthlyInvest'],
                 "interest" => $data['interest'],
+                "total_interest" => $interestSum,
                 "after_fees" => $data['after_fees'],
                 "total_invested" => $data['total_invested'],
                 "date" => $date->pay_date,

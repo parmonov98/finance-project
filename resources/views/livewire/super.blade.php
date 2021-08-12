@@ -120,18 +120,18 @@
                         <td>{{ $data->return_on_invest*100 }}%</td>
                         <td>{{ $data->fees*100 }}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
-                        <td>{{ $data->inflation*100}}%</td>
+                        <td>{{ $data->inflation}}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>
-                        <td>$ {{ $data->formatNumber($data->interest) }}</td>
+                        <td>$ {{ $data->formatNumber($data->total_interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
                         <td>
-                            $ {{ $data->formatNumber($data->total_invested)  }}
-{{--                           <button data-toggle="modal" data-toggle="modal"--}}
-{{--                                   data-target="#updateInvestmentSuper"--}}
-{{--                                   wire:click="openUpdateInvestmentSuperModal({{ $data->id }})"--}}
-{{--                                   class="btn border btn-sm">--}}
-{{--                               $ {{ $data->formatNumber($data->total_invested)  }}--}}
-{{--                           </button>--}}
+{{--                            $ {{ $data->formatNumber($data->total_invested)  }}--}}
+                           <button data-toggle="modal" data-toggle="modal"
+                                   data-target="#updateInvestmentSuper"
+                                   wire:click="openUpdateInvestmentSuperModal({{ $data->id }})"
+                                   class="btn border btn-sm">
+                               $ {{ $data->formatNumber($data->total_invested)  }}
+                           </button>
                         </td>
                         </tr>
                     @endforeach

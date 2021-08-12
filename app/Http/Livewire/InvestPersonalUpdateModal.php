@@ -59,7 +59,7 @@ class InvestPersonalUpdateModal extends Component
         $InvestPersonalData = InvestPersonalData::all()->first();
         $this->min = $InvestPersonalData->min;
         $this->max = $InvestPersonalData->max;
-        $this->inflation = $InvestPersonalData->inflation * 100;
+        $this->inflation = $InvestPersonalData->inflation;
         $this->fees = $InvestPersonalData->fees;
         $this->monthlyInvest = $InvestPersonalData->monthly_invest;
         $this->date = $investPersonal->next()->date;
@@ -115,7 +115,7 @@ class InvestPersonalUpdateModal extends Component
         $this->validate();
         $data['min'] = $this->min;
         $data['max'] =  $this->max;
-        $data['inflation'] = $this->inflation / 100; // inflation
+        $data['inflation'] = $this->inflation; // inflation
         $data['fees'] = $this->fees; // fees percentages
         $data['monthlyInvest'] = $this->monthlyInvest; // monthly_invest
         $data['monthlyFee'] = $this->monthlyFee;
@@ -164,16 +164,15 @@ class InvestPersonalUpdateModal extends Component
 
         $totalInvestSum = $this->total_invested;
         $interestSum = $this->invest_personal->interest;
+
         foreach($dates as $key => $date)
         {
             $investPersonal = $change[$key];
             if ($investPersonal != null){
                 $data['monthlyInvest'] = $data['monthlyInvest'] + $investPersonal->interest;
             }
-
-            $data['inflation'] = $data['inflation'] / 100;
-
             $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+
             $return_on_invest = rand($data['min'], $data['max']) / 100;
             $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
 
@@ -182,9 +181,12 @@ class InvestPersonalUpdateModal extends Component
             $totalInvestSum += $monthlyInvest + $interest - $after_fees;
             $data['total_invested'] = $totalInvestSum;
 
+
+
+
             $change[$key]->fees = $data['fees'];
             $change[$key]->monthly_account_fee = $data['monthlyFee'];
-            $change[$key]->inflation = $data['inflation'];
+            $change[$key]->inflation = $data['inflation'] ;
             $change[$key]->monthly_invest = $monthlyInvest;
             $change[$key]->interest = $interest;
             $change[$key]->after_fees = $after_fees;

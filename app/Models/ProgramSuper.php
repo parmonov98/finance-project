@@ -10,7 +10,18 @@ class ProgramSuper extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'return_on_invest', 'fees', 'monthly_account_fee', 'inflation', 'monthly_invest', 'interest', 'after_fees', 'total_invested', 'date'];
+    protected $fillable = [
+        'return_on_invest',
+        'fees',
+        'monthly_account_fee',
+        'inflation',
+        'monthly_invest',
+        'interest',
+        'total_interest',
+        'after_fees',
+        'total_invested',
+        'date'
+    ];
 
     public function user()
     {
