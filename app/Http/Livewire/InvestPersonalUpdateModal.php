@@ -68,9 +68,15 @@ class InvestPersonalUpdateModal extends Component
         $this->is_open = true;
     }
 
+    public function updatedTotalInvested($n){
+//        dd($n);
+    }
+
     public function save()
     {
         if ($this->invest_personal !== null) {
+//            dd($this->total_invested,  $this->invest_personal->total_invested);
+            $this->difference_value = $this->total_invested - $this->invest_personal->total_invested;
             $this->invest_personal->total_invested = $this->total_invested;
             $this->invest_personal->save();
             $this->invest_personal->refresh();
@@ -163,36 +169,63 @@ class InvestPersonalUpdateModal extends Component
         $change = InvestPersonal::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
-        $interestSum = $this->invest_personal->interest;
+        $interestSum = 0;
 
+//        dd($data['monthlyFee']);
+        $data['inflation'] = ($data['inflation'] / 100) / 12;
+        $data['fees'] = ($data['fees'] / 12);
+
+        $index = 0;
         foreach($dates as $key => $date)
         {
-            $investPersonal = $change[$key];
-            if ($investPersonal != null){
-                $data['monthlyInvest'] = $data['monthlyInvest'] + $investPersonal->interest;
+            if ($index == 0){
+//                dd($this->difference_value);
+                $data['monthlyInvest'] = $data['monthlyInvest'] + $this->difference_value;
+                $index++;
             }
-            $monthlyInvest = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
-            $return_on_invest = rand($data['min'], $data['max']) / 100;
-            $after_fees = (($data['fees'] * $monthlyInvest) / 12) + $data['monthlyFee'];
+            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $interestSum += ($return_on_invest * $data['monthlyInvest']) / 12;
-            $interest = $interestSum;
-            $totalInvestSum += $monthlyInvest + $interest - $after_fees;
+            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
+
+            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+
+            $interestSum += $data['interest'];
+
+
+            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
             $data['total_invested'] = $totalInvestSum;
+            // e
+
+//            // ns
+//
+//            $data['total_invested'] = $totalInvestSum;
+//            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
+//            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
+//
+//            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+//
+//            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
+//
+//            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+//
+//            $interestSum += $data['interest'];
+//
+//           //ne
 
 
 
 
             $change[$key]->fees = $data['fees'];
             $change[$key]->monthly_account_fee = $data['monthlyFee'];
-            $change[$key]->inflation = $data['inflation'] ;
-            $change[$key]->monthly_invest = $monthlyInvest;
-            $change[$key]->interest = $interest;
-            $change[$key]->after_fees = $after_fees;
+            $change[$key]->inflation = $data['inflation'] * 100 * 12 ;
+            $change[$key]->monthly_invest = $data['monthlyInvest'];
+            $change[$key]->interest = $data['interest'];
+            $change[$key]->after_fees = $data['after_fees'];
             $change[$key]->total_invested = $totalInvestSum;
             $change[$key]->date = $date->pay_date;
-            $change[$key]->return_on_invest = $return_on_invest;
+            $change[$key]->return_on_invest = $data['return_on_invest'];
             $change[$key]->save();
         }
 

@@ -115,15 +115,11 @@ class InvestPersonals extends Component
         $interestSum = 0;
 
         $data['inflation'] = ($data['inflation'] / 100) / 12;
-        $data['fees'] = ($data['fees'] /12);
+        $data['fees'] = ($data['fees'] / 12);
         foreach($dates as $date)
-
         {
-            $investPersonal = InvestPersonal::orderByDesc('date')->get()->first();
 
-            if ($investPersonal != null){
-                $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
-            }
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
