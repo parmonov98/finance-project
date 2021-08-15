@@ -123,27 +123,23 @@ class LongTermInvestments extends Component
     {
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();;
 
-        $totalInvestedSum = 0;
+        $totalInvestSum = 0;
         $interestSum = 0;
+
         $data['inflation'] = $data['inflation'] / 100 / 12;
-        foreach ($dates as $date) {
-
-            $longTermInvestment = LongTermInvestment::orderByDesc('date')->get()->first();
-
-//            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']) / 12);
-            if ($longTermInvestment != null){
-                $data['monthlyInvest'] = $longTermInvestment->interest + $data['monthlyInvest'];
-            }
-
-
+        $data['fees'] = ($data['fees'] / 12);
+        foreach ($dates as $date)
+        {
+            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $interestSum += ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-            $data['interest'] = $interestSum;
-            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
+            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
 
-            $totalInvestedSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
+            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
+
+            $interestSum += $data['interest'];
+            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
 
             LongTermInvestment::create([
                 "user_id" => Auth::user()->id,
@@ -154,7 +150,7 @@ class LongTermInvestments extends Component
                 "interest" => $data['interest'],
                 "total_interest" => $interestSum,
                 "after_fees" => $data['after_fees'],
-                "total_invested" => $totalInvestedSum,
+                "total_invested" => $totalInvestSum,
                 "date" => $date->pay_date,
                 "return_on_invest" => $data['return_on_invest']
             ]);

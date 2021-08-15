@@ -126,34 +126,24 @@ class Super extends Component
             return $this->redirect(route('homeloan.show'));
         }
         $data['inflation'] = ($data['inflation'] / 100) / 12;
+        $data['fees'] = ($data['fees'] / 12);
 
-        $superSum = 0;
+        $totalInvestSum = 0;
         $interestSum = 0;
         foreach($dates as $index => $date)
         {
 
-            // getting last ProgramSuper record as previous month investment value
-            $previousprogramSuper = ProgramSuper::orderByDesc('date')->get()->first();
-
-
-            // previous month's interest is added up to current month's invest value
-            if ($previousprogramSuper != null){
-                $data['monthlyInvest'] = $data['monthlyInvest'] + $previousprogramSuper->interest;
-            }
-            // calcing monthly invest value after inflation
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $data['after_fees'] = (($data['fees'] * $data['monthlyInvest']) / 12) + $data['monthlyFee'];
+            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
 
             $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
 
             $interestSum += $data['interest'];
+            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
 
-            // calcing total invest by adding intersetSum and subtracting after_fees
-            $superSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
-            $data['total_invested'] = $superSum;
 
             $programSuper = ProgramSuper::create([
                 "user_id" => Auth::user()->id,
@@ -164,7 +154,7 @@ class Super extends Component
                 "interest" => $data['interest'],
                 "total_interest" => $interestSum,
                 "after_fees" => $data['after_fees'],
-                "total_invested" => $data['total_invested'],
+                "total_invested" => $totalInvestSum,
                 "date" => $date->pay_date,
                 "return_on_invest" => $data['return_on_invest']
             ]);

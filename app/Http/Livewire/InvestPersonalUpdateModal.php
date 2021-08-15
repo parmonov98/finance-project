@@ -61,22 +61,17 @@ class InvestPersonalUpdateModal extends Component
         $this->max = $InvestPersonalData->max;
         $this->inflation = $InvestPersonalData->inflation;
         $this->fees = $InvestPersonalData->fees;
-        $this->monthlyInvest = $InvestPersonalData->monthly_invest;
+        $this->monthlyInvest = $investPersonal->monthly_invest;
         $this->date = $investPersonal->next()->date;
         $this->monthlyFee = $investPersonal->monthly_account_fee;
 
         $this->is_open = true;
     }
 
-    public function updatedTotalInvested($n){
-//        dd($n);
-    }
 
     public function save()
     {
         if ($this->invest_personal !== null) {
-//            dd($this->total_invested,  $this->invest_personal->total_invested);
-            $this->difference_value = $this->total_invested - $this->invest_personal->total_invested;
             $this->invest_personal->total_invested = $this->total_invested;
             $this->invest_personal->save();
             $this->invest_personal->refresh();
@@ -163,7 +158,6 @@ class InvestPersonalUpdateModal extends Component
     {
 
         $from = $data['date'];
-        $lastInvestPersonal = InvestPersonal::firstWhere('date', $from);
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
         $change = InvestPersonal::whereBetween('date', [$from, $to->pay_date])->get();
@@ -171,18 +165,12 @@ class InvestPersonalUpdateModal extends Component
         $totalInvestSum = $this->total_invested;
         $interestSum = 0;
 
-//        dd($data['monthlyFee']);
         $data['inflation'] = ($data['inflation'] / 100) / 12;
         $data['fees'] = ($data['fees'] / 12);
 
         $index = 0;
         foreach($dates as $key => $date)
         {
-            if ($index == 0){
-//                dd($this->difference_value);
-                $data['monthlyInvest'] = $data['monthlyInvest'] + $this->difference_value;
-                $index++;
-            }
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
             $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
@@ -196,26 +184,6 @@ class InvestPersonalUpdateModal extends Component
 
             $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
             $data['total_invested'] = $totalInvestSum;
-            // e
-
-//            // ns
-//
-//            $data['total_invested'] = $totalInvestSum;
-//            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
-//            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
-//
-//            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
-//
-//            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
-//
-//            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-//
-//            $interestSum += $data['interest'];
-//
-//           //ne
-
-
-
 
             $change[$key]->fees = $data['fees'];
             $change[$key]->monthly_account_fee = $data['monthlyFee'];
