@@ -210,6 +210,7 @@ class MonthlyNetworths extends Component
 
 
         return view('livewire.monthly-networths', [
+            "dates" => $dates,
             "home_loan" => $this->home_loan->toArray(),
             "home_values" => $home_values,
             "cashs" => $cashs,

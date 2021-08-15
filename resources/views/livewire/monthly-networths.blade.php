@@ -140,8 +140,10 @@
 
                         <tr>
                             <th>Home</th>
-                            @foreach ($home_values as $data)
-                                <td>{{ $data->home_value ? '$ ' . $data->formatNumber($data->home_value) : '' }}</td>
+                            @foreach ($dates as $data)
+                                <td>
+                                    $ <span contenteditable="true" class="px-1">1000</span>
+                                </td>
                             @endforeach
                         </tr>
 
@@ -162,7 +164,9 @@
                         <tr>
                             <th>Cash</th>
                             @foreach ($cashs as $data)
-                                <td>{{ $data->cash ? '$ ' . $data->formatNumber($data->cash) : '' }}</td>
+                                <td>
+                                    $ <span contenteditable="true" class="px-1">1000</span>
+                                </td>
                             @endforeach
                         </tr>
 
@@ -195,7 +199,10 @@
                         <tr>
                             <th>Other Investments</th>
                             @foreach ($other_invests as $data)
-                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>
+{{--                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>--}}
+                                <td>
+                                    $ <span contenteditable="true" class="px-1">1000</span>
+                                </td>
                             @endforeach
                         </tr>
 
