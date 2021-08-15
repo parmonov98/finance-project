@@ -220,14 +220,25 @@
                         <tr>
                             <th>Total Debt</th>
                             @foreach ($home_values as $data)
-                                <td>{{ $data->home_value ? '$ ' . $data->formatNumber($data->home_value) : '' }}</td>
+                                <td>
+                                    $
+                                    <span contenteditable="true" class="px-1">
+                                        {{ $data->home_value ? $data->formatNumber($data->home_value) : '' }}
+                                    </span>
+
+                                </td>
                             @endforeach
                         </tr>
                         @if (isset($assets))
                             <tr>
                                 <th>Total Assets</th>
                                 @foreach ($assets as $data)
-                                    <td>{{ $data ? '$ ' . number_format($data, 2, '.', ',') : '' }}</td>
+                                    <td>
+                                        $
+                                        <span contenteditable="true" class="px-1">
+                                            {{ $data ? number_format($data, 2, '.', ',') : '' }}
+                                        </span>
+                                    </td>
                                 @endforeach
                             </tr>
                         @endif
