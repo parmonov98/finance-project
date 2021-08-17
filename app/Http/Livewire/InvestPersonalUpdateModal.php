@@ -78,7 +78,7 @@ class InvestPersonalUpdateModal extends Component
 
             $this->InputData();
 
-            $this->emitTo('monthly-networths', 'rerender');
+            $this->emitUp('rerender');
             $this->close();
             $this->emitTo('invest-personals', 'rerender');
 

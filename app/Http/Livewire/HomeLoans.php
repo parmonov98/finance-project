@@ -354,6 +354,7 @@ class HomeLoans extends Component
         // $this->reset(['loan', 'int_rate', 'period', 'nb_pay', 'date', 'ext_pay', 'date']);
         HomeLoan::truncate();
         HomeLoanData::truncate();
+        MonthlyNetworth::truncate();
         DB::table('home_loans_savings')->truncate();
     }
 

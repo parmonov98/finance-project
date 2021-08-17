@@ -82,7 +82,7 @@ class LongTermInvestmentUpdateModal extends Component
 
             $this->InputData();
 
-            $this->emitTo('monthly-networths', 'rerender');
+            $this->emitUp('rerender');
             $this->close();
             $this->emitTo('long-term-investments', 'rerender');
 

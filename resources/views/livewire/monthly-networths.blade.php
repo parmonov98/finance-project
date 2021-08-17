@@ -98,7 +98,7 @@
                         </tr>
                         <tr>
                             <th class="table-header">Date</th>
-                            @foreach ($home_loan as $data)
+                            @foreach ($home_loans as $data)
                                 <td>
                                     {{$data->formatDate()}}
 {{--                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"--}}
@@ -112,7 +112,7 @@
 
                         <tr>
                             <th class="table-header">House Loan</th>
-                            @foreach ($home_loan as $data)
+                            @foreach ($home_loans as $data)
                                 <td>
 {{--                                    ${{ number_format($data['end_balance'], 2, '.', ',') }}--}}
                                     <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"
@@ -140,9 +140,9 @@
 
                         <tr>
                             <th>Home</th>
-                            @foreach ($dates as $data)
+                            @foreach ($home_values as $item)
                                 <td>
-                                    $ <span contenteditable="true" class="px-1">1000</span>
+                                    $ <span contenteditable="true" class="px-1">{{$item->home_value}}</span>
                                 </td>
                             @endforeach
                         </tr>
@@ -189,7 +189,7 @@
                                 <td>
 {{--                                    {{ $data->total_invested ? '$ ' . $data->formatNumber($data->total_invested) : '' }}--}}
                                     <button data-toggle="modal" data-toggle="modal" data-target="#updateLongTermInvestment"
-                                            wire:click="$emitTo('invest-personal-update-modal', 'edit', '{{ $data->id }}')"
+                                            wire:click="$emitTo('long-term-investment-update-modal', 'edit', '{{ $data->id }}')"
                                             class="btn border btn-sm">
                                         $ {{ $data->formatNumber($data->total_invested)  }}
                                     </button>
@@ -199,10 +199,10 @@
                         <tr>
                             <th>Other Investments</th>
                             @foreach ($other_invests as $data)
-{{--                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>--}}
-                                <td>
-                                    $ <span contenteditable="true" class="px-1">1000</span>
-                                </td>
+                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>
+{{--                                <td>--}}
+{{--                                    $ <span contenteditable="true" class="px-1">1000</span>--}}
+{{--                                </td>--}}
                             @endforeach
                         </tr>
 
@@ -219,36 +219,45 @@
                         </tr>
                         <tr>
                             <th>Total Debt</th>
-                            @foreach ($home_values as $data)
+                            @foreach ($home_loans as $data)
                                 <td>
                                     $
                                     <span contenteditable="true" class="px-1">
-                                        {{ $data->home_value ? $data->formatNumber($data->home_value) : '' }}
+                                        {{ $data->end_balance ? $data->formatNumber($data->end_balance) : '' }}
                                     </span>
 
                                 </td>
                             @endforeach
                         </tr>
-                        @if (isset($assets))
+
                             <tr>
                                 <th>Total Assets</th>
-                                @foreach ($assets as $data)
+                                @foreach ($assets as $key => $data)
                                     <td>
-                                        $
+                                       <button data-toggle="modal" data-toggle="modal" data-target="#updateTotalAsset"
+                                                wire:click="openUpdateTotalAssetModal({{ $dates[$key] }})"
+                                                class="btn border btn-sm">
+                                           $
+                                        </button>
                                         <span contenteditable="true" class="px-1">
                                             {{ $data ? number_format($data, 2, '.', ',') : '' }}
                                         </span>
                                     </td>
                                 @endforeach
                             </tr>
-                        @endif
+
 
 
                         <tr>
                             <th>Difference</th>
                             @if (isset($difference))
                                 @foreach ($difference as $data)
-                                    <td>{{ $data ? '$ ' . number_format($data, 2, '.', ',') : '' }}</td>
+                                    <td>
+                                        $
+                                         <span contenteditable="true" class="px-1">
+                                            {{ $data ? number_format($data, 2, '.', ',') : '' }}
+                                        </span>
+                                    </td>
                                 @endforeach
                             @endif
                         </tr>
@@ -257,7 +266,12 @@
                             <th>Difference - Super</th>
                             @if (isset($differenceSuper))
                                 @foreach ($differenceSuper as $data)
-                                    <td>{{ $data ? '$ ' . number_format($data, 2, '.', ',') : '' }}</td>
+                                    <td>
+                                        $
+                                         <span contenteditable="true" class="px-1">
+                                            {{ $data ? number_format($data, 2, '.', ',') : '' }}
+                                        </span>
+                                    </td>
                                 @endforeach
                             @endif
                         </tr>
@@ -266,7 +280,12 @@
                             <th style="background-color: #e5fbff;">Running Diff - Cash + Equity</th>
                             @if (isset($runningDiff))
                                 @foreach ($runningDiff as $data)
-                                    <td>{{ $data ? number_format($data, 2, '.', ',') : '' }}</td>
+                                    <td>
+                                        $
+                                        <span contenteditable="true" class="px-1">
+                                            {{ number_format($data, 2, '.', ',') }}
+                                        </span>
+                                    </td>
                                 @endforeach
                             @endif
                         </tr>
@@ -275,7 +294,12 @@
                             <th style="background-color: #e5fbff;">Running Diff - Overrall</th>
                             @if (isset($overallDiff))
                                 @foreach ($overallDiff as $data)
-                                    <td>{{ $data ? number_format($data, 2, '.', ',') : '' }}</td>
+                                    <td>
+                                        $
+                                        <span contenteditable="true" class="px-1">
+                                            {{ number_format($data, 2, '.', ',')}}
+                                        </span>
+                                    </td>
                                 @endforeach
                             @endif
                         </tr>

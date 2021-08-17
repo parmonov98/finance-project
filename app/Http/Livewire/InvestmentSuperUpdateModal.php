@@ -80,9 +80,9 @@ class InvestmentSuperUpdateModal extends Component
 
             $this->InputData();
 
-            $this->emitTo('monthly-networths', 'rerender');
+            $this->emitUp('rerender');
             $this->close();
-            $this->emitTo('super', 'rerender');
+//            $this->emitTo('super', 'rerender');
 
         }
     }
