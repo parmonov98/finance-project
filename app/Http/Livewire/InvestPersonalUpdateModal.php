@@ -72,7 +72,10 @@ class InvestPersonalUpdateModal extends Component
     public function save()
     {
         if ($this->invest_personal !== null) {
+            $investPersonalData = InvestPersonalData::firstWhere('user_id', Auth::id());
+            $return_on_invest = rand($investPersonalData->min, $investPersonalData->max);
             $this->invest_personal->total_invested = $this->total_invested;
+            $this->invest_personal->total_interest = ( $return_on_invest / 100 / 12) * $this->total_invested;
             $this->invest_personal->save();
             $this->invest_personal->refresh();
 

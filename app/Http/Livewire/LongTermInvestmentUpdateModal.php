@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\HomeLoan;
+use App\Models\InvestPersonalData;
 use App\Models\LongTermInvestment;
 use App\Models\LongTermInvestmentsData;
 use App\Models\ProgramSuper;
@@ -76,7 +77,11 @@ class LongTermInvestmentUpdateModal extends Component
     public function save()
     {
         if ($this->longterm_investment !== null) {
+            $longTermInvestmentsData = LongTermInvestmentsData::firstWhere('user_id', Auth::id());
+            $return_on_invest = rand($longTermInvestmentsData->min, $longTermInvestmentsData->max);
             $this->longterm_investment->total_invested = $this->total_invested;
+            $this->longterm_investment->total_interest = ( $return_on_invest / 100 / 12) * $this->total_invested;
+
             $this->longterm_investment->save();
             $this->longterm_investment->refresh();
 

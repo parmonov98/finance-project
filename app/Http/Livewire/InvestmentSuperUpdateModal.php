@@ -73,7 +73,12 @@ class InvestmentSuperUpdateModal extends Component
     public function save()
     {
         if ($this->invest_super !== null) {
+
+            $superData = SuperData::firstWhere('user_id', Auth::id());
+            $return_on_invest = rand($superData->min, $superData->max);
             $this->invest_super->total_invested = $this->total_invested;
+            $this->invest_super->total_interest = ( $return_on_invest / 100 / 12) * $this->total_invested;
+
             $this->invest_super->save();
             $this->invest_super->refresh();
 

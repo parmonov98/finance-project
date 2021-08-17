@@ -116,7 +116,7 @@
                         <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
                         <td>{{ $data->inflation}}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>
-                        <td>$ {{ $data->formatNumber($data->interest) }}</td>
+                        <td>$ {{ $data->formatNumber($data->total_interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
                         <td>
 {{--                            $ {{ $data->formatNumber($data->total_invested)  }}--}}
