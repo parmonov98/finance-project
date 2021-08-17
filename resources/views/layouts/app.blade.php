@@ -72,6 +72,14 @@
       $("#updateLongTermInvestment").modal('hide');
         $(".modal-backdrop.show").remove();
     });
+    window.addEventListener('closeModalMonthlyNetworthCash', event => {
+      $("#updateMonthlyNetworthCash").modal('hide');
+        $(".modal-backdrop.show").remove();
+    });
+    window.addEventListener('closeModalMonthlyNetworthOtherInvestment', event => {
+      $("#updateMonthlyNetworthOtherInvestment").modal('hide');
+        $(".modal-backdrop.show").remove();
+    });
 
     window.addEventListener('updatedChart', (event) => {
       console.log(event.detail);

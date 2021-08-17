@@ -53,7 +53,6 @@ class InvestmentSuperUpdateModal extends Component
 
     public function edit(ProgramSuper $investSuper)
     {
-
         $this->total_invested = $investSuper->total_invested;
         $this->invest_super = $investSuper;
 

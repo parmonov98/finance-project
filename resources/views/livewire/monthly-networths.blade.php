@@ -90,6 +90,8 @@
                     <livewire:invest-personal-update-modal/>
                     <livewire:investment-super-update-modal/>
                     <livewire:long-term-investment-update-modal/>
+                    <livewire:monthly-networth-cash-update-modal/>
+                    <livewire:monthly-networth-other-investment-update-modal/>
 
                     <table class="table table-responsive" style=" white-space: nowrap;">
                         <tr>
@@ -165,7 +167,12 @@
                             <th>Cash</th>
                             @foreach ($cashs as $data)
                                 <td>
-                                    $ <span contenteditable="true" class="px-1">1000</span>
+{{--                                    $ <span contenteditable="true" class="px-1">{{$data->cash}}</span>--}}
+                                    <button data-toggle="modal" data-toggle="modal" data-target="#updateMonthlyNetworthCash"
+                                            wire:click="$emitTo('monthly-networth-cash-update-modal', 'edit', '{{ $data->id }}')"
+                                            class="btn border btn-sm">
+                                        $ {{ $data->formatNumber($data->cash)  }}
+                                    </button>
                                 </td>
                             @endforeach
                         </tr>
@@ -199,10 +206,14 @@
                         <tr>
                             <th>Other Investments</th>
                             @foreach ($other_invests as $data)
-                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>
-{{--                                <td>--}}
-{{--                                    $ <span contenteditable="true" class="px-1">1000</span>--}}
-{{--                                </td>--}}
+{{--                                <td>{{ $data->other_invest ? '$' . $data->formatNumber($data->other_invest) : '' }}</td>--}}
+                                    <td>
+                                        <button data-toggle="modal" data-toggle="modal" data-target="#updateMonthlyNetworthOtherInvestment"
+                                                wire:click="$emitTo('monthly-networth-other-investment-update-modal', 'edit', '{{ $data->id }}')"
+                                                class="btn border btn-sm">
+                                            $ {{ $data->formatNumber($data->other_invest)  }}
+                                        </button>
+                                    </td>
                             @endforeach
                         </tr>
 
