@@ -234,11 +234,11 @@
                                 <th>Total Assets</th>
                                 @foreach ($assets as $key => $data)
                                     <td>
-                                       <button data-toggle="modal" data-toggle="modal" data-target="#updateTotalAsset"
-                                                wire:click="openUpdateTotalAssetModal({{ $dates[$key] }})"
-                                                class="btn border btn-sm">
-                                           $
-                                        </button>
+{{--                                       <button data-toggle="modal" data-toggle="modal" data-target="#updateTotalAsset"--}}
+{{--                                                wire:click="openUpdateTotalAssetModal({{ $dates[$key] }})"--}}
+{{--                                                class="btn border btn-sm">--}}
+{{--                                           $--}}
+{{--                                        </button>--}}
                                         <span contenteditable="true" class="px-1">
                                             {{ $data ? number_format($data, 2, '.', ',') : '' }}
                                         </span>
