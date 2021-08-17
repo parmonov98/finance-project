@@ -239,6 +239,7 @@
 {{--                                                class="btn border btn-sm">--}}
 {{--                                           $--}}
 {{--                                        </button>--}}
+                                        $
                                         <span contenteditable="true" class="px-1">
                                             {{ $data ? number_format($data, 2, '.', ',') : '' }}
                                         </span>
