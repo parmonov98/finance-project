@@ -22,6 +22,7 @@ class CreateLongTermInvestmentsTable extends Migration
             $table->decimal('inflation', $precision = 20 , $scale = 2);
             $table->decimal('monthly_invest', $precision = 20 , $scale = 2);
             $table->decimal('interest', $precision = 20 , $scale = 2);
+            $table->decimal('total_interest', $precision = 20 , $scale = 2);
             $table->decimal('after_fees', $precision = 20 , $scale = 2);
             $table->decimal('total_invested', $precision = 20 , $scale = 2);
             $table->date('date');
