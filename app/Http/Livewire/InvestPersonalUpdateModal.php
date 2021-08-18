@@ -72,10 +72,8 @@ class InvestPersonalUpdateModal extends Component
     public function save()
     {
         if ($this->invest_personal !== null) {
-            $investPersonalData = InvestPersonalData::firstWhere('user_id', Auth::id());
-            $return_on_invest = rand($investPersonalData->min, $investPersonalData->max);
             $this->invest_personal->total_invested = $this->total_invested;
-            $this->invest_personal->total_interest = ( $return_on_invest / 100 / 12) * $this->total_invested;
+            $this->invest_personal->total_interest = ( $this->invest_personal->return_on_invest / 12) * $this->total_invested;
             $this->invest_personal->save();
             $this->invest_personal->refresh();
 
@@ -167,6 +165,7 @@ class InvestPersonalUpdateModal extends Component
 
         $totalInvestSum = $this->total_invested;
         $interestSum = 0;
+//        dd($this->invest_personal->total_interest);
 
         $data['inflation'] = ($data['inflation'] / 100) / 12;
         $data['fees'] = ($data['fees'] / 12);
@@ -176,7 +175,7 @@ class InvestPersonalUpdateModal extends Component
         {
             $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
 
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
+            $data['return_on_invest'] = $change[$key]->return_on_invest * 100;
 
             $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
 
@@ -184,20 +183,21 @@ class InvestPersonalUpdateModal extends Component
 
             $interestSum += $data['interest'];
 
-
             $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
             $data['total_invested'] = $totalInvestSum;
 
             $change[$key]->fees = $data['fees'];
-            $change[$key]->monthly_account_fee = $data['monthlyFee'];
             $change[$key]->inflation = $data['inflation'] * 100 * 12 ;
             $change[$key]->monthly_invest = $data['monthlyInvest'];
             $change[$key]->interest = $data['interest'];
             $change[$key]->after_fees = $data['after_fees'];
             $change[$key]->total_invested = $totalInvestSum;
-            $change[$key]->date = $date->pay_date;
-            $change[$key]->return_on_invest = $data['return_on_invest'];
+
             $change[$key]->save();
+            $change[$key]->refresh();
+            $change[$key]->total_interest = ( $this->invest_personal->return_on_invest / 12) * $change[$key]->total_invested;
+            $change[$key]->save();
+            $change[$key]->refresh();
         }
 
     }

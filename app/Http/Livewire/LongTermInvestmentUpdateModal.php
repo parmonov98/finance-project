@@ -77,10 +77,8 @@ class LongTermInvestmentUpdateModal extends Component
     public function save()
     {
         if ($this->longterm_investment !== null) {
-            $longTermInvestmentsData = LongTermInvestmentsData::firstWhere('user_id', Auth::id());
-            $return_on_invest = rand($longTermInvestmentsData->min, $longTermInvestmentsData->max);
             $this->longterm_investment->total_invested = $this->total_invested;
-            $this->longterm_investment->total_interest = ( $return_on_invest / 100 / 12) * $this->total_invested;
+            $this->longterm_investment->total_interest = ( $this->longterm_investment->return_on_invest / 12) * $this->total_invested;
 
             $this->longterm_investment->save();
             $this->longterm_investment->refresh();
@@ -195,9 +193,12 @@ class LongTermInvestmentUpdateModal extends Component
             $change[$key]->interest = $data['interest'];
             $change[$key]->after_fees = $data['after_fees'];
             $change[$key]->total_invested = $totalInvestSum;
-            $change[$key]->date = $date->pay_date;
-            $change[$key]->return_on_invest = $data['return_on_invest'];
+
             $change[$key]->save();
+            $change[$key]->refresh();
+            $change[$key]->total_interest = ( $this->longterm_investment->return_on_invest / 12) * $change[$key]->total_invested;
+            $change[$key]->save();
+            $change[$key]->refresh();
         }
 
     }
