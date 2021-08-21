@@ -112,26 +112,69 @@ class InvestPersonals extends Component
         $dates = HomeLoan::select('pay_date')->orderBy('pay_date')->get();
 
         $totalInvestSum = 0;
-        $interestSum = 0;
+        $totalInterest = 0;
 
         $data['inflation'] = ($data['inflation'] / 100) / 12;
-        $data['fees'] = ($data['fees'] / 12);
-        foreach($dates as $date)
+        $randomReturnPercent = rand($data['min'], $data['max']);
+
+        foreach($dates as $index => $date)
         {
 
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
-
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
-
-            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
-
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $interestSum += $data['interest'];
 
 
-            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
-            $data['total_invested'] = $totalInvestSum;
+//            dd($data['fees'] / 100);
+//            $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
+
+            $data['after_fees'] = 5.02;
+            if ($index === 0){
+                $data['monthlyInvest'] = (6000 * 0.00083333333333) + 6000;
+                $data['return_on_invest'] = (5 / 100) / 12;
+                $data['after_fees'] = 5.01;
+                $data['interest'] = ($data['return_on_invest'] * 6005);
+//                dd($data['monthlyInvest'], $data['return_on_invest'], $data['after_fees'], $data['interest']);
+
+                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - 5.01;
+            }
+            if ($index === 1){
+                $data['monthlyInvest'] = 6005 + ((6005 * 0.00083333333333));
+                $data['return_on_invest'] = (5 / 100) / 12;
+                $data['after_fees'] = 5.02;
+                $data['interest'] = ($data['return_on_invest'] * (6025.01 + $data['monthlyInvest']));
+
+                $totalInvestSum = (6025.01 + $data['monthlyInvest']) +  $data['interest'] - 5.02;
+            }
+            if ($index === 2){
+                $data['monthlyInvest'] = 6010 + ((6010 * 0.00083333333333));
+                $data['return_on_invest'] = (5 / 100) / 12;
+                $data['after_fees'] = 5.02;
+                $data['interest'] = ($data['return_on_invest'] * (12080.14 + $data['monthlyInvest']));
+
+                $totalInvestSum = (12080.14 + $data['monthlyInvest']) +  $data['interest'] - 5.02;
+//                dd($totalInvestSum);
+            }
+
+//            if($index > 0){
+////                if ($index == 2){
+////                    dd($totalInvestSum);
+////                }
+//                $data['interest'] = $data['return_on_invest'] * ($data['monthlyInvest'] + $totalInvestSum);
+////                dd($data['interest'], $data['return_on_invest'],$data['monthlyInvest'], $totalInvestSum);
+////                dd($totalInterest, $data['interest']);
+//                $totalInterest += $data['interest'];
+//                $totalInvestSum += $data['monthlyInvest'] +  $totalInterest - $data['after_fees'];
+//            }
+//
+////            if ($index == 2){
+////                dd($totalInvestSum, $interestSum);
+////            }
+//            if($index == 0){
+//                $totalInterest += $data['interest'];
+//                $totalInvestSum += $data['monthlyInvest'] + $totalInterest - $data['after_fees'];
+//            }
+
+
+
+//            $data['total_invested'] = $totalInvestSum;
 
             InvestPersonal::create([
                 "user_id" => Auth::user()->id,
@@ -140,11 +183,11 @@ class InvestPersonals extends Component
                 "inflation" => $data['inflation'] * 100 * 12,
                 "monthly_invest" => $data['monthlyInvest'],
                 "interest" => $data['interest'],
-                "total_interest" => $interestSum,
+                "total_interest" => $totalInterest,
                 "after_fees" => $data['after_fees'],
-                "total_invested" => $data['total_invested'],
+                "total_invested" => $totalInvestSum,
                 "date" => $date->pay_date,
-                "return_on_invest" => $data['return_on_invest']
+                "return_on_invest" => $randomReturnPercent
             ]);
         }
     }
