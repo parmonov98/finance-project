@@ -75,7 +75,6 @@ class InvestmentSuperUpdateModal extends Component
         if ($this->invest_super !== null) {
 
             $this->invest_super->total_invested = $this->total_invested;
-            $this->invest_super->total_interest = ( $this->invest_super->return_on_invest / 12) * $this->total_invested;
 
             $this->invest_super->save();
             $this->invest_super->refresh();
@@ -156,43 +155,37 @@ class InvestmentSuperUpdateModal extends Component
     {
 
         $from = $data['date'];
-        $lastInvestSuper = ProgramSuper::firstWhere('date', $from);
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
         $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
         $change = ProgramSuper::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
-        $interestSum = 0;
+        $totalInterestSum = $this->invest_super->total_interest;
 
+        $superData = SuperData::where('user_id', Auth::id())->first();
         $data['inflation'] = ($data['inflation'] / 100) / 12;
-        $data['fees'] = ($data['fees'] / 12);
-
         $index = 0;
         foreach($dates as $key => $date)
         {
+            if (!$change[$key]->prev()){
+                $data['monthlyInvest'] = ($superData->monthly_invest * $data['inflation']) + $superData->monthly_invest;
+            }else{
+                $data['monthlyInvest'] = ($change[$key]->prev()->monthly_invest * $data['inflation']) + $change[$key]->prev()->monthly_invest;
+            }
+            $data['return_on_invest'] = ($change[$key]->return_on_invest / 100 ) / 12;//
+            $data['after_fees'] = ($data['monthlyInvest'] * (($change[$key]->fees / 100) / 12)) + $change[$key]->monthly_account_fee;//
+            if (!$change[$key]->prev()){
+                $data['interest'] = $data['return_on_invest'] * ($data['monthlyInvest'] + $change[$key]->monthly_invest);
+            }else{
+                $data['interest'] = $data['return_on_invest'] * ($data['monthlyInvest'] + $change[$key]->prev()->total_invested);
+            }
+            $totalInterestSum += $data['interest'];
+            $totalInvestSum += $data['monthlyInvest'] + $data['interest'] - $data['after_fees'];
 
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
 
-            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
-
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $interestSum += $data['interest'];
-
-
-            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
-            $data['total_invested'] = $totalInvestSum;
-
-            $change[$key]->fees = $data['fees'];
-            $change[$key]->inflation = $data['inflation'] * 100 * 12 ;
-            $change[$key]->monthly_invest = $data['monthlyInvest'];
             $change[$key]->interest = $data['interest'];
-            $change[$key]->after_fees = $data['after_fees'];
+            $change[$key]->total_interest = $totalInterestSum;
             $change[$key]->total_invested = $totalInvestSum;
-
-            $change[$key]->save();
-            $change[$key]->refresh();
-            $change[$key]->total_interest = ( $this->invest_super->return_on_invest / 12) * $change[$key]->total_invested;
             $change[$key]->save();
             $change[$key]->refresh();
         }

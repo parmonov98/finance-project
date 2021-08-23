@@ -125,6 +125,7 @@ class InvestPersonals extends Component
                 $prevMonthlyInvest = $data['monthlyInvest'];
                 $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
                 $data['return_on_invest'] = ($randomReturnPercent / 100) / 12;
+
                 $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']);
                 $totalInterest += $data['interest'];
                 $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - $data['after_fees'];
