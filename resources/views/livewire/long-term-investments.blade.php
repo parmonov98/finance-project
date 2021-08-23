@@ -104,6 +104,7 @@
                         <th>Inflation</th>
                         <th>Monthly Invest</th>
                         <th>Interest</th>
+                        <th>Total Interest</th>
                         <th>Fees/Taxes</th>
                         <th>Total Invested</th>
                     </tr>
@@ -116,6 +117,7 @@
                         <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
                         <td>{{ $data->inflation}}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_invest) }}</td>
+                        <td>$ {{ $data->formatNumber($data->interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->total_interest) }}</td>
                         <td>$ {{ $data->formatNumber($data->after_fees) }}</td>
                         <td>

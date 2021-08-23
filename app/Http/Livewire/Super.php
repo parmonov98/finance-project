@@ -125,41 +125,51 @@ class Super extends Component
             session()->flash('message', 'You have to add Home Loan data!');
             return $this->redirect(route('homeloan.show'));
         }
-        $data['inflation'] = ($data['inflation'] / 100) / 12;
-        $data['fees'] = ($data['fees'] / 12);
 
         $totalInvestSum = 0;
-        $interestSum = 0;
+        $totalInterest = 0;
+
+        $data['inflation'] = ($data['inflation'] / 100) / 12;
+
+        $prevMonthlyInvest = $data['monthlyInvest'];
         foreach($dates as $index => $date)
         {
+            $randomReturnPercent = rand($data['min'], $data['max']);
+            if ($index === 0){
+                $data['monthlyInvest'] = ($data['monthlyInvest'] * $data['inflation']) + $data['monthlyInvest'];
+                $prevMonthlyInvest = $data['monthlyInvest'];
+                $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
+                $data['return_on_invest'] = ($randomReturnPercent / 100) / 12;
+                $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']);
+                $totalInterest += $data['interest'];
+                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - $data['after_fees'];
+            }
 
-            $data['monthlyInvest'] = $data['monthlyInvest'] + (($data['monthlyInvest'] * $data['inflation']));
+            if ($index > 0){
+                $data['monthlyInvest'] = ($prevMonthlyInvest * $data['inflation']) + $prevMonthlyInvest;
+                $prevMonthlyInvest = $data['monthlyInvest'];
+                $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
+                $data['return_on_invest'] = ($randomReturnPercent / 100) / 12;
+                $data['interest'] = ($data['return_on_invest'] * ($data['monthlyInvest'] + $totalInvestSum));
+                $totalInterest += $data['interest'];
+                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - $data['after_fees'];
+            }
 
-            $data['return_on_invest'] = rand($data['min'], $data['max']) / 100;
-
-            $data['after_fees'] = ($data['monthlyInvest'] * ($data['fees'] /100)) + $data['monthlyFee'];
-
-            $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']) / 12;
-
-            $interestSum += $data['interest'];
-            $totalInvestSum += $data['monthlyInvest'] + $interestSum - $data['after_fees'];
-
-
-            $programSuper = ProgramSuper::create([
+            ProgramSuper::create([
                 "user_id" => Auth::user()->id,
                 "fees" => $data['fees'],
                 "monthly_account_fee" => $data['monthlyFee'],
-                "inflation" => ($data['inflation'] * 100) * 12,
+                "inflation" => $data['inflation'] * 100 * 12,
                 "monthly_invest" => $data['monthlyInvest'],
                 "interest" => $data['interest'],
-                "total_interest" => $interestSum,
+                "total_interest" => $totalInterest,
                 "after_fees" => $data['after_fees'],
                 "total_invested" => $totalInvestSum,
                 "date" => $date->pay_date,
-                "return_on_invest" => $data['return_on_invest']
+                "return_on_invest" => $randomReturnPercent
             ]);
-            $programSuper->refresh();
         }
+
     }
 
     public function Recalculate($data)

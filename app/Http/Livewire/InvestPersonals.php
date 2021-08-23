@@ -115,66 +115,30 @@ class InvestPersonals extends Component
         $totalInterest = 0;
 
         $data['inflation'] = ($data['inflation'] / 100) / 12;
-        $randomReturnPercent = rand($data['min'], $data['max']);
 
+        $prevMonthlyInvest = $data['monthlyInvest'];
         foreach($dates as $index => $date)
         {
-
-
-
-//            dd($data['fees'] / 100);
-//            $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
-
-            $data['after_fees'] = 5.02;
+            $randomReturnPercent = rand($data['min'], $data['max']);
             if ($index === 0){
-                $data['monthlyInvest'] = (6000 * 0.00083333333333) + 6000;
-                $data['return_on_invest'] = (5 / 100) / 12;
-                $data['after_fees'] = 5.01;
-                $data['interest'] = ($data['return_on_invest'] * 6005);
-//                dd($data['monthlyInvest'], $data['return_on_invest'], $data['after_fees'], $data['interest']);
-
-                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - 5.01;
-            }
-            if ($index === 1){
-                $data['monthlyInvest'] = 6005 + ((6005 * 0.00083333333333));
-                $data['return_on_invest'] = (5 / 100) / 12;
-                $data['after_fees'] = 5.02;
-                $data['interest'] = ($data['return_on_invest'] * (6025.01 + $data['monthlyInvest']));
-
-                $totalInvestSum = (6025.01 + $data['monthlyInvest']) +  $data['interest'] - 5.02;
-            }
-            if ($index === 2){
-                $data['monthlyInvest'] = 6010 + ((6010 * 0.00083333333333));
-                $data['return_on_invest'] = (5 / 100) / 12;
-                $data['after_fees'] = 5.02;
-                $data['interest'] = ($data['return_on_invest'] * (12080.14 + $data['monthlyInvest']));
-
-                $totalInvestSum = (12080.14 + $data['monthlyInvest']) +  $data['interest'] - 5.02;
-//                dd($totalInvestSum);
+                $data['monthlyInvest'] = ($data['monthlyInvest'] * $data['inflation']) + $data['monthlyInvest'];
+                $prevMonthlyInvest = $data['monthlyInvest'];
+                $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
+                $data['return_on_invest'] = ($randomReturnPercent / 100) / 12;
+                $data['interest'] = ($data['return_on_invest'] * $data['monthlyInvest']);
+                $totalInterest += $data['interest'];
+                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - $data['after_fees'];
             }
 
-//            if($index > 0){
-////                if ($index == 2){
-////                    dd($totalInvestSum);
-////                }
-//                $data['interest'] = $data['return_on_invest'] * ($data['monthlyInvest'] + $totalInvestSum);
-////                dd($data['interest'], $data['return_on_invest'],$data['monthlyInvest'], $totalInvestSum);
-////                dd($totalInterest, $data['interest']);
-//                $totalInterest += $data['interest'];
-//                $totalInvestSum += $data['monthlyInvest'] +  $totalInterest - $data['after_fees'];
-//            }
-//
-////            if ($index == 2){
-////                dd($totalInvestSum, $interestSum);
-////            }
-//            if($index == 0){
-//                $totalInterest += $data['interest'];
-//                $totalInvestSum += $data['monthlyInvest'] + $totalInterest - $data['after_fees'];
-//            }
-
-
-
-//            $data['total_invested'] = $totalInvestSum;
+            if ($index > 0){
+                $data['monthlyInvest'] = ($prevMonthlyInvest * $data['inflation']) + $prevMonthlyInvest;
+                $prevMonthlyInvest = $data['monthlyInvest'];
+                $data['after_fees'] = ((($data['fees'] / 100) / 12 * $data['monthlyInvest']) + $data['monthlyFee']);
+                $data['return_on_invest'] = ($randomReturnPercent / 100) / 12;
+                $data['interest'] = ($data['return_on_invest'] * ($data['monthlyInvest'] + $totalInvestSum));
+                $totalInterest += $data['interest'];
+                $totalInvestSum += $data['monthlyInvest'] +  $data['interest'] - $data['after_fees'];
+            }
 
             InvestPersonal::create([
                 "user_id" => Auth::user()->id,
