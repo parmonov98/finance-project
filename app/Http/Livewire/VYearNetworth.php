@@ -167,6 +167,7 @@ class VYearNetworth extends Component
         $to = date($end_date ? $end_date : null);
 
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
+//        dd($programVYear);
 
         $home_loans = array();
         $monthlyNetworths = array();
@@ -176,11 +177,35 @@ class VYearNetworth extends Component
 
         foreach($programVYear as $date)
         {
-            array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first());
-            array_push($monthlyNetworths, MonthlyNetworth::where('date', $date->date)->first());
-            array_push($investPersonals, InvestPersonal::where('date', $date->date)->first());
-            array_push($longTermInvests, LongTermInvestment::where('date', $date->date)->first()) ;
-            array_push($investSupers, ProgramSuper::where('date', $date->date)->first());
+            if (Carbon::today() > Carbon::parse($date->date)){
+                array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first());
+            }else{
+                array_push($home_loans, HomeLoan::select('pay_date')->where('pay_date', $date->date)->first());
+
+            }
+            if (Carbon::today() > Carbon::parse($date->date)){
+                array_push($monthlyNetworths, MonthlyNetworth::where('date', $date->date)->first());
+            }else{
+                array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
+            }
+
+            if (Carbon::today() > Carbon::parse($date->date)){
+                array_push($investPersonals, InvestPersonal::where('date', $date->date)->first());
+            }else{
+                array_push($investPersonals, InvestPersonal::select('date')->where('date', $date->date)->first());
+            }
+            if (Carbon::today() > Carbon::parse($date->date)){
+                array_push($longTermInvests, LongTermInvestment::where('date', $date->date)->first()) ;
+            }else{
+                array_push($longTermInvests, LongTermInvestment::select('date')->where('date', $date->date)->first()) ;
+            }
+
+            if (Carbon::today() > Carbon::parse($date->date)){
+                array_push($investSupers, ProgramSuper::where('date', $date->date)->first());
+            }else{
+                array_push($investSupers, ProgramSuper::select('date')->where('date', $date->date)->first());
+//                dd($investSupers);
+            }
         }
 
         return view('livewire.v-year-networth', [
