@@ -112,7 +112,7 @@
                 <tbody>
                     @foreach($datas as $data) <tr>
                         <td>{{ $data->formatDate() }}</td>
-                        <td>{{ $data->return_on_invest*100 }}%</td>
+                        <td>{{ $data->return_on_invest }}%</td>
                         <td>{{ $data->fees }}%</td>
                         <td>$ {{ $data->formatNumber($data->monthly_account_fee) }}</td>
                         <td>{{ $data->inflation}}%</td>
