@@ -131,11 +131,79 @@
                             }
 
 
+                            if(isset($programVYear[$key]->home_worth) && isset($programVYear[$key]->long_term_invest) && isset($programVYear[$key]->house_loan) && isset($programVYear[$key]->invest_super))
+                            {
+                                $total_assets_real = $programVYear[$key]->home_worth + $programVYear[$key]->long_term_invest;
+                                $difference_real = $total_assets_real - $programVYear[$key]->house_loan;
+                                $difference_super_real = $total_assets_real - $programVYear[$key]->house_loan - $programVYear[$key]->invest_super;
+                            }
+
+
+
+                            echo ' <tr> ' ;
+
+                                if(isset($programVYear[$key]->date))
+                                    echo '<td> '. $programVYear[$key]->date . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->house_loan))
+                                    echo '<td>' . $programVYear[$key]->house_loan . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->home_worth))
+                                    echo '<td>' . $programVYear[$key]->home_worth . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->invest_super))
+                                    echo '<td>' . $programVYear[$key]->invest_super . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($monthlyNetworths[$key]->cash))
+                                    echo '<td> ' . $monthlyNetworths[$key]->cash . '  (approx) </td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->invest_personal))
+                                    echo '<td>' . $programVYear[$key]->invest_personal . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->long_term_invest))
+                                    echo '<td>' . $programVYear[$key]->long_term_invest . ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($programVYear[$key]->house_loan))
+                                    echo '<td>' . $programVYear[$key]->house_loan .  ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($total_assets_real))
+                                    echo '<td>' . $total_assets_real .  ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($difference_real))
+                                    echo '<td>' . $difference_real .  ' (approx)</td>';
+                                else
+                                    echo '<td> No data</td>';
+
+                                if(isset($difference_super_real))
+                                    echo '<td>' . $difference_super_real .  ' (approx)</td>';
+                                else
+                                    echo '<td> No data (approx)</td>';
+
+                            echo '</tr> ';
+
 
                             echo ' <tr> ' ;
 
                                 if(isset($home_loans[$key]->pay_date))
-                                    echo '<td> '. $home_loans[$key]->pay_date . ' (approx)</td>';
+                                    echo '<td> '. $home_loans[$key]->pay_date . '</td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 
@@ -192,73 +260,6 @@
                             echo '</tr> ';
 
 
-                            if(isset($programVYear[$key]->home_worth) && isset($programVYear[$key]->long_term_invest) && isset($programVYear[$key]->house_loan) && isset($programVYear[$key]->invest_super))
-                            {
-                                $total_assets_real = $programVYear[$key]->home_worth + $programVYear[$key]->long_term_invest;
-                                $difference_real = $total_assets_real - $programVYear[$key]->house_loan;
-                                $difference_super_real = $total_assets_real - $programVYear[$key]->house_loan - $programVYear[$key]->invest_super;
-                            }
-
-
-
-                            echo ' <tr> ' ;
-
-                                if(isset($programVYear[$key]->date))
-                                    echo '<td> '. $programVYear[$key]->date . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->house_loan))
-                                    echo '<td>' . $programVYear[$key]->house_loan . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->home_worth))
-                                    echo '<td>' . $programVYear[$key]->home_worth . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->invest_super))
-                                    echo '<td>' . $programVYear[$key]->invest_super . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($monthlyNetworths[$key]->cash))
-                                    echo '<td> ' . $monthlyNetworths[$key]->cash . '  </td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->invest_personal))
-                                    echo '<td>' . $programVYear[$key]->invest_personal . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->long_term_invest))
-                                    echo '<td>' . $programVYear[$key]->long_term_invest . '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($programVYear[$key]->house_loan))
-                                    echo '<td>' . $programVYear[$key]->house_loan .  '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($total_assets_real))
-                                    echo '<td>' . $total_assets_real .  '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($difference_real))
-                                    echo '<td>' . $difference_real .  '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                                if(isset($difference_super_real))
-                                    echo '<td>' . $difference_super_real .  '</td>';
-                                else
-                                    echo '<td> No data</td>';
-
-                            echo '</tr> ';
 
                         }
 
