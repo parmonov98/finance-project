@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\SuperData;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\ProgramSuper;
@@ -56,38 +58,91 @@ class VYearNetworth extends Component
 
         if($data == 0)
         {
-            $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
-            // dd($dates);
+//            $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
+            $homeLoans = HomeLoan::select(
+                '*',
+                DB::raw('CEIL(MONTH(pay_date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(YEAR(pay_date)) AS yearVALUE')
+            )->groupBy('monthVALUE')
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+//            dd($homeLoans);
+            $monthlyWorths = MonthlyNetworth::select(
+                '*',
+                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+            )->groupBy('monthVALUE')
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+            $superInvests = ProgramSuper::select(
+                '*',
+                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+            )->groupBy('monthVALUE')
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+            $personalInvests = InvestPersonal::select(
+                '*',
+                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+            )->groupBy('monthVALUE')
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+            $longTermInvests = LongTermInvestment::select(
+                '*',
+                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+            )->groupBy('monthVALUE')
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+//            dd($monthlyWorths, $homeLoans, $superInvests, $personalInvests, $longTermInvests);
 
-            if(!is_null($dates) && $dates->count() > 0)
-            {
-                $first = $dates[0];
-                $i = 0 ;
-                $tab[] = null;
-
-                while(true)
+                foreach($homeLoans as $key => $date)
                 {
-                    $monthsToAdd = $i*6;
-
-                    $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
-                    $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
-
-                    $i++;
-
-                    if(!is_null($data))
-                    {
-                        Program5YRNetworth::create([
-                            "date"   => $data->pay_date,
-                            "user_id" => Auth::user()->id
-                        ]);
-                    }
-                    else
-                        break;
-
-
+                    Program5YRNetworth::create([
+                        "date"   => $homeLoans->get($key)->pay_date,
+                        "user_id" => Auth::user()->id,
+                        "house_loan"   => $homeLoans->get($key)->end_balance,
+                        "home_worth" => $monthlyWorths->get($key)->home_value,
+                        "cash" => $monthlyWorths->get($key)->cash,
+                        "invest_super" => $superInvests->get($key)->total_invested,
+                        "invest_personal" => $personalInvests->get($key)->total_invested,
+                        "long_term_invest" => $longTermInvests->get($key)->total_invested,
+                    ]);
                 }
 
-            }
+
+//            if(!is_null($dates) && $dates->count() > 0)
+//            {
+//                $first = $dates[0];
+//                $i = 0 ;
+//                $tab[] = null;
+//
+//                while(true)
+//                {
+//                    $monthsToAdd = $i*6;
+//
+//                    $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
+//                    $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
+////                    $data = MonthlyNetworth::select('home_value')->where('pay_date', $time)->first();
+//
+//                    $i++;
+//
+//                    if(!is_null($data))
+//                    {
+//                        Program5YRNetworth::create([
+//                            "date"   => $data->pay_date,
+//                            "user_id" => Auth::user()->id,
+//                            "home_worth" => $monthlyWorths[$key]->home_value
+//                        ]);
+//                    }
+//                    else
+//                        break;
+//
+//
+//                }
+//
+//            }
 
         }
     }
@@ -105,9 +160,7 @@ class VYearNetworth extends Component
                 $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
             else if ($this->show = "x")
                 $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show . "  years"));
-        }
-
-        else
+        }else
             $end_date = null;
 
         $from = date($start_date ? $start_date->pay_date : null);

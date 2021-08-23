@@ -9,6 +9,6 @@ class Program5YRNetworth extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'date', 'user_id'];
+    protected $fillable = [ 'date', 'user_id', 'house_loan', 'home_worth', 'invest_super', 'cash', 'invest_personal', 'long_term_invest'];
 
 }
