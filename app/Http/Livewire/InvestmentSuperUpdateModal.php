@@ -83,7 +83,6 @@ class InvestmentSuperUpdateModal extends Component
 
             $this->emitUp('rerender');
             $this->close();
-//            $this->emitTo('super', 'rerender');
 
         }
     }

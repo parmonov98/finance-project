@@ -80,7 +80,7 @@ class InvestPersonalUpdateModal extends Component
 
             $this->InputData();
 
-//            $this->emitUp('rerender');
+            $this->emitUp('rerender');
             $this->close();
             $this->emitTo('invest-personals', 'rerender');
 
