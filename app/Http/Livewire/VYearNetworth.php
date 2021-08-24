@@ -67,7 +67,7 @@ class VYearNetworth extends Component
             ->groupBy('yearVALUE')
             ->orderBy('id')->get();
 //            dd($homeLoans);
-            $monthlyWorths = MonthlyNetworth::select(
+            $monthlyNetworths = MonthlyNetworth::select(
                 '*',
                 DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(date)) AS yearVALUE')
@@ -97,52 +97,30 @@ class VYearNetworth extends Component
             ->orderBy('id')->get();
 //            dd($monthlyWorths, $homeLoans, $superInvests, $personalInvests, $longTermInvests);
 
-                foreach($homeLoans as $key => $date)
+
+
+            foreach($homeLoans as $key => $date)
                 {
+                    $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
+                    $difference = $total_assets - $date->beg_balance;
+                    $difference_super = $total_assets - $date->beg_balance - $superInvests[$key]->total_invested;
+
+
                     Program5YRNetworth::create([
                         "date"   => $homeLoans->get($key)->pay_date,
                         "user_id" => Auth::user()->id,
                         "house_loan"   => $homeLoans->get($key)->end_balance,
-                        "home_worth" => $monthlyWorths->get($key)->home_value,
-                        "cash" => $monthlyWorths->get($key)->cash,
+                        "home_worth" => $monthlyNetworths->get($key)->home_value,
+                        "cash" => $monthlyNetworths->get($key)->cash,
                         "invest_super" => $superInvests->get($key)->total_invested,
                         "invest_personal" => $personalInvests->get($key)->total_invested,
                         "long_term_invest" => $longTermInvests->get($key)->total_invested,
+                        "total_debt" => $homeLoans->get($key)->end_balance,
+                        "total_assets" => $total_assets,
+                        "difference" => $difference,
+                        "difference_minus_super" => $difference_super,
                     ]);
                 }
-
-
-//            if(!is_null($dates) && $dates->count() > 0)
-//            {
-//                $first = $dates[0];
-//                $i = 0 ;
-//                $tab[] = null;
-//
-//                while(true)
-//                {
-//                    $monthsToAdd = $i*6;
-//
-//                    $time = date('Y-m-d', strtotime($first->pay_date . '+' . $monthsToAdd .  ' months'));
-//                    $data = HomeLoan::select('pay_date')->where('pay_date', $time)->first();
-////                    $data = MonthlyNetworth::select('home_value')->where('pay_date', $time)->first();
-//
-//                    $i++;
-//
-//                    if(!is_null($data))
-//                    {
-//                        Program5YRNetworth::create([
-//                            "date"   => $data->pay_date,
-//                            "user_id" => Auth::user()->id,
-//                            "home_worth" => $monthlyWorths[$key]->home_value
-//                        ]);
-//                    }
-//                    else
-//                        break;
-//
-//
-//                }
-//
-//            }
 
         }
     }

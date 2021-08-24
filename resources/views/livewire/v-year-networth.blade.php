@@ -177,23 +177,23 @@
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($programVYear[$key]->house_loan))
-                                    echo '<td>' . number_format($programVYear[$key]->house_loan, 2) .  ' (approx)</td>';
+                                if(isset($programVYear[$key]->total_debt))
+                                    echo '<td>' . number_format($programVYear[$key]->total_debt, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($total_assets_real))
-                                    echo '<td>' . number_format($total_assets_real, 2) .  ' (approx)</td>';
+                                if(isset($programVYear[$key]->total_assets))
+                                    echo '<td>' . number_format($programVYear[$key]->total_assets, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($difference_real))
-                                    echo '<td>' . number_format($difference_real, 2) .  ' (approx)</td>';
+                                if(isset($programVYear[$key]->difference))
+                                    echo '<td>' . number_format($programVYear[$key]->difference, 2) .  ' (approx)</td>';
                                 else
-                                    echo '<td> No data</td>';
+                                    echo '<td> No data (approx)</td>';
 
-                                if(isset($difference_super_real))
-                                    echo '<td>' . number_format($difference_super_real, 2) .  ' (approx)</td>';
+                                if(isset($programVYear[$key]->difference_minus_super))
+                                    echo '<td>' . number_format($programVYear[$key]->difference_minus_super, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 
