@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="alert alert-warning p-3">
-                <h4>Visit here to fix initial data as approx data</h4>
+                <h4>Visit here after first monthly networths calculation to fix initial data as approx data</h4>
             </div>
         </div>
 
@@ -72,52 +72,52 @@
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->house_loan))
-                                    echo '<td>' . number_format($programVYear[$key]->house_loan, 2) . ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->house_loan, 2) . ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->home_worth))
-                                    echo '<td>' . number_format($programVYear[$key]->home_worth, 2) . ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->home_worth, 2) . ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->invest_super))
-                                    echo '<td>' . number_format($programVYear[$key]->invest_super, 2) . ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->invest_super, 2) . ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->cash))
-                                    echo '<td> ' . number_format($programVYear[$key]->cash, 2) . '  (approx) </td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->cash, 2) . '  (approx) </td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->invest_personal))
-                                    echo '<td>' . number_format($programVYear[$key]->invest_personal, 2) . ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->invest_personal, 2) . ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->long_term_invest))
-                                    echo '<td>' . number_format($programVYear[$key]->long_term_invest, 2) . ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->long_term_invest, 2) . ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->total_debt))
-                                    echo '<td>' . number_format($programVYear[$key]->total_debt, 2) .  ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->total_debt, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->total_assets))
-                                    echo '<td>' . number_format($programVYear[$key]->total_assets, 2) .  ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->total_assets, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($programVYear[$key]->difference))
-                                    echo '<td>' . number_format($programVYear[$key]->difference, 2) .  ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->difference, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 
                                 if(isset($programVYear[$key]->difference_minus_super))
-                                    echo '<td>' . number_format($programVYear[$key]->difference_minus_super, 2) .  ' (approx)</td>';
+                                    echo '<td>$' . number_format($programVYear[$key]->difference_minus_super, 2) .  ' (approx)</td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 
@@ -132,52 +132,52 @@
                                     echo '<td> No data (approx)</td>';
 
                                 if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td>' . number_format($home_loans[$key]->beg_balance, 2) . '</td>';
+                                    echo '<td>$' . number_format($home_loans[$key]->beg_balance, 2) . '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($monthlyNetworths[$key]->home_value))
-                                    echo '<td>' . number_format($monthlyNetworths[$key]->home_value, 2) . '</td>';
+                                    echo '<td>$' . number_format($monthlyNetworths[$key]->home_value, 2) . '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($investSupers[$key]->total_invested))
-                                    echo '<td>' . number_format($investSupers[$key]->total_invested, 2) . '</td>';
+                                    echo '<td>$' . number_format($investSupers[$key]->total_invested, 2) . '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($monthlyNetworths[$key]->cash))
-                                    echo '<td> ' . number_format($monthlyNetworths[$key]->cash, 2) . '  </td>';
+                                    echo '<td>$' . number_format($monthlyNetworths[$key]->cash, 2) . '  </td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($investPersonals[$key]->total_invested))
-                                    echo '<td>' . number_format($investPersonals[$key]->total_invested, 2) . '</td>';
+                                    echo '<td>$' . number_format($investPersonals[$key]->total_invested, 2) . '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($longTermInvests[$key]->total_invested))
-                                    echo '<td>' . number_format($longTermInvests[$key]->total_invested, 2) . '</td>';
+                                    echo '<td>$' . number_format($longTermInvests[$key]->total_invested, 2) . '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td>' . number_format($home_loans[$key]->beg_balance, 2) .  '</td>';
+                                    echo '<td>$' . number_format($home_loans[$key]->beg_balance, 2) .  '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($total_assets))
-                                    echo '<td>' . number_format($total_assets, 2) .  '</td>';
+                                    echo '<td>$' . number_format($total_assets, 2) .  '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($difference))
-                                    echo '<td>' . number_format($difference, 2) .  '</td>';
+                                    echo '<td>$' . number_format($difference, 2) .  '</td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($difference_super))
-                                    echo '<td>' . number_format($difference_super, 2) .  '</td>';
+                                    echo '<td>$' . number_format($difference_super, 2) .  '</td>';
                                 else
                                     echo '<td> No data</td>';
 

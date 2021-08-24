@@ -112,6 +112,7 @@ class VYearNetworth extends Component
                         "house_loan"   => $homeLoans->get($key)->end_balance,
                         "home_worth" => $monthlyNetworths->get($key)->home_value,
                         "cash" => $monthlyNetworths->get($key)->cash,
+                        "other_invest" => $monthlyNetworths->get($key)->other_invest,
                         "invest_super" => $superInvests->get($key)->total_invested,
                         "invest_personal" => $personalInvests->get($key)->total_invested,
                         "long_term_invest" => $longTermInvests->get($key)->total_invested,

@@ -72,8 +72,7 @@ class HomeLoanUpdateModal extends Component
 
     public function edit(HomeLoan $home_loan)
     {
-//        dd($month_date);
-//        $home_loan = HomeLoan::firstWhere('pay_date', $month_date);
+//        dd($home_loan);
         $homeLoanData = HomeLoanData::all()->first();
         $this->home_loan = $home_loan;
         $this->end_balance = $home_loan->end_balance;

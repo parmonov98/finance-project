@@ -21,7 +21,8 @@ class Program5YRNetworth extends Model
         'total_debt',
         'total_assets',
         'difference_minus_super',
-        'difference'
+        'difference',
+        'other_invest'
     ];
 
 }

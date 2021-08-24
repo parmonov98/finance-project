@@ -49,7 +49,8 @@ class MonthlyNetworths extends Component
 
     protected $listeners = ['saved', 'rerender' => '$refresh'];
 
-    public function rerender(){
+    public function rerender()
+    {
         dd(1);
         $this->render();
     }
@@ -67,7 +68,7 @@ class MonthlyNetworths extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
-        $home_loans = HomeLoan::select('pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
+        $home_loans = HomeLoan::select('pay_date', 'end_balance', 'id')->whereBetween('pay_date', [$from, $to])->get();
 
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
 
