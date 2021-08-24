@@ -1,85 +1,9 @@
 <div>
     <div class="row">
         <div class="col-12">
-            <form wire:submit.prevent="InputData">
-                <div class="card">
-                    <div class="card-header"><strong>Credit Card</strong> <small>Form</small></div>
-                    <div class="card-body">
-                        <div class="row">
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-                                <div class="form-group">
-                                    <label for="ccnumber">House Loan</label>
-                                    <input wire:model.prevent="houseLoan" class="form-control" id="ccnumber" type="text" placeholder="Enter your home loan">
-                                    @error('date')<span class="span-error">{{ $message }}</span>@enderror
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-                                <div class="form-group">
-                                    <label for="ccnumber">Home Worth</label>
-                                    <input wire:model.prevent="homeWorth" class="form-control" id="ccnumber" type="text" placeholder="Enter your home worth">
-                                    @error('homeWorth')<span class="span-error">{{ $message }}</span>@enderror
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-                                <div class="form-group">
-                                    <label for="ccnumber">Investment Super</label>
-                                    <input wire:model.prevent="investSuper" class="form-control" id="ccnumber" type="text" placeholder="Enter your investment super">
-                                    @error('investSuper')<span class="span-error">{{ $message }}</span>@enderror
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-                                <div class="form-group">
-                                    <label for="ccnumber">Cash</label>
-                                    <input wire:model.prevent="cash" class="form-control" id="ccnumber" type="text" placeholder="Enter cash">
-                                    @error('cash')<span class="span-error">{{ $message }}</span>@enderror
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-                                <div class="form-group">
-                                    <label for="ccnumber">Invest Personal</label>
-                                    <input wire:model.prevent="investPersonal" class="form-control" id="ccnumber" type="text" placeholder="Enter your investment personal">
-                                    @error('investPersonal')<span class="span-error">{{ $message }}</span>@enderror
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4">
-
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="ccnumber">Long Term Investment</label>
-                                            <input wire:model.prevent="longTermInvest" class="form-control" id="ccnumber" type="text" placeholder="Enter your long term investment">
-                                            @error('longTermInvest')<span class="span-error">{{ $message }}</span>@enderror
-
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Date Input</label>
-                                            <input class="form-control" id="date-input" type="date" wire:model.prevent="date" placeholder="date" >
-                                            @error('date')<span class="span-error">{{ $message }}</span>@enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-sm btn-primary" type="submit"> Submit</button>
-                        <button class="btn btn-sm btn-danger" type="button" wire:click="ResetTables"> Reset</button>
-                    </div>
-                </div>
-            </form>
+            <div class="alert alert-warning p-3">
+                <h4>Visit here to fix initial data as approx data</h4>
+            </div>
         </div>
 
     </div>
