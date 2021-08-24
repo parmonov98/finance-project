@@ -128,57 +128,57 @@
                             echo ' <tr> ' ;
 
                                 if(isset($home_loans[$key]->pay_date))
-                                    echo '<td> '. $home_loans[$key]->pay_date . '</td>';
+                                    echo '<td><B> '. $home_loans[$key]->pay_date . '<B></td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 
                                 if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td>$' . number_format($home_loans[$key]->beg_balance, 2) . '</td>';
+                                    echo '<td><B>$' . number_format($home_loans[$key]->beg_balance, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($monthlyNetworths[$key]->home_value))
-                                    echo '<td>$' . number_format($monthlyNetworths[$key]->home_value, 2) . '</td>';
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->home_value, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($investSupers[$key]->total_invested))
-                                    echo '<td>$' . number_format($investSupers[$key]->total_invested, 2) . '</td>';
+                                    echo '<td><B>$' . number_format($investSupers[$key]->total_invested, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($monthlyNetworths[$key]->cash))
-                                    echo '<td>$' . number_format($monthlyNetworths[$key]->cash, 2) . '  </td>';
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->cash, 2) . '  <B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($investPersonals[$key]->total_invested))
-                                    echo '<td>$' . number_format($investPersonals[$key]->total_invested, 2) . '</td>';
+                                    echo '<td><B>$' . number_format($investPersonals[$key]->total_invested, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($longTermInvests[$key]->total_invested))
-                                    echo '<td>$' . number_format($longTermInvests[$key]->total_invested, 2) . '</td>';
+                                    echo '<td><B>$' . number_format($longTermInvests[$key]->total_invested, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td>$' . number_format($home_loans[$key]->beg_balance, 2) .  '</td>';
+                                    echo '<td><B>$' . number_format($home_loans[$key]->beg_balance, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($total_assets))
-                                    echo '<td>$' . number_format($total_assets, 2) .  '</td>';
+                                    echo '<td><B>$' . number_format($total_assets, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($difference))
-                                    echo '<td>$' . number_format($difference, 2) .  '</td>';
+                                    echo '<td><B>$' . number_format($difference, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
                                 if(isset($difference_super))
-                                    echo '<td>$' . number_format($difference_super, 2) .  '</td>';
+                                    echo '<td><B>$' . number_format($difference_super, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
