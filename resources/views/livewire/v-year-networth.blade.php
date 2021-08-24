@@ -47,13 +47,6 @@
 
                         foreach($home_loans as $key => $home_loan)
                         {
-                            if(isset($monthlyNetworths[$key]->home_value) && isset($longTermInvests[$key]->total_invested) && isset($home_loans[$key]->beg_balance) && isset($investSupers[$key]->total_invested))
-                            {
-                                $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
-                                $difference = $total_assets - $home_loans[$key]->beg_balance;
-                                $difference_super = $total_assets - $home_loans[$key]->beg_balance - $investSupers[$key]->total_invested;
-                            }
-
 
                             if(isset($programVYear[$key]->home_worth) && isset($programVYear[$key]->long_term_invest) && isset($programVYear[$key]->house_loan) && isset($programVYear[$key]->invest_super))
                             {
@@ -122,6 +115,14 @@
                                     echo '<td> No data (approx)</td>';
 
                             echo '</tr> ';
+
+                            if(isset($monthlyNetworths[$key]->home_value) && isset($longTermInvests[$key]->total_invested) && isset($home_loans[$key]->beg_balance) && isset($investSupers[$key]->total_invested))
+                            {
+                                $total_assets = $monthlyNetworths[$key]->home_value + $monthlyNetworths[$key]->cash + $monthlyNetworths[$key]->other_invest + $investSupers[$key]->total_invested + $investPersonals[$key]->total_invested + $longTermInvests[$key]->total_invested;
+                                $difference = $total_assets - $home_loans[$key]->beg_balance;
+                                $difference_super = $total_assets - $home_loans[$key]->beg_balance - $investSupers[$key]->total_invested;
+                            }
+
 
 
                             echo ' <tr> ' ;

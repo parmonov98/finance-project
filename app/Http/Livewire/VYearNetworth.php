@@ -61,7 +61,7 @@ class VYearNetworth extends Component
 //            $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
             $homeLoans = HomeLoan::select(
                 '*',
-                DB::raw('CEIL(MONTH(pay_date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(MONTH(pay_date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(pay_date)) AS yearVALUE')
             )->groupBy('monthVALUE')
             ->groupBy('yearVALUE')
@@ -69,28 +69,28 @@ class VYearNetworth extends Component
 //            dd($homeLoans);
             $monthlyNetworths = MonthlyNetworth::select(
                 '*',
-                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(date)) AS yearVALUE')
             )->groupBy('monthVALUE')
             ->groupBy('yearVALUE')
             ->orderBy('id')->get();
             $superInvests = ProgramSuper::select(
                 '*',
-                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(date)) AS yearVALUE')
             )->groupBy('monthVALUE')
             ->groupBy('yearVALUE')
             ->orderBy('id')->get();
             $personalInvests = InvestPersonal::select(
                 '*',
-                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(date)) AS yearVALUE')
             )->groupBy('monthVALUE')
             ->groupBy('yearVALUE')
             ->orderBy('id')->get();
             $longTermInvests = LongTermInvestment::select(
                 '*',
-                DB::raw('CEIL(MONTH(date) / 6) AS monthVALUE'),
+                DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(date)) AS yearVALUE')
             )->groupBy('monthVALUE')
             ->groupBy('yearVALUE')
