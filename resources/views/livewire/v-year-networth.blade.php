@@ -116,12 +116,6 @@
 
                             echo '</tr> ';
 
-                            if(isset($monthlyNetworths[$key]->home_value) && isset($longTermInvests[$key]->total_invested) && isset($home_loans[$key]->beg_balance) && isset($investSupers[$key]->total_invested))
-                            {
-                                $total_assets = $monthlyNetworths[$key]->home_value + $monthlyNetworths[$key]->cash + $monthlyNetworths[$key]->other_invest + $investSupers[$key]->total_invested + $investPersonals[$key]->total_invested + $longTermInvests[$key]->total_invested;
-                                $difference = $total_assets - $home_loans[$key]->beg_balance;
-                                $difference_super = $total_assets - $home_loans[$key]->beg_balance - $investSupers[$key]->total_invested;
-                            }
 
 
 
@@ -167,18 +161,18 @@
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($total_assets))
-                                    echo '<td><B>$' . number_format($total_assets, 2) .  '<B></td>';
+                                if(isset($monthlyNetworths[$key]->assets))
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->assets, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($difference))
-                                    echo '<td><B>$' . number_format($difference, 2) .  '<B></td>';
+                                if(isset($monthlyNetworths[$key]->difference))
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->difference, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($difference_super))
-                                    echo '<td><B>$' . number_format($difference_super, 2) .  '<B></td>';
+                                if(isset($monthlyNetworths[$key]->difference_super))
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->difference_super, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 

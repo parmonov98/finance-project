@@ -61,6 +61,7 @@ class VYearNetworth extends Component
 //            $dates = HomeLoan::select('pay_date')->orderBy('id')->get();
             $homeLoans = HomeLoan::select(
                 '*',
+                DB::raw('MONTH(pay_date) AS monthNUMBER'),
                 DB::raw('CEIL(MONTH(pay_date) / 5) AS monthVALUE'),
                 DB::raw('CEIL(YEAR(pay_date)) AS yearVALUE')
             )->groupBy('monthVALUE')
@@ -101,9 +102,23 @@ class VYearNetworth extends Component
 
             foreach($homeLoans as $key => $date)
                 {
-                    $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
-                    $difference = $total_assets - $date->beg_balance;
-                    $difference_super = $total_assets - $date->beg_balance - $superInvests[$key]->total_invested;
+                    if ($date->monthVALUE == 3){
+                        if ($homeLoans->last() !== $date){
+                            $homeLoans[$key] = $homeLoans[$key]->next();
+                            $monthlyNetworths[$key] = $monthlyNetworths[$key]->next();
+                            $superInvests[$key] = $superInvests[$key]->next();
+                            $personalInvests[$key] = $personalInvests[$key]->next();
+                            $longTermInvests[$key] = $longTermInvests[$key]->next();
+                            $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
+                            $difference = $total_assets - $date->beg_balance;
+                            $difference_super = $total_assets - $date->beg_balance - $superInvests[$key]->total_invested;
+                        }
+                    }else{
+                        $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
+                        $difference = $total_assets - $date->beg_balance;
+                        $difference_super = $total_assets - $date->beg_balance - $superInvests[$key]->total_invested;
+
+                    }
 
 
                     Program5YRNetworth::create([
@@ -145,47 +160,110 @@ class VYearNetworth extends Component
         $from = date($start_date ? $start_date->pay_date : null);
         $to = date($end_date ? $end_date : null);
 
+
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
 //        dd($programVYear);
 
-        $home_loans = array();
-        $monthlyNetworths = array();
-        $investPersonals = array();
-        $longTermInvests = array();
-        $investSupers = array();
+//        dd($from, $to);
+
+        $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
+
+        // ASSETS
+        $monthlyNetworths = MonthlyNetworth::select(
+            '*',
+            DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
+            DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+        )->groupBy('monthVALUE')
+            ->whereBetween('date', [$from, $to])
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+        $longTermInvests = LongTermInvestment::select(
+            '*',
+            DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
+            DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+        )->groupBy('monthVALUE')
+            ->whereBetween('date', [$from, $to])
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+        $investPersonals = InvestPersonal::select(
+            '*',
+            DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
+            DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+        )->groupBy('monthVALUE')
+            ->whereBetween('date', [$from, $to])
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+        $investSupers = ProgramSuper::select(
+            '*',
+            DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
+            DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+        )->groupBy('monthVALUE')
+            ->whereBetween('date', [$from, $to])
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+        $home_values = MonthlyNetworth::select(
+            '*',
+            DB::raw('CEIL(MONTH(date) / 5) AS monthVALUE'),
+            DB::raw('CEIL(YEAR(date)) AS yearVALUE')
+        )->groupBy('monthVALUE')
+            ->whereBetween('date', [$from, $to])
+            ->groupBy('yearVALUE')
+            ->orderBy('id')->get();
+
+
+//        dd($programVYear);
+
+        $home_loans = [];
+        $monthlyNetworths = [];
+        $investPersonals = [];
+        $longTermInvests = [];
+        $investSupers = [];
+
 
         foreach($programVYear as $date)
         {
             if (Carbon::today() > Carbon::parse($date->date)){
-                array_push($home_loans, HomeLoan::where('pay_date', $date->date)->first());
+                $currentHomeLoan = HomeLoan::where('pay_date', $date->date)->first();
+                array_push($home_loans, $currentHomeLoan);
             }else{
                 array_push($home_loans, HomeLoan::select('pay_date')->where('pay_date', $date->date)->first());
-
-            }
-            if (Carbon::today() > Carbon::parse($date->date)){
-                array_push($monthlyNetworths, MonthlyNetworth::where('date', $date->date)->first());
-            }else{
-                array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
             }
 
             if (Carbon::today() > Carbon::parse($date->date)){
-                array_push($investPersonals, InvestPersonal::where('date', $date->date)->first());
+                $currentPersonalInvest =  InvestPersonal::where('date', $date->date)->first();
+                array_push($investPersonals, $currentPersonalInvest);
             }else{
                 array_push($investPersonals, InvestPersonal::select('date')->where('date', $date->date)->first());
             }
             if (Carbon::today() > Carbon::parse($date->date)){
-                array_push($longTermInvests, LongTermInvestment::where('date', $date->date)->first()) ;
+                $currentLongTermInvest =  LongTermInvestment::where('date', $date->date)->first();
+                array_push($longTermInvests, $currentLongTermInvest) ;
             }else{
                 array_push($longTermInvests, LongTermInvestment::select('date')->where('date', $date->date)->first()) ;
             }
 
             if (Carbon::today() > Carbon::parse($date->date)){
-                array_push($investSupers, ProgramSuper::where('date', $date->date)->first());
+                $currentSuperInvest =  ProgramSuper::where('date', $date->date)->first();
+                array_push($investSupers, $currentSuperInvest);
             }else{
                 array_push($investSupers, ProgramSuper::select('date')->where('date', $date->date)->first());
-//                dd($investSupers);
+            }
+
+
+            if (Carbon::today() > Carbon::parse($date->date)){
+                $currentMonthlyNetworth =  MonthlyNetworth::where('date', $date->date)->first();
+                $currentMonthlyNetworth->assets = $currentMonthlyNetworth->home_value + $currentMonthlyNetworth->cash
+                    + $currentMonthlyNetworth->other_invest + $currentPersonalInvest->total_invested + $currentLongTermInvest->total_invested
+                    + $currentSuperInvest->total_invested;
+                $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance;
+                $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance - $currentSuperInvest->total_invested;
+                array_push($monthlyNetworths, $currentMonthlyNetworth);
+            }else{
+                array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
             }
         }
+
+//        dd($monthlyNetworths, $investPersonals, $longTermInvests, $investSupers);
 
         return view('livewire.v-year-networth', [
             "home_loans" => $home_loans ,
