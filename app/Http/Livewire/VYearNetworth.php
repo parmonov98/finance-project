@@ -154,10 +154,10 @@ class VYearNetworth extends Component
         $to = date($end_date ? $end_date : null);
 
 
-        $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
 
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
 
+        $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
 
         $home_loans = [];
         $monthlyNetworths = [];

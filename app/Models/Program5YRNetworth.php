@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Program5YRNetworth extends Model
 {
@@ -24,5 +25,10 @@ class Program5YRNetworth extends Model
         'difference',
         'other_invest'
     ];
+
+    public function formatDate()
+    {
+        return Carbon::parse($this->date)->format('d-m-Y');
+    }
 
 }

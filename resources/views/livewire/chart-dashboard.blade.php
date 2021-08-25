@@ -17,9 +17,9 @@
       var years = dates.map(item => item.toString());
 
       var total_debts = <?php echo $total_debts ?? ''; ?>;
-      {{--var total_assets = <?php echo $total_assets ?? ''; ?>;--}}
-      {{--var differences = <?php echo $differences; ?>;--}}
-      {{--var differences_vs_super = <?php echo $differences_vs_super; ?>;--}}
+      var total_assets = <?php echo $total_assets ?? ''; ?>;
+      var differences = <?php echo $differences; ?>;
+      var differences_vs_super = <?php echo $differences_vs_super; ?>;
       {{--var runningDiff_minus_cash_plus_equity = <?php echo $runningDiff_minus_cash_plus_equity; ?>;--}}
       {{--var runningDiff_minus_overall = <?php echo $runningDiff_minus_overall; ?>;--}}
 
@@ -33,19 +33,19 @@
           },
           {
               label: 'Total Assets',
-              data: total_debts,
+              data: total_assets,
               borderColor: 'black',
               backgroundColor: '#92d050',
           },
           {
               label: 'Difference',
-              data: total_debts,
+              data: differences,
               borderColor: 'black',
               backgroundColor: '#00b050',
           },
           {
               label: 'Difference - Super',
-              data: total_debts,
+              data: differences_vs_super,
               borderColor: 'black',
               backgroundColor: '#505050',
           }

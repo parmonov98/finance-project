@@ -61,7 +61,7 @@
                             echo ' <tr> ' ;
 
                                 if(isset($programVYear[$key]->date))
-                                    echo '<td> '. $programVYear[$key]->date .  ' (approx)</td>';
+                                    echo '<td> '. $programVYear[$key]->formatDate() .  ' (approx)</td>';
                                 else
                                     echo '<td> No data</td>';
 
@@ -125,7 +125,7 @@
                             echo ' <tr> ' ;
 
                                 if(isset($home_loans[$key]->pay_date))
-                                    echo '<td><B> '. $home_loans[$key]->pay_date . '<B></td>';
+                                    echo '<td><B> '. $home_loans[$key]->formatDate() . '<B></td>';
                                 else
                                     echo '<td> No data (approx)</td>';
 

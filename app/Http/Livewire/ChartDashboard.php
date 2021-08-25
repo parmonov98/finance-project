@@ -17,16 +17,17 @@ class ChartDashboard extends Component
 
     public $showDataLabels = false;
 
+
     public $from_year = "2021";
     public $to_year = "2022";
 
     public $years = [];
-    public $year = "2021";
+    public $year = 1;
 
     public function mount()
     {
         $result = MonthlyNetworth::select(DB::raw('YEAR(date) as year'))->distinct()->get();
-        $this->years = $result->pluck('year');
+        $this->years = [1, 3, 5];
 
     }
 
@@ -35,40 +36,58 @@ class ChartDashboard extends Component
         // dd($selected_year);
         $this->year = $selected_year;
         if (is_numeric($selected_year)) {
-            $this->from_year = $selected_year;
-            $this->to_year = $selected_year + 1;
 
             $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-            $yearText = "['" . implode("','", $months) . "']";
 
-            $total_debtsRecords = HomeLoan::query()
+            if ($this->year != 1)
+                $this->to_year = $this->from_year + $this->year;
+            else
+                $this->to_year = $this->from_year + 1;
+
+            $homeLoans = HomeLoan::query()
                 ->select("*", DB::raw("MONTH(pay_date) as month"), DB::raw("MONTHNAME(pay_date) as monthname"))
-                ->where(DB::raw('YEAR(pay_date)'), [$this->from_year])
+                ->whereBetween(DB::raw('YEAR(pay_date)'), [$this->from_year, $this->to_year - 1])
                 ->get();
-            // ->pluck('home_value');
+            $homeLoansLabels = $homeLoans->pluck('pay_date')->toArray();
 
-//            dd($total_debtsRecords);
-            $_debtsLabel = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-            $total_debts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            $total_debtsRecords->each(function($item) use (&$total_debts){
+            $totalDebts = $homeLoans->pluck('end_balance');
 
-                if(!isset($total_debts[$item->month-1])){
-                    $total_debts[$item->month-1] = $item->end_balance;
-                }else{
-                    $total_debts[$item->month-1] = $item->end_balance;
-                }
-            });
-            $total_debtsText = "['" . implode("','", $total_debts) . "']";
-//            dd($total_debtsText);
+            // TOTAL ASSETS
+            $monthlyNetworths = MonthlyNetworth::query()
+                ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+                ->whereBetween(DB::raw('YEAR(date)'), [$this->from_year, $this->to_year - 1])
+                ->get();
+            $superInvests = ProgramSuper::query()
+                ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+                ->whereBetween(DB::raw('YEAR(date)'), [$this->from_year, $this->to_year - 1])
+                ->get();
+            $personalInvests = InvestPersonal::query()
+                ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+                ->whereBetween(DB::raw('YEAR(date)'), [$this->from_year, $this->to_year - 1])
+                ->get();
+            $longtermInvests = LongTermInvestment::query()
+                ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+                ->whereBetween(DB::raw('YEAR(date)'), [$this->from_year, $this->to_year - 1])
+                ->get();
 
-            $data['total_debts'] = $total_debts;
-            $data['months'] = $months;
-//            $data['total_assets'] = $assets;
-//            $data['differences'] = $differences;
-//            $data['differences_vs_super'] = $differences_vs_super;
-//            $data['runningDiff_minus_cash_plus_equity'] = $runningDiff;
-//            $data['differences_minus_overall'] = $overallDiff;
+            // TOTAL ASSETS CALC
+            $totalAssets = [];
+            $differences = [];
+            $differenceSupers = [];
+            foreach ($monthlyNetworths as $key => $item){
+                $currentAssets = $item->home_value + $item->cash + $item->other_invest
+                    + $superInvests[$key]->total_invested + $personalInvests[$key]->total_invested
+                    + $longtermInvests[$key]->total_invested;
+                $totalAssets[] = $currentAssets;
+                $differences[] = $currentAssets - $homeLoans[$key]->end_balance;
+                $differenceSupers[] = $currentAssets - $homeLoans[$key]->end_balance - $superInvests[$key]->total_invested;
+            }
 
+            $data['total_debts'] = $totalDebts->toArray();
+            $data['total_assets'] = $totalAssets;
+            $data['differences'] = $differences;
+            $data['differences_vs_super'] = $differenceSupers;
+            $data['months'] = $homeLoansLabels;
 
             $this->dispatchBrowserEvent('updatedChart', $data);
             $this->render();
@@ -77,70 +96,64 @@ class ChartDashboard extends Component
 
     public function render()
     {
-
-//        dd($this->from_year, $this->to_year);
-        // dd(1);
-        // $expenses = Expense::whereIn('type', $this->types)->get();
-        // $home_loans = HomeLoan::select('id', 'pay_date', 'end_balance')->whereBetween('pay_date', [$from, $to])->get();
-        // $home_loans = HomeLoan::select('id', 'pay_date', 'end_balance', 'beg_balance')->get();
-//        $home_loans = HomeLoan::all();
-
-
-        $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-        $yearText = "['" . implode("','", $months) . "']";
-
         // TOTAL DEBTS
-        $total_debtsRecords = HomeLoan::query()
+        $homeLoans = HomeLoan::query()
                 ->select("*", DB::raw("MONTH(pay_date) as month"), DB::raw("MONTHNAME(pay_date) as monthname"))
-                ->where(DB::raw('YEAR(pay_date)'), [$this->from_year])
+                ->where(DB::raw('YEAR(pay_date)'), $this->from_year)
                 ->get();
                 // ->pluck('home_value');
+        $totalDebtsText = "['" . implode("','", $homeLoans->pluck('end_balance')->toArray()) . "']";
 
-//        dd($total_debtsRecords);
+        $homeLoansLabels = $homeLoans->pluck('pay_date')->toArray();
+        $yearText = "['" . implode("','", $homeLoansLabels) . "']";
 
-        $_debtsLabel = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        $total_debts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        $total_debtsRecords->each(function($item) use (&$total_debts){
 
-            if(!isset($total_debts[$item->month-1])){
-                $total_debts[$item->month-1] = $item->end_balance;
-            }else{
-                $total_debts[$item->month-1] = $item->end_balance;
-            }
-        });
-        $total_debtsText = "['" . implode("','", $total_debts) . "']";
-        // TOTAL DEBTS
 
-        // SUPER
-        $total_debtsRecords = HomeLoan::query()
-            ->select("*", DB::raw("MONTH(pay_date) as month"), DB::raw("MONTHNAME(pay_date) as monthname"))
-            ->where(DB::raw('YEAR(pay_date)'), [$this->from_year])
+        // TOTAL ASSETS
+        $monthlyNetworths = MonthlyNetworth::query()
+            ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+            ->where(DB::raw('YEAR(date)'), $this->from_year)
             ->get();
-        // ->pluck('home_value');
+        $superInvests = ProgramSuper::query()
+            ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+            ->where(DB::raw('YEAR(date)'), $this->from_year)
+            ->get();
+        $personalInvests = InvestPersonal::query()
+            ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+            ->where(DB::raw('YEAR(date)'), $this->from_year)
+            ->get();
+        $longtermInvests = LongTermInvestment::query()
+            ->select("*", DB::raw("MONTH(date) as month"), DB::raw("MONTHNAME(date) as monthname"))
+            ->where(DB::raw('YEAR(date)'), $this->from_year)
+            ->get();
 
-        $_debtsLabel = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        $total_debts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        $total_debtsRecords->each(function($item) use (&$total_debts){
+        // TOTAL ASSETS CALC
+        $totalAssets = [];
+        $differences = [];
+        $differenceSupers = [];
+        foreach ($monthlyNetworths as $key => $item){
+             $currentAssets = $item->home_value + $item->cash + $item->other_invest
+                + $superInvests[$key]->total_invested + $personalInvests[$key]->total_invested
+                + $longtermInvests[$key]->total_invested;
+            $totalAssets[] = $currentAssets;
+            $differences[] = $currentAssets - $homeLoans[$key]->end_balance;
+            $differenceSupers[] = $currentAssets - $homeLoans[$key]->end_balance - $superInvests[$key]->total_invested;
+        }
 
-            if(!isset($total_debts[$item->month-1])){
-                $total_debts[$item->month-1] = $item->beg_balance;
-            }else{
-                $total_debts[$item->month-1] = $item->beg_balance;
-            }
-        });
-        $total_debtsText = "['" . implode("','", $total_debts) . "']";
-        // SUPER
+        $totalAssetsText = "['" . implode("','", $totalAssets) . "']";
+        $differencesText = "['" . implode("','", $differences) . "']";
+        $differenceSupersText = "['" . implode("','", $differenceSupers) . "']";
+//        dd($totalDebtsText, $totalAssetsText, $differencesText, $differenceSupersText);
+//        dd($monthlyNetworths, $superInvests, $personalInvests, $longtermInvests);
 
 
         // $years = MonthlyNetworth::select('date')->distinct('date')->get();
         return view('livewire.chart-dashboard')->with([
-            "total_debts" => $total_debtsText,
+            "total_debts" => $totalDebtsText,
             'yearText' => $yearText,
-//            'total_assets' => $total_assets,
-//            'differences' => $differencesText,
-//            'differences_vs_super' => $differences_vs_superText,
-//            'runningDiff_minus_cash_plus_equity' => $runningDiff_minus_cash_plus_equityText,
-//            'runningDiff_minus_overall' => $runningDiff_minus_overallText,
+            'total_assets' => $totalAssetsText,
+            'differences' => $differencesText,
+            'differences_vs_super' => $differenceSupersText
         ]);
     }
 }
