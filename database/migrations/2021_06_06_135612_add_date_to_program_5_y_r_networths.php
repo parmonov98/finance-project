@@ -15,11 +15,11 @@ class AddDateToProgram5YRNetworths extends Migration
     {
         Schema::table('program5_y_r_networths', function (Blueprint $table) {
             $table->date('date')->nullable();
-            $table->decimal('other_invest')->nullable();
-            $table->decimal('total_debt')->nullable();
-            $table->decimal('total_assets')->nullable();
-            $table->decimal('difference')->nullable();
-            $table->decimal('difference_minus_super')->nullable();
+            $table->decimal('other_invest', 20, 2)->nullable();
+            $table->decimal('total_debt', 20, 2)->nullable();
+            $table->decimal('total_assets', 20, 2)->nullable();
+            $table->decimal('difference', 20, 2)->nullable();
+            $table->decimal('difference_minus_super', 20, 2)->nullable();
         });
     }
 

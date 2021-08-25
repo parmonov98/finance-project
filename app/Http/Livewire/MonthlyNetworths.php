@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Program5YRNetworth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HomeLoan;

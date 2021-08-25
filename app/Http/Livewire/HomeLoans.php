@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Program5YRNetworth;
 use Livewire\Component;
 use App\Models\HomeLoan;
 use App\Models\HomeLoanData;
@@ -355,6 +356,7 @@ class HomeLoans extends Component
         HomeLoan::truncate();
         HomeLoanData::truncate();
         MonthlyNetworth::truncate();
+        Program5YRNetworth::truncate();
         DB::table('home_loans_savings')->truncate();
     }
 
