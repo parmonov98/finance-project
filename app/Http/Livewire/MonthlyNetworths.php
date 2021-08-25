@@ -52,7 +52,6 @@ class MonthlyNetworths extends Component
 
     public function rerender()
     {
-        dd(1);
         $this->render();
     }
 
@@ -104,8 +103,6 @@ class MonthlyNetworths extends Component
             $value5 += $investSuper ? $investSuper->total_invested : 0;
             $value6 += $other_invest->other_invest ? $other_invest->other_invest : 0;
 
-//            dd($date->date);
-
             $assets[] = $value1 + $value2 + $value3 + $value4 + $value5 + $value6;
             $value1 = null;
             $value2 = null;
@@ -113,9 +110,7 @@ class MonthlyNetworths extends Component
             $value4 = null;
             $value5 = null;
             $value6 = null;
-//            if ($date->date == '2021-02-01'){
-//                dd($assets);
-//            }
+
         }
         // End ASSETS
 
@@ -152,8 +147,6 @@ class MonthlyNetworths extends Component
             }
         }
 
-
-//        dd($home_loans);
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
 
         return view('livewire.monthly-networths', [
