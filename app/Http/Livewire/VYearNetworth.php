@@ -162,6 +162,7 @@ class VYearNetworth extends Component
 
 
         $programVYear = Program5YRNetworth::whereBetween('date', [$from, $to])->get();
+        $programVYear = $programVYear->forget(0)->values();
 //        dd($programVYear);
 
 //        dd($from, $to);
@@ -211,7 +212,7 @@ class VYearNetworth extends Component
             ->orderBy('id')->get();
 
 
-//        dd($programVYear);
+//        dd($home_values);
 
         $home_loans = [];
         $monthlyNetworths = [];
@@ -220,46 +221,50 @@ class VYearNetworth extends Component
         $investSupers = [];
 
 
-        foreach($programVYear as $date)
+        foreach($programVYear as $key => $date)
         {
-            if (Carbon::today() > Carbon::parse($date->date)){
-                $currentHomeLoan = HomeLoan::where('pay_date', $date->date)->first();
-                array_push($home_loans, $currentHomeLoan);
-            }else{
-                array_push($home_loans, HomeLoan::select('pay_date')->where('pay_date', $date->date)->first());
-            }
+//            dd($key);
+            if ($key > 0){
 
-            if (Carbon::today() > Carbon::parse($date->date)){
-                $currentPersonalInvest =  InvestPersonal::where('date', $date->date)->first();
-                array_push($investPersonals, $currentPersonalInvest);
-            }else{
-                array_push($investPersonals, InvestPersonal::select('date')->where('date', $date->date)->first());
-            }
-            if (Carbon::today() > Carbon::parse($date->date)){
-                $currentLongTermInvest =  LongTermInvestment::where('date', $date->date)->first();
-                array_push($longTermInvests, $currentLongTermInvest) ;
-            }else{
-                array_push($longTermInvests, LongTermInvestment::select('date')->where('date', $date->date)->first()) ;
-            }
+                if (Carbon::today() > Carbon::parse($date->date)){
+                    $currentHomeLoan = HomeLoan::where('pay_date', $date->date)->first();
+                    array_push($home_loans, $currentHomeLoan);
+                }else{
+                    array_push($home_loans, HomeLoan::select('pay_date')->where('pay_date', $date->date)->first());
+                }
 
-            if (Carbon::today() > Carbon::parse($date->date)){
-                $currentSuperInvest =  ProgramSuper::where('date', $date->date)->first();
-                array_push($investSupers, $currentSuperInvest);
-            }else{
-                array_push($investSupers, ProgramSuper::select('date')->where('date', $date->date)->first());
-            }
+                if (Carbon::today() > Carbon::parse($date->date)){
+                    $currentPersonalInvest =  InvestPersonal::where('date', $date->date)->first();
+                    array_push($investPersonals, $currentPersonalInvest);
+                }else{
+                    array_push($investPersonals, InvestPersonal::select('date')->where('date', $date->date)->first());
+                }
+                if (Carbon::today() > Carbon::parse($date->date)){
+                    $currentLongTermInvest =  LongTermInvestment::where('date', $date->date)->first();
+                    array_push($longTermInvests, $currentLongTermInvest) ;
+                }else{
+                    array_push($longTermInvests, LongTermInvestment::select('date')->where('date', $date->date)->first()) ;
+                }
+
+                if (Carbon::today() > Carbon::parse($date->date)){
+                    $currentSuperInvest =  ProgramSuper::where('date', $date->date)->first();
+                    array_push($investSupers, $currentSuperInvest);
+                }else{
+                    array_push($investSupers, ProgramSuper::select('date')->where('date', $date->date)->first());
+                }
 
 
-            if (Carbon::today() > Carbon::parse($date->date)){
-                $currentMonthlyNetworth =  MonthlyNetworth::where('date', $date->date)->first();
-                $currentMonthlyNetworth->assets = $currentMonthlyNetworth->home_value + $currentMonthlyNetworth->cash
-                    + $currentMonthlyNetworth->other_invest + $currentPersonalInvest->total_invested + $currentLongTermInvest->total_invested
-                    + $currentSuperInvest->total_invested;
-                $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance;
-                $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance - $currentSuperInvest->total_invested;
-                array_push($monthlyNetworths, $currentMonthlyNetworth);
-            }else{
-                array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
+                if (Carbon::today() > Carbon::parse($date->date)){
+                    $currentMonthlyNetworth =  MonthlyNetworth::where('date', $date->date)->first();
+                    $currentMonthlyNetworth->assets = $currentMonthlyNetworth->home_value + $currentMonthlyNetworth->cash
+                        + $currentMonthlyNetworth->other_invest + $currentPersonalInvest->total_invested + $currentLongTermInvest->total_invested
+                        + $currentSuperInvest->total_invested;
+                    $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance;
+                    $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance - $currentSuperInvest->total_invested;
+                    array_push($monthlyNetworths, $currentMonthlyNetworth);
+                }else{
+                    array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
+                }
             }
         }
 
