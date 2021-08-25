@@ -78,10 +78,13 @@ class ChartDashboard extends Component
                 $currentAssets = $item->home_value + $item->cash + $item->other_invest
                     + $superInvests[$key]->total_invested + $personalInvests[$key]->total_invested
                     + $longtermInvests[$key]->total_invested;
-                $totalAssets[] = $currentAssets;
-                $differences[] = $currentAssets - $homeLoans[$key]->end_balance;
-                $differenceSupers[] = $currentAssets - $homeLoans[$key]->end_balance - $superInvests[$key]->total_invested;
+                $totalAssets[] = (string)$currentAssets;
+                $differences[] = (string)$currentAssets - $homeLoans[$key]->end_balance;
+                $differenceSupers[] = (string) $currentAssets - $homeLoans[$key]->end_balance - $superInvests[$key]->total_invested;
             }
+
+//            dd($totalDebts->toArray(), $totalAssets, $differences, $differenceSupers);
+//            ddd($differenceSupers);
 
             $data['total_debts'] = $totalDebts->toArray();
             $data['total_assets'] = $totalAssets;

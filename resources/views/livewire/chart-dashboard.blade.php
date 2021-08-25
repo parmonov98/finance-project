@@ -20,9 +20,6 @@
       var total_assets = <?php echo $total_assets ?? ''; ?>;
       var differences = <?php echo $differences; ?>;
       var differences_vs_super = <?php echo $differences_vs_super; ?>;
-      {{--var runningDiff_minus_cash_plus_equity = <?php echo $runningDiff_minus_cash_plus_equity; ?>;--}}
-      {{--var runningDiff_minus_overall = <?php echo $runningDiff_minus_overall; ?>;--}}
-
 
       window.barChartData = [
           {
@@ -77,7 +74,7 @@
       };
 
         window.ctx = document.getElementById("canvas").getContext("2d");
-        window.myLinechart = new Chart(window.ctx, {
+        window.myBarchart = new Chart(window.ctx, {
           type: 'bar',
           data: data,
           options: {
