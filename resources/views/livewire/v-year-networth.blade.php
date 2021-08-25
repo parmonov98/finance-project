@@ -33,6 +33,7 @@
                             <th>Home Worth</th>
                             <th>Investment Super</th>
                             <th>Cash</th>
+                            <th>Other invest</th>
                             <th>Investment Personal</th>
                             <th>Long Term Investment</th>
                             <th>Total Debt</th>
@@ -84,6 +85,11 @@
                                 else
                                     echo '<td> No data</td>';
 
+                                if(isset($programVYear[$key]->other_invest))
+                                    echo '<td>$' . number_format($programVYear[$key]->other_invest, 2) . '   </td>';
+                                else
+                                    echo '<td> No data</td>';
+
                                 if(isset($programVYear[$key]->invest_personal))
                                     echo '<td>$' . number_format($programVYear[$key]->invest_personal, 2) . '</td>';
                                 else
@@ -116,9 +122,6 @@
 
                             echo '</tr> ';
 
-
-
-
                             echo ' <tr> ' ;
 
                                 if(isset($home_loans[$key]->pay_date))
@@ -126,8 +129,8 @@
                                 else
                                     echo '<td> No data (approx)</td>';
 
-                                if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td><B>$' . number_format($home_loans[$key]->beg_balance, 2) . '<B></td>';
+                                if(isset($home_loans[$key]->end_balance))
+                                    echo '<td><B>$' . number_format($home_loans[$key]->end_balance, 2) . '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 
@@ -146,6 +149,11 @@
                                 else
                                     echo '<td> No data</td>';
 
+                                if(isset($monthlyNetworths[$key]->other_invest))
+                                    echo '<td><B>$' . number_format($monthlyNetworths[$key]->other_invest, 2) . '  <B></td>';
+                                else
+                                    echo '<td> No data</td>';
+
                                 if(isset($investPersonals[$key]->total_invested))
                                     echo '<td><B>$' . number_format($investPersonals[$key]->total_invested, 2) . '<B></td>';
                                 else
@@ -156,8 +164,8 @@
                                 else
                                     echo '<td> No data</td>';
 
-                                if(isset($home_loans[$key]->beg_balance))
-                                    echo '<td><B>$' . number_format($home_loans[$key]->beg_balance, 2) .  '<B></td>';
+                                if(isset($home_loans[$key]->end_balance))
+                                    echo '<td><B>$' . number_format($home_loans[$key]->end_balance, 2) .  '<B></td>';
                                 else
                                     echo '<td> No data</td>';
 

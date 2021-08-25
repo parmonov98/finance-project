@@ -96,6 +96,8 @@ class ChartDashboard extends Component
                 ->get();
                 // ->pluck('home_value');
 
+//        dd($total_debtsRecords);
+
         $_debtsLabel = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         $total_debts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         $total_debtsRecords->each(function($item) use (&$total_debts){

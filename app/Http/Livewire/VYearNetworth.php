@@ -103,9 +103,12 @@ class VYearNetworth extends Component
 
             foreach ($homeLoans as $key => $date) {
 
-                $total_assets = $monthlyNetworths[$key]->home_value + $longTermInvests[$key]->total_invested;
-                $difference = $total_assets - $date->beg_balance;
-                $difference_super = $total_assets - $date->beg_balance - $superInvests[$key]->total_invested;
+                $total_assets = $monthlyNetworths[$key]->home_value
+                    + $monthlyNetworths[$key]->cash + $monthlyNetworths[$key]->other_invest
+                    + $superInvests[$key]->total_invested  + $personalInvests[$key]->total_invested
+                    + $longTermInvests[$key]->total_invested;
+                $difference = $total_assets - $date->end_balance;
+                $difference_super = $total_assets - $date->end_balance - $superInvests[$key]->total_invested;
 
 
                 Program5YRNetworth::create([
@@ -200,8 +203,8 @@ class VYearNetworth extends Component
                 $currentMonthlyNetworth->assets = $currentMonthlyNetworth->home_value + $currentMonthlyNetworth->cash
                     + $currentMonthlyNetworth->other_invest + $currentPersonalInvest->total_invested + $currentLongTermInvest->total_invested
                     + $currentSuperInvest->total_invested;
-                $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance;
-                $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->beg_balance - $currentSuperInvest->total_invested;
+                $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance;
+                $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance - $currentSuperInvest->total_invested;
                 array_push($monthlyNetworths, $currentMonthlyNetworth);
             } else {
                 array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
