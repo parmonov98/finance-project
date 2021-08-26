@@ -149,6 +149,8 @@ class MonthlyNetworths extends Component
 
         $dates = MonthlyNetworth::select('date')->whereBetween('date', [$from, $to])->get();
 
+//        dd($home_loans);
+
         return view('livewire.monthly-networths', [
             'dates' => $dates,
             "home_loans" => $home_loans,

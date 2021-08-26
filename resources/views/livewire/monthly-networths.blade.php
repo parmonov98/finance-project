@@ -93,6 +93,7 @@
                     <livewire:monthly-networth-cash-update-modal/>
                     <livewire:monthly-networth-other-investment-update-modal/>
 
+                    @if($home_loans->count() > 0)
                     <table class="table table-responsive" style=" white-space: nowrap;">
                         <tr>
                             <th class="table-header-bold">Debt</th>
@@ -317,7 +318,9 @@
                         </tr>
 
                     </table>
-
+                    @else
+                        <span class="text-danger">Please, add home loan data!</span>
+                    @endif
                 </div>
 
             </div>
