@@ -1,20 +1,15 @@
 <div>
     <x-loader/>
 
-    <livewire:home-loan-update-modal/>
-    <br/>
-
     <div class="row">
-            @if (session()->has('message'))
-                <div class="w-100 alert alert-warning">
-                    {{ session('message') }}
-                </div>
-            @endif
-
+        @if (session()->has('message'))
+            <div class="w-100 alert alert-warning">
+                {{ session('message') }}
+            </div>
+        @endif
     </div>
-    <!-- First row of the two cards -->
      <div class="row">
-          <!-- First Card -->
+          <!-- Initial calculation form -->
           @if(is_null($check))
           <div class="col-sm-12 col-md-6">
                <form wire:submit.prevent="Inputdata">
@@ -81,6 +76,7 @@
                     </div>
                </form>
           </div>
+             <!-- recalculation form -->
           @elseif(!is_null($check))
           <div class="col-sm-12 col-md-6">
                <form wire:submit.prevent="Modifydata">
@@ -238,10 +234,6 @@
                                    <td>$ {{ $data->formatNumber($data->principal) }}</td>
                                    <td>$ {{ $data->formatNumber($data->interest) }}</td>
                                    <td>
-{{--                                   <button data-toggle="modal" data-toggle="modal" data-target="#updateHomeLoan"--}}
-{{--                                            wire:click="openUpdateHomeLoanModal({{ $data->id }})"--}}
-{{--                                            class="btn border btn-sm">--}}
-{{--                                    </button>--}}
                                         ${{ $data->formatNumber($data->end_balance) }}
                                    </td>
                                    <td>$ {{ $data->formatNumber($data->cum_interest) }}</td>

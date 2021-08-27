@@ -302,13 +302,11 @@
                                 @endforeach
                             @endif
                         </tr>
-
                         <tr>
                             <th style="background-color: #e5fbff;">Running Diff - Overrall</th>
                             @if (isset($overallDiff))
                                 @foreach ($overallDiff as $data)
-                                    <td>
-                                        $
+                                    <td> $
                                         <span contenteditable="true" class="px-1">
                                             {{ number_format($data, 2, '.', ',')}}
                                         </span>
@@ -325,7 +323,6 @@
 
             </div>
         </div>
-
 
     </div>
 
