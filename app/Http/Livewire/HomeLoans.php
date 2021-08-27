@@ -199,7 +199,7 @@ class HomeLoans extends Component
             if ($last_record != null) {
                 do {
                     $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')
-                                            ->orderBy('id', 'DESC')->first();
+                                            ->where('user_id', Auth::id())->orderBy('id', 'DESC')->first();
                     $data['beg_balance'] = $last_record->end_balance;
 
                     $daystosum = 1;
