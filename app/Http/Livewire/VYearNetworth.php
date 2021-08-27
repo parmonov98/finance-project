@@ -103,25 +103,37 @@ class VYearNetworth extends Component
 
             foreach ($homeLoans as $key => $date) {
 
+                $currentAllInvests = 0;
+                if (isset($superInvests[$key])){
+                    $currentAllInvests  += $superInvests[$key]->total_invest;
+                }
+                if (isset($personalInvests[$key])){
+                    $currentAllInvests  += $personalInvests[$key]->total_invested;
+                }
+                if (isset($longTermInvests[$key])){
+                    $currentAllInvests  += $longTermInvests[$key]->total_invested;
+                }
                 $total_assets = $monthlyNetworths[$key]->home_value
                     + $monthlyNetworths[$key]->cash + $monthlyNetworths[$key]->other_invest
-                    + $superInvests[$key]->total_invested  + $personalInvests[$key]->total_invested
-                    + $longTermInvests[$key]->total_invested;
+                    + $currentAllInvests;
                 $difference = $total_assets - $date->end_balance;
-                $difference_super = $total_assets - $date->end_balance - $superInvests[$key]->total_invested;
+                $difference_super = $total_assets - $date->end_balance - 0;
+                if (isset($superInvests[$key])){
+                    $difference_super = $total_assets - $date->end_balance - $superInvests[$key]->total_invest;
+                }
 
 
                 Program5YRNetworth::create([
-                    "date" => $homeLoans->get($key)->pay_date,
+                    "date" => $homeLoans[$key]->pay_date,
                     "user_id" => Auth::user()->id,
-                    "house_loan" => $homeLoans->get($key)->end_balance,
-                    "home_worth" => $monthlyNetworths->get($key)->home_value,
-                    "cash" => $monthlyNetworths->get($key)->cash,
-                    "other_invest" => $monthlyNetworths->get($key)->other_invest,
-                    "invest_super" => $superInvests->get($key)->total_invested,
-                    "invest_personal" => $personalInvests->get($key)->total_invested,
-                    "long_term_invest" => $longTermInvests->get($key)->total_invested,
-                    "total_debt" => $homeLoans->get($key)->end_balance,
+                    "house_loan" => $homeLoans[$key]->end_balance,
+                    "home_worth" => $monthlyNetworths[$key]->home_value,
+                    "cash" => $monthlyNetworths[$key]->cash,
+                    "other_invest" => $monthlyNetworths[$key]->other_invest,
+                    "invest_super" => isset($superInvests[$key]) ? $superInvests[$key]->total_invested : 0,
+                    "invest_personal" => isset($personalInvests[$key]) ? $personalInvests[$key]->total_invested  : 0,
+                    "long_term_invest" => isset($longTermInvests[$key]) ? $longTermInvests[$key]->total_invested : 0,
+                    "total_debt" => $homeLoans[$key]->end_balance,
                     "total_assets" => $total_assets,
                     "difference" => $difference,
                     "difference_minus_super" => $difference_super,
@@ -200,11 +212,29 @@ class VYearNetworth extends Component
 
             if (Carbon::today() > Carbon::parse($date->date)) {
                 $currentMonthlyNetworth = MonthlyNetworth::where('date', $date->date)->first();
+
+                $currentAllInvests = 0;
+                if ($currentPersonalInvest){
+                    $currentAllInvests  += $currentPersonalInvest->total_invest;
+                }
+                if ($currentLongTermInvest){
+                    $currentAllInvests  += $currentLongTermInvest->total_invested;
+                }
+                if ($currentSuperInvest){
+                    $currentAllInvests  += $currentSuperInvest->total_invested;
+                }
+
                 $currentMonthlyNetworth->assets = $currentMonthlyNetworth->home_value + $currentMonthlyNetworth->cash
-                    + $currentMonthlyNetworth->other_invest + $currentPersonalInvest->total_invested + $currentLongTermInvest->total_invested
-                    + $currentSuperInvest->total_invested;
+                    + $currentMonthlyNetworth->other_invest
+                    + $currentAllInvests;
                 $currentMonthlyNetworth->difference = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance;
-                $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance - $currentSuperInvest->total_invested;
+
+                if ($currentSuperInvest){
+                    $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance - $currentSuperInvest->total_invested;
+                }else{
+                    $currentMonthlyNetworth->difference_super = $currentMonthlyNetworth->assets - $currentHomeLoan->end_balance - 0;
+                }
+
                 array_push($monthlyNetworths, $currentMonthlyNetworth);
             } else {
                 array_push($monthlyNetworths, MonthlyNetworth::select('date')->where('date', $date->date)->first());
