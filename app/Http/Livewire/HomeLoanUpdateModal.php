@@ -435,7 +435,8 @@ class HomeLoanUpdateModal extends Component
             $from = $record_date->pay_date;
             $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
             HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->delete();
-            DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();
+
+//            DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
             $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
 

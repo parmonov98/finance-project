@@ -116,7 +116,9 @@ class VYearNetworth extends Component
                 $total_assets = $monthlyNetworths[$key]->home_value
                     + $monthlyNetworths[$key]->cash + $monthlyNetworths[$key]->other_invest
                     + $currentAllInvests;
+
                 $difference = $total_assets - $date->end_balance;
+
                 $difference_super = $total_assets - $date->end_balance - 0;
                 if (isset($superInvests[$key])){
                     $difference_super = $total_assets - $date->end_balance - $superInvests[$key]->total_invest;

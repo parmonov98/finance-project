@@ -116,8 +116,10 @@ class MonthlyNetworths extends Component
 
         // DIFFERENCE
         $home_loans_savings = DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to])->get();
-        foreach ($home_values as $key => $record)
+
+        foreach ($home_values as $key => $record){
             $difference[] = $assets[$key] - $home_loans_savings[$key]->end_balance;
+        }
 
         // End DIFFERENCE
 
