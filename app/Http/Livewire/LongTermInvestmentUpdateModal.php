@@ -158,7 +158,7 @@ class LongTermInvestmentUpdateModal extends Component
 
         $from = $data['date'];
         $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
-        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();;
+        $dates = HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->orderBy('pay_date')->get();
         $change = LongTermInvestment::whereBetween('date', [$from, $to->pay_date])->get();
 
         $totalInvestSum = $this->total_invested;
@@ -169,7 +169,11 @@ class LongTermInvestmentUpdateModal extends Component
         $index = 0;
         foreach($dates as $key => $date)
         {
-            if (!$change[$key]->prev()){
+
+            if (!isset($change[$key])){
+                break;
+            }
+            if ($change[$key]->prev() == null){
                 $data['monthlyInvest'] = ($longTermInvestmentData->monthly_invest * $data['inflation']) + $longTermInvestmentData->monthly_invest;
             }else{
                 $data['monthlyInvest'] = ($change[$key]->prev()->monthly_invest * $data['inflation']) + $change[$key]->prev()->monthly_invest;

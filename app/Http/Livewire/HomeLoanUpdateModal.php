@@ -102,12 +102,13 @@ class HomeLoanUpdateModal extends Component
     {
         $db_data = HomeLoanData::get()->first();
         $this->loan = $home_loan->end_balance;
+//        dd($home_loan);
         $paidRecords = HomeLoan::where('pay_date', '<', $home_loan->pay_date)->where('user_id', auth()->id())->get();
 
         $this->date = $start_date;
         $this->int_rate = $db_data->int_rate * 100;
         $this->period = round(round($db_data->loan_period * 12 - $paidRecords->count(), 1) / 12, 1);
-        // dd($this->period);
+//         dd($this->period);
         $this->ext_pay = $db_data->opt_payment;
         $this->nb_pay = $db_data->no_payments;
         $this->Modifydata();

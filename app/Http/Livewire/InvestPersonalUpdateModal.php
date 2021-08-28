@@ -142,7 +142,10 @@ class InvestPersonalUpdateModal extends Component
         $index = 0;
         foreach($dates as $key => $date)
         {
-            if (!$change[$key]->prev()){
+            if (!isset($change[$key])){
+                break;
+            }
+            if ($change[$key]->prev() == null){
                 $data['monthlyInvest'] = ($investPersonalData->monthly_invest * $data['inflation']) + $investPersonalData->monthly_invest;
             }else{
                 $data['monthlyInvest'] = ($change[$key]->prev()->monthly_invest * $data['inflation']) + $change[$key]->prev()->monthly_invest;

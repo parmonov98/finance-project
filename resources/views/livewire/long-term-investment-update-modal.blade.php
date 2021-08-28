@@ -6,7 +6,7 @@
         <div class="modal-dialog modal-content">
             <form class="edit_longterm_investment_form " wire:submit.prevent="save">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Investment Super</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Long-term investment</h5>
                     <button type="button" class="close" wire:click="close">
                         <span aria-hidden="true">&times;</span>
                     </button>

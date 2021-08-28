@@ -149,7 +149,7 @@ class HomeLoans extends Component
 
     public function home_loan_data($data)
     {
-        $db_data = HomeLoanData::get()->first();
+        $db_data = HomeLoanData::where('user_id', Auth::id())->first();
 
         // dd($data);
 
