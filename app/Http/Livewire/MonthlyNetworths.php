@@ -58,7 +58,7 @@ class MonthlyNetworths extends Component
 
     public function render()
     {
-        $this->show_data = 5;
+        $this->show_data = 10;
         $start_date = HomeLoan::select('pay_date')->first();
         if (!is_null($start_date))
             $end_date = date('Y-m-d', strtotime($start_date->pay_date . " + " . $this->show_data . "  years"));
@@ -118,15 +118,25 @@ class MonthlyNetworths extends Component
         $home_loans_savings = DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to])->get();
 
         foreach ($home_values as $key => $record){
-            $difference[] = $assets[$key] - $home_loans_savings[$key]->end_balance;
+            if(isset($home_loans_savings[$key])){
+                $difference[] = $assets[$key] - $home_loans_savings[$key]->end_balance;
+            }else{
+                $difference[] = $assets[$key] ;
+            }
+
         }
 
         // End DIFFERENCE
 
 
         // DIFFERENCE SUPER
-        foreach ($investSupers as $key => $record)
-            $differenceSuper[] = $difference[$key] - $record->total_invested;
+        foreach ($investSupers as $key => $record){
+            if (isset($difference[$key])) {
+                $differenceSuper[] = $difference[$key] - $record->total_invested;
+            }else{
+                $differenceSuper[] = 0 - $record->total_invested;
+            }
+        }
 
         // End DIFFERENCE SUPER
 

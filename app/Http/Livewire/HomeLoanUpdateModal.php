@@ -185,11 +185,13 @@ class HomeLoanUpdateModal extends Component
     public function Recalculate($data)
     {
 
-        $last_record = HomeLoan::select('end_balance', 'principal', 'interest')->orderBy('id', 'DESC')->first();
+        $last_record = HomeLoan::select('end_balance', 'principal', 'interest')
+        ->where('user_id', Auth::id())->orderBy('id', 'DESC')->first();
 
         $stop = null;
         do {
-            $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
+            $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')
+                        ->where('user_id', Auth::id())->orderBy('id', 'DESC')->first();
             $data['beg_balance'] = $last_record->end_balance;
 
             $daystosum = 1;
@@ -435,6 +437,8 @@ class HomeLoanUpdateModal extends Component
 
             $from = $record_date->pay_date;
             $to = HomeLoan::select('pay_date')->orderBy('id', 'DESC')->first();
+            // dd($from, $to->pay_date, $data);
+
             HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->delete();
 
 //            DB::table('home_loans_savings')->whereBetween('pay_date', [$from, $to->pay_date])->delete();

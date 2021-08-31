@@ -21,7 +21,7 @@ class Authenticate extends Middleware
         }
     }
 
-    public function handle($request, Closure $next, $guard = null, $field = null)
+    public function handle($request, Closure $next)
     {
         if (Auth::guest()){
             return redirect(route('login'));
