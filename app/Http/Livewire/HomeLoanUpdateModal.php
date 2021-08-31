@@ -100,9 +100,9 @@ class HomeLoanUpdateModal extends Component
 
     public function update(HomeLoan $home_loan, $start_date)
     {
-        $db_data = HomeLoanData::get()->first();
+        $db_data = HomeLoanData::where('user_id', Auth::id())->first();
         $this->loan = $home_loan->end_balance;
-//        dd($home_loan);
+
         $paidRecords = HomeLoan::where('pay_date', '<', $home_loan->pay_date)->where('user_id', auth()->id())->get();
 
         $this->date = $start_date;
@@ -132,10 +132,11 @@ class HomeLoanUpdateModal extends Component
 
     public function scheduled_payment($data)
     {
-        $up = $data['interest_rate'] * $data['loan_amount'];
+//        $up = $data['interest_rate'] * $data['loan_amount'];
         // dd($data['interest_rate'], $data['nb_payments']);
-        $pow = pow(1 + ($data['interest_rate'] / $data['nb_payments']), -$data['nb_payments'] * $data['loan_period']);
-        $data['sch_payment'] = $up / ($data['nb_payments'] * (1 - $pow));
+//        $pow = pow(1 + ($data['interest_rate'] / $data['nb_payments']), -$data['nb_payments'] * $data['loan_period']);
+        $homeLoanData = HomeLoanData::where('user_id', Auth::id())->first();
+        $data['sch_payment'] = $homeLoanData->sch_payment;
 
         return $data;
     }
@@ -428,7 +429,7 @@ class HomeLoanUpdateModal extends Component
         $record_date = HomeLoan::where('pay_date', $this->date)->first();
         if (!is_null($record_date)) {
             $data = $this->FormatVariable();
-            // dd($data);
+//             dd($data);
             $data = $this->scheduled_payment($data);
             $this->home_loan_data($data);
 
@@ -443,6 +444,7 @@ class HomeLoanUpdateModal extends Component
             if (isset($last_record['end_balance']))
             {
                 $data['beg_balance'] = $last_record->end_balance;
+//                dd($data);
                 $this->Recalculate($data);
                 $this->RecalculateSavings($data);
             } else

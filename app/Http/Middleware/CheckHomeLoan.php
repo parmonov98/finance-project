@@ -20,7 +20,7 @@ class CheckHomeLoan
         $check = HomeLoan::all();
 
         if(!$check)
-            return response()->view('check');
+            return response()->view('auth.login');
 
         return $next($request);
     }

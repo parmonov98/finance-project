@@ -40,7 +40,7 @@ Route::get('/Landing-page', function(){
     return view('landing');
 })->name('landingPage');
 
-Route::middleware(['check', 'auth.basic'])->group(function () {
+Route::middleware(['auth', 'check', 'auth.basic'])->group(function () {
     Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
     Route::get('/Invest-Personal', [InvestPersonalController::class, 'show'])->name('investpersonal.show');
