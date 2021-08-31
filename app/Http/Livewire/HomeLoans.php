@@ -78,11 +78,13 @@ class HomeLoans extends Component
         $datas = HomeLoan::orderBy('pay_date', 'ASC')->get();
         $cum_interest = HomeLoan::select('cum_interest')->orderBy('id', 'DESC')->first();
         $additional_data = HomeLoan::select('sch_payment')->first();
-        $actual_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
+        $sch_no_pay = HomeLoan::select('pmt_no')->orderBy('id', 'DESC')->first();
         $savings_no_pay = DB::table('home_loans_savings')->select('pmt_no')->orderBy('id', 'DESC')->first();
         $actual_no_pay = null;
-        if(!is_null($actual_no_pay) && !is_null($savings_no_pay))
-            $sch_no_pay = $savings_no_pay->pmt_no - $actual_no_pay->pmt_no;
+        if(!is_null($sch_no_pay) && !is_null($savings_no_pay))
+            $actual_no_pay = $savings_no_pay->pmt_no - $sch_no_pay->pmt_no;
+
+//        dd($actual_no_pay);
 
         $start_date = HomeLoan::select('pay_date')->first();
 
