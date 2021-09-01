@@ -112,7 +112,7 @@ class HomeLoanUpdateModal extends Component
         $this->ext_pay = $db_data->opt_payment;
         // dd($home_loan);
         if($home_loan->ext_payment != $db_data->opt_payment){
-            $this->ext_pay = $this->home_loan->ext_invest;
+            $this->ext_pay = $home_loan->ext_payment;
         }
         // dd($this->ext_pay);
 
