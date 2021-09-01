@@ -108,8 +108,14 @@ class HomeLoanUpdateModal extends Component
         $this->date = $start_date;
         $this->int_rate = $db_data->int_rate * 100;
         $this->period = round(round($db_data->loan_period * 12 - $paidRecords->count(), 1) / 12, 1);
-//         dd($this->period);
+        // dd($db_data);
         $this->ext_pay = $db_data->opt_payment;
+        // dd($home_loan);
+        if($home_loan->ext_payment != $db_data->opt_payment){
+            $this->ext_pay = $this->home_loan->ext_invest;
+        }
+        // dd($this->ext_pay);
+
         $this->nb_pay = $db_data->no_payments;
         $this->Modifydata();
     }

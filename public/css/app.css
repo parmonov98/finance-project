@@ -18775,3 +18775,20 @@ h3 {
     border-color: #d8dbe0;
   }
 }
+
+
+.table-wrapper{
+    overflow-x:scroll;
+    overflow-y:visible;
+    width:250px;
+    margin-left: 120px;
+}
+.table tr th:first-child{
+    position: fixed;
+    left: 5px;
+}
+
+
+.table-custom-responsive tr{
+    border-bottom: 1px solid #b9b4b4;
+}

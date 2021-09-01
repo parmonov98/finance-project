@@ -362,9 +362,9 @@ class HomeLoans extends Component
             $from = $record_date->pay_date;
             $to = HomeLoan::select('pay_date')->where('user_id', Auth::id())->orderBy('id', 'DESC')->first();
 
-            DB::table('home_loans_savings')->where('user_id', Auth::id())->whereBetween('pay_date', [$from, $to->pay_date])->delete();
+            // DB::table('home_loans_savings')->where('user_id', Auth::id())->whereBetween('pay_date', [$from, $to->pay_date])->delete();
             HomeLoan::whereBetween('pay_date', [$from, $to->pay_date])->where('user_id', Auth::id())->delete();
-            MonthlyNetworth::whereBetween('date', [$from, $to->pay_date])->where('user_id', Auth::id())->delete();
+            // MonthlyNetworth::whereBetween('date', [$from, $to->pay_date])->where('user_id', Auth::id())->delete();
 
             $last_record = HomeLoan::select('beg_balance', 'end_balance', 'tot_payment', 'pay_date', 'pmt_no', 'cum_interest')->orderBy('id', 'DESC')->first();
 
