@@ -62,23 +62,23 @@
 
     window.addEventListener('closeModalOfInvestPersonal', event => {
       $("#updateInvestPersonal").modal('hide');
-        $(".modal-backdrop.show").remove();
+      $(".modal-backdrop.show").remove();
     });
     window.addEventListener('closeModalOfInvestmentSuper', event => {
       $("#updateInvestmentSuper").modal('hide');
-        $(".modal-backdrop.show").remove();
+      $(".modal-backdrop.show").remove();
     });
     window.addEventListener('closeModalOfLongTermInvestment', event => {
       $("#updateLongTermInvestment").modal('hide');
-        $(".modal-backdrop.show").remove();
+      $(".modal-backdrop.show").remove();
     });
     window.addEventListener('closeModalMonthlyNetworthCash', event => {
       $("#updateMonthlyNetworthCash").modal('hide');
-        $(".modal-backdrop.show").remove();
+      $(".modal-backdrop.show").remove();
     });
     window.addEventListener('closeModalMonthlyNetworthOtherInvestment', event => {
       $("#updateMonthlyNetworthOtherInvestment").modal('hide');
-        $(".modal-backdrop.show").remove();
+      $(".modal-backdrop.show").remove();
     });
 
     window.addEventListener('updatedChart', (event) => {
@@ -102,6 +102,7 @@
       window.myBarchart.update();
       //   $("#updateHomeLoan").modal('hide');
     })
+
   </script>
 
 
