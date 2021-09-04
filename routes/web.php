@@ -27,20 +27,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/Landing-Page', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/chart', function (){
-    return view('dashboard.dashboard.chart', );
-})->name('chart.show');
-
-
-
-
-Route::get('/Landing-page', function(){
-    return view('landing');
-})->name('landingPage');
-
 Route::middleware(['check', 'auth.basic'])->group(function () {
+
+
+    Route::get('/Landing-page', function(){
+        return view('landing');
+    })->name('landingPage');
+
+    Route::get('/chart', function (){
+        return view('dashboard.dashboard.chart', );
+    })->name('chart.show');
+
     Route::get('/Home-Loan', [HomeLoanController::class, 'show'])->name('homeloan.show');
 
     Route::get('/Invest-Personal', [InvestPersonalController::class, 'show'])->name('investpersonal.show');
